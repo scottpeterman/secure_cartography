@@ -1,0 +1,47 @@
+classDiagram
+    class TextFSMAutoEngine {
+        -ThreadSafeConnection connection_manager
+        -str db_path
+        -bool verbose
+        +find_best_template()
+        -calculate_template_score()
+        +get_filtered_templates()
+    }
+
+    class ThreadSafeConnection {
+        -str db_path
+        -bool verbose
+        -threading.local _local
+        +get_connection()
+        +close_all()
+    }
+
+    class SQLiteConnection {
+        +cursor()
+        +execute()
+        +close()
+    }
+
+    class TextFSMTemplate {
+        +ParseText()
+        +header
+    }
+
+    TextFSMAutoEngine --> ThreadSafeConnection : manages
+    ThreadSafeConnection --> SQLiteConnection : creates per thread
+    TextFSMAutoEngine ..> TextFSMTemplate : creates
+    
+    note for TextFSMAutoEngine "Core engine\nManages template matching"
+    note for ThreadSafeConnection "Thread-local storage\nConnection management"
+    note for TextFSMTemplate "Template parser\nStructured data extraction"
+
+    class TemplateDB{
+        <<database>>
+        +templates table
+        +cli_command
+        +textfsm_content
+    }
+
+    SQLiteConnection --> TemplateDB : queries
+    
+    note for TemplateDB "SQLite Database\nStores TextFSM templates"
