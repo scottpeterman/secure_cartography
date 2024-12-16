@@ -1,6 +1,54 @@
+## Table of Contents
+
+- [Secure Cartography](#secure-cartography)
+  - [Overview](#overview)
+  - [Installation](#installation)
+    - [From GitHub](#from-github)
+  - [Usage](#usage)
+  - [Key Features](#key-features)
+    - [Security](#security)
+    - [Network Discovery](#network-discovery)
+    - [Topology Management](#topology-management)
+    - [Visualization](#visualization)
+    - [Map Merging](#map-merging)
+  - [Project Structure](#project-structure)
+  - [Technology Stack](#technology-stack)
+    - [Core Technologies](#core-technologies)
+    - [Security Components](#security-components)
+    - [Network Interaction](#network-interaction)
+    - [Data Storage](#data-storage)
+  - [Security Architecture](#security-architecture)
+    - [Credential Protection](#credential-protection)
+  - [Requirements](#requirements)
+  - [License](#license)
+  - [Contributing](#contributing)
+  - [Acknowledgments](#acknowledgments)
+  - [Appendix A: Diagram Export and Visualization Tools](#appendix-a-diagram-export-and-visualization-tools)
+    - [Exported Formats](#exported-formats)
+      - [yEd GraphML (.graphml)](#yed-graphml-graphml)
+      - [draw.io (.drawio)](#drawio-drawio)
+    - [Usage Notes](#usage-notes)
+    - [Recommendations](#recommendations)
+  - [Appendix B: TFSM_Fire - Intelligent Template Matching](#appendix-b-tfsm_fire---intelligent-template-matching)
+    - [Overview](#overview-1)
+    - [Key Features](#key-features-1)
+      - [1. Intelligent Template Selection](#1-intelligent-template-selection)
+      - [2. Thread-Safe Design](#2-thread-safe-design)
+      - [3. Scoring Algorithm](#3-scoring-algorithm)
+      - [4. Template Filtering](#4-template-filtering)
+    - [Use Cases](#use-cases)
+    - [Technical Implementation](#technical-implementation)
+      - [Connection Management](#connection-management)
+      - [Template Parsing](#template-parsing)
+    - [Advantages Over Traditional Approaches](#advantages-over-traditional-approaches)
+    - [Integration Example](#integration-example)
+    - [Future Enhancements](#future-enhancements)
+  - [Dependencies and Integrations](#dependencies-and-integrations)
+  - [Keywords](#keywords)
+
 # Secure Cartography
 
-A secure, Python-based network discovery and mapping tool that generates comprehensive network topology maps using SSH-based device interrogation.
+Secure Cartography is a secure, Python-based network discovery and mapping tool designed for network engineers and IT professionals. It leverages SSH-based device interrogation to automate network discovery, visualize network topologies, and merge network maps across multi-vendor environments, including Cisco IOS, NX-OS, and Arista EOS platforms.
 
 ![Main Application](screenshots/scart.png)
 
@@ -397,3 +445,20 @@ else:
    - Version control integration
    - Automated testing framework
    - Template validation tools
+
+## Dependencies and Integrations
+
+Secure Cartography is built on a foundation of powerful open-source libraries and tools. Each plays a critical role in enabling robust network discovery, visualization, and automation capabilities:
+
+- **[PyQt6](https://riverbankcomputing.com/software/pyqt/intro)**: Provides a flexible and modern GUI framework for the application's user interface.
+- **[TextFSM](https://github.com/google/textfsm)**: Used for parsing unstructured device command outputs into structured data.
+- **[Napalm](https://github.com/napalm-automation/napalm)**: Simplifies multi-vendor network automation by providing a unified API for device interaction.
+- **[Netmiko](https://github.com/ktbyers/netmiko)**: Handles SSH communication with network devices, offering seamless execution of CLI commands.
+- **[Paramiko](https://github.com/paramiko/paramiko)**: A robust library for SSHv2 protocol implementation, used for secure device communication.
+- **[NetworkX](https://networkx.org/)**: Facilitates the graph-based representation and processing of network topology data.
+- **[N2G](https://github.com/networktocode/n2g)**: Converts topology data into visual formats, supporting tools like yEd and draw.io.
+
+Each of these libraries contributes to making Secure Cartography a feature-rich and reliable tool for network engineers.
+
+## Keywords
+Python, network discovery, network automation, network topology, SSH, topology visualization, multi-vendor networks, Cisco IOS, NX-OS, Arista EOS, secure network tools.
