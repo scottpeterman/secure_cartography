@@ -111,6 +111,8 @@ class SecureCredentials:
             # Create empty credentials file
             creds_path = self.config_dir / "credentials.yaml"
             self.save_credentials([], creds_path)
+            creds_path = self.config_dir / "network_mapper_passwords.yaml"
+            self.save_credentials([], creds_path)
 
             self.is_initialized = True
             return True

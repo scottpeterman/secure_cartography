@@ -43,51 +43,51 @@ class InterfaceNormalizer:
     # Comprehensive interface specifications with both long and short names
     INTERFACE_SPECS = [
         # Standard Ethernet interfaces
-        InterfaceSpec(r"^(?:Eth|Et|Ethernet)(\d+(?:/\d+)*(?:\.\d+)?)",
+        InterfaceSpec(r"^(?:eth|et|ethernet)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "Ethernet\\1", "Eth\\1"),
 
-        # Gigabit interfaces
-        InterfaceSpec(r"^(?:Gi|GigE|GigabitEth)(\d+(?:/\d+)*(?:\.\d+)?)",
+        # Gigabit interfaces - full pattern including all variations
+        InterfaceSpec(r"^(?:gi|gige|gigabiteth|gigabitethernet|gigabit)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "GigabitEthernet\\1", "Gi\\1"),
 
-        # 10-Gigabit interfaces
-        InterfaceSpec(r"^(?:Te|TenGig|TenGigE)(\d+(?:/\d+)*(?:\.\d+)?)",
+        # Ten-Gigabit interfaces - full pattern including all variations
+        InterfaceSpec(r"^(?:te|tengig|tengige|tengigabitethernet|tengigabit)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "TenGigabitEthernet\\1", "Te\\1"),
 
         # 25-Gigabit interfaces
-        InterfaceSpec(r"^(?:Twe|TwentyFiveGig)(\d+(?:/\d+)*(?:\.\d+)?)",
+        InterfaceSpec(r"^(?:twe|twentyfivegig|twentyfivegige|twentyfivegigabitethernet)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "TwentyFiveGigE\\1", "Twe\\1"),
 
         # 40-Gigabit interfaces
-        InterfaceSpec(r"^(?:Fo|FortyGig)(\d+(?:/\d+)*(?:\.\d+)?)",
+        InterfaceSpec(r"^(?:fo|fortygig|fortygige|fortygigabitethernet)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "FortyGigabitEthernet\\1", "Fo\\1"),
 
         # 100-Gigabit interfaces
-        InterfaceSpec(r"^(?:Hu|Hun|HundredGig|100Gig)(\d+(?:/\d+)*(?:\.\d+)?)",
+        InterfaceSpec(r"^(?:hu|hun|hundredgig|hundredgige|hundredgigabitethernet|100gig)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "HundredGigabitEthernet\\1", "Hu\\1"),
 
         # Port channels
-        InterfaceSpec(r"^(?:Po|port-channel|Port-channel)(\d+)",
+        InterfaceSpec(r"^(?:po|portchannel|port-channel|port_channel)(\d+)",
                       "Port-Channel\\1", "Po\\1"),
 
         # Management interfaces (with number)
-        InterfaceSpec(r"^(?:Ma|Mgmt|Management|oob_management|oob|wan)(\d+(?:/\d+)*)",
+        InterfaceSpec(r"^(?:ma|mgmt|management|oob_management|oob|wan)(\d+(?:/\d+)*)",
                       "Management\\1", "Ma\\1"),
 
         # Management interfaces (without number)
-        InterfaceSpec(r"^(?:Ma|Mgmt|Management|oob_management|oob|wan)$",
+        InterfaceSpec(r"^(?:ma|mgmt|management|oob_management|oob|wan)$",
                       "Management", "Ma"),
 
         # VLAN interfaces
-        InterfaceSpec(r"^(?:Vl|Vlan)(\d+)",
+        InterfaceSpec(r"^(?:vl|vlan)(\d+)",
                       "Vlan\\1", "Vl\\1"),
 
         # Loopback interfaces
-        InterfaceSpec(r"^(?:Lo|Loopback)(\d+)",
+        InterfaceSpec(r"^(?:lo|loopback)(\d+)",
                       "Loopback\\1", "Lo\\1"),
 
         # FastEthernet interfaces (legacy)
-        InterfaceSpec(r"^(?:Fa|Fast)(\d+(?:/\d+)*)",
+        InterfaceSpec(r"^(?:fa|fast|fastethernet)(\d+(?:/\d+)*)",
                       "FastEthernet\\1", "Fa\\1"),
     ]
 
@@ -129,8 +129,8 @@ class InterfaceNormalizer:
                 return f"Management{suffix}" if not use_short_name else f"Ma{suffix}"
 
         # Auto-select short names for certain platforms
-        if platform in [Platform.CISCO_NXOS, Platform.ARISTA]:
-            use_short_name = True
+        # if platform in [Platform.CISCO_NXOS, Platform.ARISTA]:
+        #     use_short_name = True
 
         # Try to match and normalize the interface name
         for spec in cls.INTERFACE_SPECS:

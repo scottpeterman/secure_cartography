@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Cartography Help</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        [data-bs-theme="dark"] {
+            color-scheme: dark;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-pills .nav-link {
+            margin-bottom: 0.5rem;
+        }
+
+        .container-fluid {
+            max-width: 1600px;
+        }
+
+        pre {
+            background-color: var(--bs-secondary-bg);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .key-feature {
+            border-left: 4px solid var(--bs-primary);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body data-bs-theme="dark">
+    <div class="theme-toggle">
+        <button class="btn btn-outline-primary" onclick="toggleTheme()">
+            <i class="bi bi-sun-fill" id="theme-icon"></i>
+            Toggle Theme
+        </button>
+    </div>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3">
+                <nav class="sticky-top pt-3">
+                    <div class="nav nav-pills flex-column">
+                        <a class="nav-link active" href="#getting-started">Getting Started</a>
+                        <a class="nav-link" href="#configuration">Configuration</a>
+                        <a class="nav-link" href="#discovery">Network Discovery</a>
+                        <a class="nav-link" href="#visualization">Map Visualization</a>
+                        <a class="nav-link" href="#troubleshooting">Troubleshooting</a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <h1 class="mb-4">Secure Cartography Help Guide</h1>
+
+                <section id="getting-started" class="mb-5">
+                    <h2>Getting Started</h2>
+                    <p class="lead">Secure Cartography is a network discovery and mapping tool that uses SSH to safely explore and document your network topology.</p>
+
+                    <div class="key-feature">
+                        <h4>Main Features</h4>
+                        <ul>
+                            <li>Secure SSH-based network discovery</li>
+                            <li>Support for multiple vendor platforms</li>
+                            <li>Real-time discovery progress monitoring</li>
+                            <li>Dark and light theme support</li>
+                            <li>Multiple visualization layouts</li>
+                        </ul>
+                    </div>
+
+                    <div class="mermaid">
+                    graph TD
+                        A[Start Discovery] --> B[Enter Seed IP]
+                        B --> C[Configure Credentials]
+                        C --> D[Set Discovery Parameters]
+                        D --> E[Begin Mapping]
+                        E --> F[Generate Network Map]
+                    </div>
+                </section>
+
+                <section id="configuration" class="mb-5">
+                    <h2>Configuration</h2>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4>Basic Settings</h4>
+                            <dl class="row">
+                                <dt class="col-sm-3">Seed IP</dt>
+                                <dd class="col-sm-9">The starting point IP address for network discovery</dd>
+
+                                <dt class="col-sm-3">Username/Password</dt>
+                                <dd class="col-sm-9">SSH credentials for device access</dd>
+
+                                <dt class="col-sm-3">Timeout</dt>
+                                <dd class="col-sm-9">Maximum wait time for device responses (in seconds)</dd>
+
+                                <dt class="col-sm-3">Max Devices</dt>
+                                <dd class="col-sm-9">Upper limit for discovered devices</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4>Output Settings</h4>
+                            <dl class="row">
+                                <dt class="col-sm-3">Map Name</dt>
+                                <dd class="col-sm-9">Name for the generated network map file</dd>
+
+                                <dt class="col-sm-3">Output Directory</dt>
+                                <dd class="col-sm-9">Location for discovery results and maps</dd>
+
+                                <dt class="col-sm-3">Exclude Pattern</dt>
+                                <dd class="col-sm-9">
+                                    Comma-separated patterns to exclude specific devices or networks. For example:
+                                    <div class="mt-2">
+                                        <code>othersite-,sep</code>
+                                    </div>
+                                    <small class="text-muted mt-2 d-block">
+                                        This would exclude:
+                                        <ul class="mt-1 mb-0">
+                                            <li>Any device with "othersite-" in the name (e.g., "othersite-core-1")</li>
+                                            <li>Any Cisco IP phones (which contain "SEP" in their names)</li>
+                                        </ul>
+                                    </small>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">Using Exclude Patterns</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Exclude patterns help control the scope of network discovery. Multiple patterns can be combined using commas.</p>
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Example Pattern</th>
+                                            <th>What it Excludes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>othersite-</code></td>
+                                            <td>All devices containing "othersite-" in their name (e.g., othersite-core-1, othersite-switch-2)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>sep</code></td>
+                                            <td>Cisco IP phones (which have "SEP" in their names)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>test-,dev-</code></td>
+                                            <td>All devices with names containing "test-" or "dev-"</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <strong>Tip:</strong> Patterns are case-insensitive. Use commas to separate multiple patterns without spaces.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="discovery" class="mb-5">
+                    <h2>Network Discovery</h2>
+                    <h4 class="mt-4">Discovery Algorithm</h4>
+                    <p>Secure Cartography uses Breadth-First Search (BFS) to systematically explore your network. Starting from the seed device, it discovers and processes each layer of neighbors before moving deeper into the network:</p>
+
+                    <div class="mermaid">
+                    graph TB
+                        subgraph "Layer 1"
+                        A[Seed Device]
+                        end
+                        subgraph "Layer 2"
+                        B[Switch 1]
+                        C[Switch 2]
+                        D[Switch 3]
+                        end
+                        subgraph "Layer 3"
+                        E[Device A]
+                        F[Device B]
+                        G[Device C]
+                        H[Device D]
+                        end
+
+                        A --> B
+                        A --> C
+                        A --> D
+                        B --> E
+                        B --> F
+                        C --> G
+                        D --> H
+
+                        style A fill:#f96
+                        style B fill:#9cf
+                        style C fill:#9cf
+                        style D fill:#9cf
+                        style E fill:#9c6
+                        style F fill:#9c6
+                        style G fill:#9c6
+                        style H fill:#9c6
+                    </div>
+
+                    <div class="card mt-3 mb-4">
+                        <div class="card-body">
+                            <h5>How BFS Discovery Works</h5>
+                            <ol>
+                                <li>Starts at the seed device (Layer 1)</li>
+                                <li>Discovers all immediate neighbors before moving deeper</li>
+                                <li>Processes each layer completely before moving to the next</li>
+                                <li>Avoids revisiting devices, preventing loops</li>
+                                <li>Respects exclude patterns at each layer</li>
+                            </ol>
+                            <div class="alert alert-primary mt-2">
+                                <strong>Advantage:</strong> BFS ensures thorough discovery of nearby devices before exploring further network segments, making it ideal for network mapping.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <h5>Discovery Progress Indicators</h5>
+                        <ul>
+                            <li><strong>Discovered:</strong> Successfully mapped devices</li>
+                            <li><strong>Failed:</strong> Unreachable or authentication failed</li>
+                            <li><strong>Queue:</strong> Devices waiting to be processed</li>
+                            <li><strong>Total:</strong> Overall devices found</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="visualization" class="mb-5">
+                    <h2>Map Visualization</h2>
+                    <p>Choose from multiple layout algorithms to best represent your network topology:</p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Kamada-Kawai (kk)</h5>
+                                    <p>Best for general network topologies</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Circular</h5>
+                                    <p>Arranges devices in a circular pattern</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="troubleshooting" class="mb-5">
+                    <h2>Troubleshooting</h2>
+
+                    <div class="accordion" id="troubleshootingAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#connectionIssues">
+                                    Connection Issues
+                                </button>
+                            </h2>
+                            <div id="connectionIssues" class="accordion-collapse collapse show" data-bs-parent="#troubleshootingAccordion">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Verify SSH credentials are correct</li>
+                                        <li>Check network connectivity to target devices</li>
+                                        <li>Ensure firewall rules allow SSH access</li>
+                                        <li>Verify device SSH service is enabled</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize mermaid
+        mermaid.initialize({
+            theme: 'dark',
+            startOnLoad: true
+        });
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-bs-theme', newTheme);
+
+            // Update mermaid diagrams
+            mermaid.initialize({
+                theme: newTheme,
+                startOnLoad: true
+            });
+            document.querySelectorAll('.mermaid').forEach(diagram => {
+                const content = diagram.innerHTML;
+                diagram.innerHTML = content;
+            });
+        }
+    </script>
+</body>
+</html>

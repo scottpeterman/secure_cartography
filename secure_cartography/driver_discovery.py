@@ -7,9 +7,10 @@ from typing import Optional, Dict, List
 from dataclasses import dataclass, field, asdict
 from napalm import get_network_driver
 
-from ssh_client_pysshpass import ssh_client
-from tfsm_fire import TextFSMAutoEngine
-from interface_normalizer import InterfaceNormalizer
+from secure_cartography.ssh_client_pysshpass import ssh_client
+from secure_cartography.tfsm_fire import TextFSMAutoEngine
+from secure_cartography.interface_normalizer import InterfaceNormalizer
+from secure_cartography.util import get_db_path
 
 logger = logging.getLogger('netmiko')
 
@@ -32,8 +33,8 @@ class DriverDiscovery:
         self.logger = logging.getLogger(__name__)
         self.supported_drivers = ['nxos_ssh','ios', 'eos']
         self._platform_cache = {}
-        self.parser = TextFSMAutoEngine('tfsm_templates.db')
-
+        db_path = get_db_path()
+        self.parser = TextFSMAutoEngine(db_path)
     def _check_port_open(self, host: str, port: int = 22, timeout: int = 5) -> bool:
         """Quick check if port is open on host."""
         try:
@@ -119,7 +120,7 @@ class DriverDiscovery:
                         'transport': 'ssh',
                         'use_eapi': False
                     }
-                print(f"NAPALM connecting to: {device_dict}")
+                # print(f"NAPALM connecting to: {device_dict}")
                 # Attempt connection and fact gathering
                 if driver_name == 'eos':
                     device_dict['optional_args'] ={
@@ -336,7 +337,9 @@ class DriverDiscovery:
     def _get_enhanced_neighbors(self, device_conn, platform: str) -> Dict:
         """Get enhanced neighbor information using direct SSH and TextFSM parsing."""
         neighbors = {'cdp': {}, 'lldp': {}}
-        parser = TextFSMAutoEngine('tfsm_templates.db')
+        db_path = get_db_path()
+        parser = TextFSMAutoEngine(db_path)
+        # parser = TextFSMAutoEngine('tfsm_templates.db')
         parsed_cdp = []
         parsed_lldp = []
         device_id = None

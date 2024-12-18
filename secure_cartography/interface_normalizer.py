@@ -1,77 +1,30 @@
 import re
-from typing import Optional, Tuple
-
+from typing import Optional
+from secure_cartography.enh_int_normalizer import InterfaceNormalizer as EnhancedNormalizer, Platform
+#Migrating to enhanced normalizer
 
 class InterfaceNormalizer:
-    STANDARD_INTERFACES = {
-        'Gi': 'GigabitEthernet',
-        'Te': 'TenGigabitEthernet',
-        'Eth': 'Ethernet',
-        'Fa': 'FastEthernet',
-        'Po': 'Port-channel',
-        'Vl': 'Vlan',
-        'Lo': 'Loopback',
-        'Mg': 'Management',
-        'Hu': 'HundredGigE'
-    }
-
-    INTERFACE_PATTERNS = {
-        'ios': [
-            (r'^(?:Gi|GigabitEthernet)(\d+/?\d*/?(?:\d+)?)', 'GigabitEthernet\\1'),
-            (r'^(?:Te|TenGigabitEthernet)(\d+/?\d*/?(?:\d+)?)', 'TenGigabitEthernet\\1'),
-            (r'^(?:Fa|FastEthernet)(\d+/?\d*/?(?:\d+)?)', 'FastEthernet\\1'),
-            (r'^(?:Po|Port-channel)(\d+)', 'Port-channel\\1'),
-            (r'^(?:Vl|Vlan)(\d+)', 'Vlan\\1'),
-            (r'^(?:Lo|Loopback)(\d+)', 'Loopback\\1'),
-            (r'^(?:Hu|HundredGigE)(\d+/?\d*/?(?:\d+)?)', 'HundredGigE\\1')
-        ],
-        'nxos': [
-            (r'^(?:Eth|Ethernet)(\d+/\d+)', 'Ethernet\\1'),
-            (r'^(?:Po|port-channel)(\d+)', 'port-channel\\1'),
-            (r'^(?:Vlan)(\d+)', 'Vlan\\1'),
-            (r'^(?:Lo|loopback)(\d+)', 'loopback\\1'),
-            (r'^(?:mgmt)(\d+)', 'mgmt\\1')
-        ],
-        'arista': [
-            (r'^(?:Et|Ethernet)(\d+(/\d+)?)', 'Ethernet\\1'),
-            (r'^(?:Po|Port-Channel)(\d+)', 'Port-Channel\\1'),
-            (r'^(?:Vl|Vlan)(\d+)', 'Vlan\\1'),
-            (r'^(?:Lo|Loopback)(\d+)', 'Loopback\\1'),
-            (r'^(?:Ma|Management)(\d+)', 'Management\\1')
-        ]
-    }
+    """Legacy wrapper for enhanced interface normalizer"""
 
     @classmethod
     def normalize(cls, interface: str, vendor: Optional[str] = None) -> str:
-        if not interface or interface == "unknown":
-            return "unknown"
-
-        interface = interface.strip()
-
-        # Return if already in full format
-        if any(interface.startswith(full) for full in cls.STANDARD_INTERFACES.values()):
-            return interface
-
+        """Wrapper for enhanced normalizer that maintains old interface"""
+        # Map old vendor strings to Platform enum if provided
+        platform = None
         if vendor:
-            vendor = vendor.lower()
-            if vendor in cls.INTERFACE_PATTERNS:
-                for pattern, replacement in cls.INTERFACE_PATTERNS[vendor]:
-                    if re.match(pattern, interface, re.IGNORECASE):
-                        return re.sub(pattern, replacement, interface, flags=re.IGNORECASE)
+            vendor_map = {
 
-        # Try generic normalization if no vendor match
-        for patterns in cls.INTERFACE_PATTERNS.values():
-            for pattern, replacement in patterns:
-                if re.match(pattern, interface, re.IGNORECASE):
-                    return re.sub(pattern, replacement, interface, flags=re.IGNORECASE)
+            }
+            platform = vendor_map.get(vendor.lower(), None)
 
-        return interface
+        return EnhancedNormalizer.normalize(interface, platform)
 
     @classmethod
     def normalize_pair(cls, local_int: str, remote_int: str,
                        local_vendor: Optional[str] = None,
-                       remote_vendor: Optional[str] = None) -> Tuple[str, str]:
-        return (
-            cls.normalize(local_int, local_vendor),
-            cls.normalize(remote_int, remote_vendor)
-        )
+                       remote_vendor: Optional[str] = None) -> tuple[str, str]:
+        """Wrapper for pair normalization"""
+        local = cls.normalize(local_int, local_vendor)
+        remote = cls.normalize(remote_int, remote_vendor)
+        return local, remote
+

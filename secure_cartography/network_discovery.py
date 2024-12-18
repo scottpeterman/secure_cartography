@@ -1,5 +1,8 @@
 import math
 import re
+from pathlib import Path
+from secure_cartography.tfsm_fire import TextFSMAutoEngine
+
 import socket
 import traceback
 from collections import defaultdict
@@ -15,13 +18,17 @@ import errno
 
 import networkx as nx
 import numpy as np
+from PyQt6.QtWidgets import QMessageBox
 from matplotlib import pyplot as plt
 
-from enh_int_normalizer import InterfaceNormalizer
-from diagrams import create_network_diagrams
-from driver_discovery import DriverDiscovery, DeviceInfo
+from secure_cartography.enh_int_normalizer import InterfaceNormalizer
+from secure_cartography.diagrams import create_network_diagrams
+from secure_cartography.driver_discovery import DriverDiscovery, DeviceInfo
 
 import threading
+
+from secure_cartography.util import get_db_path
+
 
 class TimeoutError(Exception):
     pass
@@ -52,6 +59,8 @@ class DiscoveryConfig:
     max_devices: int = 100
     save_debug_info: bool = False
     map_name: str = ""
+    layout_algo: str = "kk"
+
 
     def to_dict(self) -> Dict:
         data = asdict(self)
@@ -126,6 +135,7 @@ class NetworkDiscovery:
     def __init__(self, config: DiscoveryConfig):
         self.config = config
         self.progress_callback = None
+        self.log_callback = None
         self.stats = {
             'devices_discovered': 0,
             'devices_failed': 0,
@@ -139,7 +149,32 @@ class NetworkDiscovery:
         self.network_map: Dict[str, NetworkDevice] = {}
         self.logger = logging.getLogger(__name__)
         self.config.output_dir.mkdir(parents=True, exist_ok=True)
+        self.max_devices = config.max_devices
+        self.layout_algo = config.layout_algo
 
+        class CallbackHandler(logging.Handler):
+            def __init__(self, callback):
+                super().__init__()
+                self.callback = callback
+
+            def emit(self, record):
+                if self.callback:
+                    self.callback(self.format(record))
+
+        # Configure logger with callback
+        self.logger = logging.getLogger(__name__)
+        self.callback_handler = CallbackHandler(self._handle_log)
+        self.callback_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        self.logger.addHandler(self.callback_handler)
+
+    def set_log_callback(self, callback):
+        """Set callback for log messages"""
+        self.log_callback = callback
+
+    def _handle_log(self, message):
+        """Handle log messages from logger"""
+        if self.log_callback:
+            self.log_callback(message)
     def _check_port_open(self, host: str, port: int = 22, timeout: int = 5) -> bool:
         """Quick check if port is open on host."""
         if host in self.unreachable_hosts:  # Skip if already known unreachable
@@ -204,11 +239,9 @@ class NetworkDiscovery:
             timeout=self.config.timeout
         )
         self.queue.put(seed_device)
-        loop_count = 0
-        import signal
-        # Add at top of file with other imports
+        processing_seed_device = True
 
-        while not self.queue.empty():
+        while not self.queue.empty() and self.stats['devices_discovered'] < self.max_devices -1:
             current_device = self.queue.get()
             try:
                 # Update stats for queue before processing
@@ -221,7 +254,10 @@ class NetworkDiscovery:
                 }
 
                 if current_device.hostname in self.visited:
-                    print(f"Already Visited: {current_device}")
+                    try:
+                        print(f"Already Visited: {current_device.hostname}")
+                    except:
+                        traceback.print_exc()
                     continue
                 self.emit_device_discovered(current_device.hostname, "processing")
 
@@ -232,65 +268,91 @@ class NetworkDiscovery:
                     continue
 
                 try:
-                    # Device discovery logic...
+                    if processing_seed_device:
+                        self.logger.setLevel(logging.INFO)
+                        self.logger.info("Discovering seed device...")
+                        self.logger.setLevel(logging.WARNING)
+                        processing_seed_device = False
                     def device_discovery_logic():
-                        # Device discovery logic...
                         if not current_device.platform:
-                            print(f"Discovering: {current_device}")
-                            current_device.platform = self.driver_discovery.detect_platform(current_device, config=self.config)
+
+                            self.logger.info(f"Discovering: {current_device.hostname}")
+                            current_device.platform = self.driver_discovery.detect_platform(current_device,
+                                                                                            config=self.config)
+                        # Get basic capabilities for device info, but not for neighbors
                         capabilities = self.driver_discovery.get_device_capabilities(current_device, config=self.config)
+                        self.logger.setLevel(logging.INFO)
+                        self.logger.info(f"Found device: <font color='#53fa05'>{capabilities['facts'].get('hostname','hostname_not_advertised')}</font>")
+                        self.logger.setLevel(logging.WARNING)
                         return capabilities
+
                     try:
                         capabilities = run_with_timeout(device_discovery_logic, 95)
                     except:
                         continue
 
                     if capabilities:
-                        if capabilities['driver_connection'].platform in ['ios', 'nxos_ssh']:
-                            try:
-                                # Add CDP enhancement here
-                                from netmiko import ConnectHandler
-                                from tfsm_fire import TextFSMAutoEngine
+                        try:
+                            from netmiko import ConnectHandler
 
-                                platform_map = {
-                                    'ios': 'cisco_ios',
-                                    'nxos_ssh': 'cisco_nxos',
-                                    'eos': 'arista_eos'
-                                }
-                                platform = capabilities['driver_connection'].platform
-                                device_type = platform_map.get(platform, 'cisco_ios')
+                            platform_map = {
+                                'ios': 'cisco_ios',
+                                'nxos_ssh': 'cisco_nxos',
+                                'eos': 'arista_eos'
+                            }
 
-                                netmiko_device = {
-                                    'device_type': device_type,
-                                    'host': current_device.hostname,
-                                    'username': current_device.username,
-                                    'password': current_device.password,
-                                    'port': 22
-                                }
+                            platform = capabilities['driver_connection'].platform
+                            device_type = platform_map.get(platform, 'cisco_ios')
 
-                                with ConnectHandler(**netmiko_device) as net_connect:
-                                    cdp_detail = net_connect.send_command('show cdp neighbors detail')
-                                    parser = TextFSMAutoEngine('tfsm_templates.db')
-                                    best_template, parsed_cdp, score = parser.find_best_template(cdp_detail,
-                                                                                                 'show_cdp_neighbors_detail')
+                            self.logger.debug(f"Processing device {current_device.hostname} with platform {platform}")
 
-                                    if parsed_cdp and score > 10:
-                                        capabilities['neighbors']['cdp'] = self._enhance_cdp_data(parsed_cdp)
+                            netmiko_device = {
+                                'device_type': device_type,
+                                'host': current_device.hostname,
+                                'username': current_device.username,
+                                'password': current_device.password,
+                                'port': 22
+                            }
 
-                                        # LLDP neighbors collection
+                            with ConnectHandler(**netmiko_device) as net_connect:
+                                # Initialize neighbors dict if it doesn't exist
+                                if 'neighbors' not in capabilities:
+                                    capabilities['neighbors'] = {}
+
+                                # Handle CDP for IOS and NXOS devices
+                                if platform in ['ios', 'nxos_ssh']:
+                                    try:
+                                        cdp_detail = net_connect.send_command('show cdp neighbors detail')
+                                        db_path = get_db_path()
+                                        parser = TextFSMAutoEngine(db_path)
+                                        best_template, parsed_cdp, score = parser.find_best_template(
+                                            cdp_detail, 'show_cdp_neighbors_detail')
+
+                                        if parsed_cdp and score > 10:
+                                            capabilities['neighbors']['cdp'] = self._enhance_cdp_data(parsed_cdp)
+                                    except Exception as e:
+                                        self.logger.error(
+                                            f"CDP collection failed for {current_device.hostname}: {str(e)}")
+
+                                # Handle LLDP for all platforms
+                                try:
                                     lldp_detail = net_connect.send_command('show lldp neighbors detail')
-                                    best_template, parsed_lldp, score = parser.find_best_template(lldp_detail,
-                                                                                                  'show_lldp_neighbors_detail')
+                                    db_path = get_db_path()
+                                    parser = TextFSMAutoEngine(db_path)
+                                    best_template, parsed_lldp, score = parser.find_best_template(
+                                        lldp_detail, 'show_lldp_neighbors_detail')
 
                                     if parsed_lldp and score > 10:
-                                        capabilities['neighbors']['lldp'] = self._enhance_lldp_data(parsed_lldp)
+                                        capabilities['neighbors']['lldp'] = self._enhance_lldp_data(parsed_lldp,platform=capabilities['driver_connection'].platform)
+                                except Exception as e:
+                                    self.logger.error(f"LLDP collection failed for {current_device.hostname}: {str(e)}")
 
-
-                            except Exception as e:
-                                self.logger.error(f"Failed to enhance CDP data: {str(e)}")
+                        except Exception as e:
+                            self.logger.error(f"Failed to enhance neighbor data: {str(e)}")
 
                         device = self._process_device(current_device, capabilities)
                         if device:
+                            # Good to here
                             self._process_neighbors(device, capabilities.get('neighbors', {}))
                             self.network_map[device.hostname] = device
                             self.emit_device_discovered(current_device.hostname, "success")
@@ -305,7 +367,6 @@ class NetworkDiscovery:
 
             except Exception as e:
                 self.logger.error(f"Error in discovery loop: {str(e)}")
-                # Final stats update before completing
         self.stats = {
             'devices_discovered': len(self.network_map),
             'devices_failed': len(self.failed_devices),
@@ -314,9 +375,8 @@ class NetworkDiscovery:
             'unreachable_hosts': len(self.unreachable_hosts)
         }
         self.emit_device_discovered(None, "complete")
-
-        if self.config.save_debug_info:
-            self._save_debug_info()
+        # if self.config.save_debug_info:
+        #     self._save_debug_info()
 
         transformed_map = self.transform_map(self.network_map)
         enriched_map = self.enrich_peer_data(transformed_map)
@@ -365,12 +425,31 @@ class NetworkDiscovery:
 
         return enhanced_cdp
 
-    def _enhance_lldp_data(self, parsed_lldp):
+    def _enhance_lldp_data(self, parsed_lldp, platform='ios'):
         """Convert parsed LLDP data to the required neighbor format matching CDP structure."""
         enhanced_lldp = {}
 
+        # Define field mappings for different platforms
+        field_mappings = {
+            'ios': {
+                'device_id': 'NEIGHBOR_NAME',
+                'mgmt_ip': 'MGMT_ADDRESS',
+                'local_interface': 'LOCAL_INTERFACE',
+                'remote_interface': 'NEIGHBOR_PORT_ID'
+            },
+            'eos': {
+                'device_id': 'NEIGHBOR_NAME',
+                'mgmt_ip': 'MGMT_ADDRESS',
+                'local_interface': 'LOCAL_INTERFACE',
+                'remote_interface': 'NEIGHBOR_INTERFACE'
+            }
+        }
+
+        # Get the appropriate field mapping
+        fields = field_mappings.get(platform, field_mappings['ios'])  # Default to IOS mapping
+
         for entry in parsed_lldp:
-            device_id = entry.get('NEIGHBOR_NAME', '')  # Primary key for each device
+            device_id = entry.get(fields['device_id'], '')
             if not device_id:
                 continue
 
@@ -379,21 +458,21 @@ class NetworkDiscovery:
                 continue
 
             # Get management IP
-            ip_address = entry.get('MGMT_ADDRESS', '')
+            ip_address = entry.get(fields['mgmt_ip'], '')
 
             # Initialize or update device structure
             if device_id not in enhanced_lldp:
                 enhanced_lldp[device_id] = {
                     'ip': ip_address,
-                    'platform': 'ios',  # Default to ios as shown in the CDP example
+                    'platform': platform,  # Use the actual platform instead of hardcoding to 'ios'
                     'connections': []
                 }
 
-            # Add connection using LOCAL_INTERFACE and NEIGHBOR_PORT_ID
-            if entry.get('LOCAL_INTERFACE') and entry.get('NEIGHBOR_PORT_ID'):
+            # Add connection using mapped interface fields
+            if entry.get(fields['local_interface']) and entry.get(fields['remote_interface']):
                 connection = [
-                    entry['LOCAL_INTERFACE'],
-                    entry['NEIGHBOR_PORT_ID']  # Using NEIGHBOR_PORT_ID for the remote interface
+                    entry[fields['local_interface']],
+                    entry[fields['remote_interface']]
                 ]
                 if connection not in enhanced_lldp[device_id]['connections']:
                     enhanced_lldp[device_id]['connections'].append(connection)
@@ -412,10 +491,7 @@ class NetworkDiscovery:
                 return 'junos'
         return 'ios'  # Default to ios if unable to determine
 
-    import networkx as nx
-    import matplotlib.pyplot as plt
-    from pathlib import Path
-    import numpy as np
+
 
     def create_multipartite_layout(self, G, subset_key='layer', min_layer_dist=1.0, min_node_dist=0.2):
         """Creates a multipartite layout with customizable spacing."""
@@ -656,7 +732,7 @@ class NetworkDiscovery:
             json.dump(normalized_map, indent=2, fp=fh)
 
         # Create the diagram files
-        create_network_diagrams(normalized_map, output_dir, map_name, "kk")  # Using 'kk' as default layout
+        create_network_diagrams(normalized_map, output_dir, map_name, self.layout_algo)  # Using 'kk' as default layout
 
         # Create SVG preview
         svg_path = output_dir / f"{map_name}.svg"
@@ -785,53 +861,6 @@ class NetworkDiscovery:
                         transformed_map[hostname]["peers"][peer_id]["connections"].append(connection_pair)
 
         return transformed_map
-
-
-    # def transform_map(self, network_map: Dict[str, NetworkDevice]) -> Dict:
-    #     transformed_map = {}
-    #
-    #     for hostname, device in network_map.items():
-    #         transformed_map[hostname] = {
-    #             "node_details": {
-    #                 "ip": device.ip,
-    #                 "platform": device.platform
-    #             },
-    #             "peers": {}
-    #         }
-    #
-    #         for peer_id, connections in device.connections.items():
-    #             # Initialize peer entry
-    #             transformed_map[hostname]["peers"][peer_id] = {
-    #                 "ip": "",
-    #                 "platform": "",
-    #                 "connections": []
-    #             }
-    #
-    #             # Get best IP and platform from any connection
-    #             for conn in connections:
-    #                 # If we haven't set an IP yet, or if we have a non-empty IP, use it
-    #                 if (not transformed_map[hostname]["peers"][peer_id]["ip"] and conn.neighbor_ip):
-    #                     transformed_map[hostname]["peers"][peer_id]["ip"] = conn.neighbor_ip
-    #
-    #                 # If we haven't set a platform yet, or if we have a non-"unknown" platform, use it
-    #                 if (not transformed_map[hostname]["peers"][peer_id]["platform"] or
-    #                     transformed_map[hostname]["peers"][peer_id][
-    #                         "platform"] == "unknown") and conn.neighbor_platform:
-    #                     transformed_map[hostname]["peers"][peer_id]["platform"] = conn.neighbor_platform
-    #
-    #             # Use set for unique connections
-    #             unique_connections = {
-    #                 (InterfaceNormalizer.normalize(conn.local_port),
-    #                  InterfaceNormalizer.normalize(conn.remote_port))
-    #                 for conn in connections
-    #             }
-    #
-    #             # Convert back to list
-    #             transformed_map[hostname]["peers"][peer_id]["connections"] = [
-    #                 list(conn) for conn in unique_connections
-    #             ]
-    #
-    #     return transformed_map
 
     def enrich_peer_data(self, data):
         """
