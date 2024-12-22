@@ -1,7 +1,6 @@
 import math
 import re
 from pathlib import Path
-from secure_cartography.tfsm_fire import TextFSMAutoEngine
 
 import socket
 import traceback
@@ -112,9 +111,10 @@ class NetworkDevice:
         }
         return data
 
-def timeout(seconds=30):
+def timeout(seconds=60):
     def decorator(func):
         def _handle_timeout(signum, frame):
+            print(f"Global Timeout Hit...")
             raise TimeoutError(f"Function call timed out after {seconds} seconds")
 
         @wraps(func)
@@ -132,6 +132,7 @@ def timeout(seconds=30):
     return decorator
 
 class NetworkDiscovery:
+
     def __init__(self, config: DiscoveryConfig):
         self.config = config
         self.progress_callback = None
@@ -144,13 +145,19 @@ class NetworkDiscovery:
         self.driver_discovery = DriverDiscovery()
         self.queue: Queue = Queue()
         self.visited: Set[str] = set()
+        self.visited_ips: Set[str] = set()  # Track visited IPs
+        self.visited_hostnames: Set[str] = set()  # Track visited hostnames
+
         self.failed_devices: Set[str] = set()
-        self.unreachable_hosts: Set[str] = set()  # Simple set to track unreachable hosts
+        self.unreachable_hosts: Set[str] = set()
         self.network_map: Dict[str, NetworkDevice] = {}
+
+        # Logger setup with duplicate handler prevention
         self.logger = logging.getLogger(__name__)
-        self.config.output_dir.mkdir(parents=True, exist_ok=True)
-        self.max_devices = config.max_devices
-        self.layout_algo = config.layout_algo
+
+        # Remove any existing handlers to prevent duplicates
+        while self.logger.handlers:
+            self.logger.removeHandler(self.logger.handlers[0])
 
         class CallbackHandler(logging.Handler):
             def __init__(self, callback):
@@ -162,10 +169,15 @@ class NetworkDiscovery:
                     self.callback(self.format(record))
 
         # Configure logger with callback
-        self.logger = logging.getLogger(__name__)
         self.callback_handler = CallbackHandler(self._handle_log)
         self.callback_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         self.logger.addHandler(self.callback_handler)
+        self.logger.setLevel(logging.DEBUG)  # Set to DEBUG for maximum verbosity
+
+        # Additional initialization
+        self.config.output_dir.mkdir(parents=True, exist_ok=True)
+        self.max_devices = config.max_devices
+        self.layout_algo = config.layout_algo
 
     def set_log_callback(self, callback):
         """Set callback for log messages"""
@@ -228,6 +240,22 @@ class NetworkDiscovery:
 
         return mapped_data
 
+    def _is_visited(self, device: DeviceInfo) -> bool:
+        """Check if a device has already been visited."""
+        visited = device.hostname in self.visited_hostnames or device.ip in self.visited_ips
+        self.logger.debug(
+            f"Visited check for device {device.hostname} ({device.ip}): {visited}"
+        )
+        return visited
+
+    def _mark_visited(self, device: DeviceInfo) -> None:
+        """Mark a device as visited."""
+        self.visited_hostnames.add(device.hostname)
+        self.visited_ips.add(device.ip)
+        self.logger.debug(
+            f"Marked device as visited: {device.hostname} ({device.ip}). Visited count: {len(self.visited_ips)}"
+        )
+
     def crawl(self):
         """Run network discovery process."""
         # Initialize with seed device
@@ -238,195 +266,305 @@ class NetworkDiscovery:
             password=self.config.password,
             timeout=self.config.timeout
         )
+        self.logger.info(
+            f"Queueing seed device: {self.config.seed_ip} - in visited_ips: {self.config.seed_ip in self.visited_ips}, "
+            f"in unreachable: {self.config.seed_ip in self.unreachable_hosts}, "
+            f"in network_map: {self.config.seed_ip in [d.ip for d in self.network_map.values()]}"
+        )
+
         self.queue.put(seed_device)
         processing_seed_device = True
 
-        while not self.queue.empty() and self.stats['devices_discovered'] < self.max_devices -1:
+        while not self.queue.empty() and self.stats['devices_discovered'] < self.max_devices - 1:
             current_device = self.queue.get()
+            self.logger.info(
+                f"Dequeued device {current_device.hostname} (IP: {current_device.ip}). Queue size: {self.queue.qsize()}")
+
             try:
                 # Update stats for queue before processing
                 self.stats = {
                     'devices_discovered': len(self.network_map),
                     'devices_failed': len(self.failed_devices),
                     'devices_queued': self.queue.qsize(),
-                    'devices_visited': len(self.visited),
+                    'devices_visited': len(self.visited_ips),
                     'unreachable_hosts': len(self.unreachable_hosts)
                 }
+                self.logger.info(f"Starting processing of {current_device.hostname} (IP: {current_device.ip})")
+                self.logger.debug(f"Current visited IPs: {self.visited_ips}")
+                self.logger.debug(f"Current network_map devices: {list(self.network_map.keys())}")
 
-                if current_device.hostname in self.visited:
-                    try:
-                        print(f"Already Visited: {current_device.hostname}")
-                    except:
-                        traceback.print_exc()
+                if self._is_visited(current_device):
+                    self.logger.debug(f"Already processed device: {current_device.hostname} ({current_device.ip})")
                     continue
+
                 self.emit_device_discovered(current_device.hostname, "processing")
 
                 # Check if device is reachable
                 if not self._check_port_open(current_device.hostname):
+                    self.logger.warning(f"Device unreachable: {current_device.hostname} (IP: {current_device.ip})")
                     self.failed_devices.add(current_device.hostname)
                     self.emit_device_discovered(current_device.hostname, "failed")
                     continue
 
+                # Discover device capabilities and neighbors
                 try:
                     if processing_seed_device:
                         self.logger.setLevel(logging.INFO)
                         self.logger.info("Discovering seed device...")
-                        self.logger.setLevel(logging.WARNING)
+                        # self.logger.setLevel(logging.WARNING)
                         processing_seed_device = False
+
                     def device_discovery_logic():
                         if not current_device.platform:
-
-                            self.logger.info(f"Discovering: {current_device.hostname}")
+                            self.logger.info(f"Discovering platform for: {current_device.hostname}")
                             current_device.platform = self.driver_discovery.detect_platform(current_device,
                                                                                             config=self.config)
-                        # Get basic capabilities for device info, but not for neighbors
+
                         capabilities = self.driver_discovery.get_device_capabilities(current_device, config=self.config)
-                        self.logger.setLevel(logging.INFO)
-                        self.logger.info(f"Found device: <font color='#53fa05'>{capabilities['facts'].get('hostname','hostname_not_advertised')}</font>")
-                        self.logger.setLevel(logging.WARNING)
+                        self.logger.info(
+                            f"Capabilities discovered for {current_device.hostname}: {capabilities['facts'].get('hostname', 'N/A')}")
                         return capabilities
 
-                    try:
-                        capabilities = run_with_timeout(device_discovery_logic, 95)
-                    except:
-                        continue
+                    capabilities = run_with_timeout(device_discovery_logic, 95)
 
                     if capabilities:
-                        try:
-                            from netmiko import ConnectHandler
-
-                            platform_map = {
-                                'ios': 'cisco_ios',
-                                'nxos_ssh': 'cisco_nxos',
-                                'eos': 'arista_eos'
-                            }
-
-                            platform = capabilities['driver_connection'].platform
-                            device_type = platform_map.get(platform, 'cisco_ios')
-
-                            self.logger.debug(f"Processing device {current_device.hostname} with platform {platform}")
-
-                            netmiko_device = {
-                                'device_type': device_type,
-                                'host': current_device.hostname,
-                                'username': current_device.username,
-                                'password': current_device.password,
-                                'port': 22
-                            }
-
-                            with ConnectHandler(**netmiko_device) as net_connect:
-                                # Initialize neighbors dict if it doesn't exist
-                                if 'neighbors' not in capabilities:
-                                    capabilities['neighbors'] = {}
-
-                                # Handle CDP for IOS and NXOS devices
-                                if platform in ['ios', 'nxos_ssh']:
-                                    try:
-                                        cdp_detail = net_connect.send_command('show cdp neighbors detail')
-                                        db_path = get_db_path()
-                                        parser = TextFSMAutoEngine(db_path)
-                                        best_template, parsed_cdp, score = parser.find_best_template(
-                                            cdp_detail, 'show_cdp_neighbors_detail')
-
-                                        if parsed_cdp and score > 10:
-                                            capabilities['neighbors']['cdp'] = self._enhance_cdp_data(parsed_cdp)
-                                    except Exception as e:
-                                        self.logger.error(
-                                            f"CDP collection failed for {current_device.hostname}: {str(e)}")
-
-                                # Handle LLDP for all platforms
-                                try:
-                                    lldp_detail = net_connect.send_command('show lldp neighbors detail')
-                                    db_path = get_db_path()
-                                    parser = TextFSMAutoEngine(db_path)
-                                    best_template, parsed_lldp, score = parser.find_best_template(
-                                        lldp_detail, 'show_lldp_neighbors_detail')
-
-                                    if parsed_lldp and score > 10:
-                                        capabilities['neighbors']['lldp'] = self._enhance_lldp_data(parsed_lldp,platform=capabilities['driver_connection'].platform)
-                                except Exception as e:
-                                    self.logger.error(f"LLDP collection failed for {current_device.hostname}: {str(e)}")
-
-                        except Exception as e:
-                            self.logger.error(f"Failed to enhance neighbor data: {str(e)}")
-
+                        # Process neighbors and connections
                         device = self._process_device(current_device, capabilities)
                         if device:
-                            # Good to here
-                            self._process_neighbors(device, capabilities.get('neighbors', {}))
+                            neighbors = capabilities.get('neighbors', {})
+                            self.logger.info(f"Processing {len(neighbors)} neighbors for {device.hostname}")
+                            self._process_neighbors(device, neighbors)
                             self.network_map[device.hostname] = device
                             self.emit_device_discovered(current_device.hostname, "success")
 
                 except Exception as e:
-                    traceback.print_exc()
                     self.logger.error(f"Failed to process device {current_device.hostname}: {str(e)}")
                     self.failed_devices.add(current_device.hostname)
                     self.emit_device_discovered(current_device.hostname, "failed")
+                    traceback.print_exc()
 
-                self.visited.add(current_device.hostname)
+                self._mark_visited(current_device)
 
             except Exception as e:
-                self.logger.error(f"Error in discovery loop: {str(e)}")
+                self.logger.error(f"Error in discovery loop for device {current_device.hostname}: {str(e)}")
+                traceback.print_exc()
+
         self.stats = {
             'devices_discovered': len(self.network_map),
             'devices_failed': len(self.failed_devices),
             'devices_queued': self.queue.qsize(),
-            'devices_visited': len(self.visited),
+            'devices_visited': len(self.visited_ips),
             'unreachable_hosts': len(self.unreachable_hosts)
         }
         self.emit_device_discovered(None, "complete")
-        # if self.config.save_debug_info:
-        #     self._save_debug_info()
 
+        # Save transformed and enriched map
         transformed_map = self.transform_map(self.network_map)
         enriched_map = self.enrich_peer_data(transformed_map)
         self._save_map_files(enriched_map)
 
         return enriched_map
 
+    def _normalize_hostname(self, hostname: str) -> str:
+        """Normalize hostname by removing domain and whitespace."""
+        if not hostname:
+            return hostname
+        return hostname.split('.')[0].strip()
+
+    def _check_known_device(self, hostname: str, ip: str) -> bool:
+        """Check if a device is known by either hostname or IP."""
+        if not ip:
+            self.logger.warning(f"Empty IP provided for hostname {hostname}")
+            return True  # Treat empty IPs as known
+
+        normalized_hostname = self._normalize_hostname(hostname)
+        existing_ips = [d.ip for d in self.network_map.values()]
+
+        is_known = (
+                ip in self.visited_ips or
+                normalized_hostname in self.visited_hostnames or
+                ip in self.unreachable_hosts or
+                ip in existing_ips or
+                normalized_hostname in [self._normalize_hostname(d.hostname) for d in self.network_map.values()] or
+                any(ip == item.ip for item in list(self.queue.queue))
+        )
+
+        if is_known:
+            self.logger.debug(
+                f"Device {hostname} ({ip}) known via:\n"
+                f"  - visited_ips: {ip in self.visited_ips}\n"
+                f"  - visited_hostnames: {normalized_hostname in self.visited_hostnames}\n"
+                f"  - unreachable_hosts: {ip in self.unreachable_hosts}\n"
+                f"  - network_map_ips: {ip in existing_ips}\n"
+                f"  - network_map_hostnames: {normalized_hostname in [self._normalize_hostname(d.hostname) for d in self.network_map.values()]}\n"
+                f"  - queue: {any(ip == item.ip for item in list(self.queue.queue))}"
+            )
+        return is_known
+
     def _enhance_cdp_data(self, parsed_cdp):
         """Convert parsed CDP data to the required neighbor format and queue new devices."""
         enhanced_cdp = {}
+
         for entry in parsed_cdp:
+            # Get and normalize device ID
             device_id = entry.get('NEIGHBOR_NAME', '')
             if not device_id:
                 chassis_id = entry.get('CHASSIS_ID', '')
                 device_id = chassis_id.split('.')[0]
 
             if not device_id or any(x in device_id.lower() for x in ['show', 'invalid', 'total']):
+                self.logger.debug(f"CDP: Skipping invalid device_id: {device_id}")
                 continue
 
-            # Get IP from MGMT_ADDRESS or INTERFACE_IP
+            # Normalize the device ID
+            normalized_device_id = self._normalize_hostname(device_id)
+
+            # Get IP address with fallback
             ip_address = entry.get('MGMT_ADDRESS') or entry.get('INTERFACE_IP', '')
 
-            if device_id not in enhanced_cdp:
-                enhanced_cdp[device_id] = {
-                    'ip': ip_address,  # Make sure we capture the IP
-                    'platform': 'ios',  # Default to ios for Cisco devices
+            self.logger.info(f"CDP: Processing neighbor {normalized_device_id} with IP {ip_address}")
+
+            # Initialize or update device data
+            if normalized_device_id not in enhanced_cdp:
+                enhanced_cdp[normalized_device_id] = {
+                    'ip': ip_address,
+                    'platform': 'ios',  # Default platform for CDP
                     'connections': []
                 }
 
+            # Process connection information
             if 'LOCAL_INTERFACE' in entry and 'NEIGHBOR_INTERFACE' in entry:
                 connection = [entry['LOCAL_INTERFACE'], entry['NEIGHBOR_INTERFACE']]
-                if connection not in enhanced_cdp[device_id]['connections']:
-                    enhanced_cdp[device_id]['connections'].append(connection)
+                if connection not in enhanced_cdp[normalized_device_id]['connections']:
+                    enhanced_cdp[normalized_device_id]['connections'].append(connection)
+                    self.logger.debug(f"CDP: Added connection {connection} for {normalized_device_id}")
 
-            # Queue the device if it hasn't been visited
-            if ip_address and ip_address not in self.visited and ip_address not in self.unreachable_hosts:
-                new_device = DeviceInfo(
-                    hostname=ip_address,
-                    ip=ip_address,
-                    username=self.config.username,
-                    password=self.config.password,
-                    timeout=self.config.timeout,
-                    platform='ios'  # Default platform for queued devices
-                )
-                self.queue.put(new_device)
+            # Update platform if available
+            if 'PLATFORM' in entry:
+                platform_str = entry['PLATFORM'].lower()
+                if 'nx-os' in platform_str:
+                    enhanced_cdp[normalized_device_id]['platform'] = 'nxos_ssh'
+                elif 'eos' in platform_str:
+                    enhanced_cdp[normalized_device_id]['platform'] = 'eos'
+                else:
+                    enhanced_cdp[normalized_device_id]['platform'] = 'ios'
+
+            # Handle device queueing if IP is available
+            if ip_address:
+                self.logger.info(f"CDP: Evaluating {normalized_device_id} ({ip_address}) for queuing")
+                self.logger.debug(f"CDP Queue state for {ip_address}:")
+                self.logger.debug(f"  - In visited IPs: {ip_address in self.visited_ips}")
+                self.logger.debug(f"  - In visited hostnames: {normalized_device_id in self.visited_hostnames}")
+                self.logger.debug(f"  - In unreachable: {ip_address in self.unreachable_hosts}")
+
+                if not self._check_known_device(device_id, ip_address):
+                    new_device = DeviceInfo(
+                        hostname=ip_address,
+                        ip=ip_address,
+                        username=self.config.username,
+                        password=self.config.password,
+                        timeout=self.config.timeout,
+                        platform=enhanced_cdp[normalized_device_id]['platform']
+                    )
+                    self.logger.info(
+                        f"CDP: Queueing new device <font color='green'>{ip_address}</font> from <font color='yellow'>{normalized_device_id}</font>")
+                    self.queue.put(new_device)
+                else:
+                    self.logger.info(f"CDP: Skipping known device {ip_address} ({normalized_device_id})")
 
         return enhanced_cdp
 
+    def _process_neighbors(self, device: NetworkDevice, neighbors: Dict) -> None:
+        """Process neighbors for both CDP and LLDP."""
+        self.logger.info(f"Starting neighbor processing for device {device.hostname}")
+        self.logger.debug(f"Raw neighbor data: {neighbors}")
+
+        for protocol in ['cdp', 'lldp']:
+            protocol_neighbors = neighbors.get(protocol, {})
+            self.logger.info(f"Processing {len(protocol_neighbors)} {protocol.upper()} neighbors for {device.hostname}")
+
+            for neighbor_id, data in protocol_neighbors.items():
+                self.logger.debug(f"{protocol.upper()}: Processing neighbor {neighbor_id}")
+
+                if self._is_excluded(neighbor_id):
+                    self.logger.info(f"Neighbor {neighbor_id} is excluded by configuration. Skipping.")
+                    continue
+
+                # Get neighbor IP and validate
+                neighbor_ip = data.get('ip', '')
+                if not neighbor_ip:
+                    self.logger.warning(f"No IP found for neighbor {neighbor_id}. Connection data: {data}")
+                    # continue
+
+                self.logger.info(f"{protocol.upper()}: Processing neighbor {neighbor_id} ({neighbor_ip})")
+
+                # Process each connection for this neighbor
+                for connection in data.get('connections', []):
+                    self.logger.debug(f"{protocol.upper()}: Processing connection {connection} for {neighbor_id}")
+
+                    # Check if we should queue this neighbor for discovery
+                    if not self._is_known_device(neighbor_ip):
+                        self.logger.info(f"New device found: {neighbor_id} ({neighbor_ip})")
+
+                        # Create new device info and queue it
+                        neighbor_device = DeviceInfo(
+                            hostname=neighbor_ip,
+                            ip=neighbor_ip,
+                            username=self.config.username,
+                            password=self.config.password,
+                            timeout=self.config.timeout,
+                            platform=data.get('platform', '')
+                        )
+
+                        self.logger.info(f"Queueing new device: {neighbor_ip}")
+                        self.queue.put(neighbor_device)
+                        self.logger.debug(f"Queue size after adding {neighbor_ip}: {self.queue.qsize()}")
+                    else:
+                        self.logger.debug(f"Device {neighbor_ip} already known, skipping queue")
+
+                    # Add connection info regardless of queuing status
+                    connection_data = {
+                        'local_port': connection[0],
+                        'remote_port': connection[1],
+                        'ip': neighbor_ip,
+                        'platform': data.get('platform', 'unknown')
+                    }
+
+                    if device is not None:
+                        self.logger.debug(f"Adding connection for {neighbor_id}: {connection[0]} -> {connection[1]}")
+                        self._add_neighbor(device, neighbor_id, connection_data, protocol)
+                    else:
+                        self.logger.warning("Device object is None, cannot add neighbor connection")
+
+        self.logger.info(f"Completed neighbor processing for {device.hostname}")
+        self.logger.info(f"Current queue size: {self.queue.qsize()}")
+        self.logger.debug(f"Current visited IPs: {self.visited_ips}")
+
+    def _is_known_device(self, ip: str) -> bool:
+        """Check if a device IP is already known, queued, or unreachable."""
+        if not ip:
+            self.logger.warning("Empty IP provided to _is_known_device")
+            return True  # Treat empty IPs as known to prevent queuing
+
+        known = (
+                ip in self.visited_ips or
+                ip in self.unreachable_hosts or
+                ip in [d.ip for d in self.network_map.values()] or
+                any(ip == item.ip for item in list(self.queue.queue))
+        )
+
+        self.logger.debug(
+            f"Known device check for {ip}:\n"
+            f"  - In visited_ips: {ip in self.visited_ips}\n"
+            f"  - In unreachable_hosts: {ip in self.unreachable_hosts}\n"
+            f"  - In network_map: {ip in [d.ip for d in self.network_map.values()]}\n"
+            f"  - In queue: {any(ip == item.ip for item in list(self.queue.queue))}\n"
+            f"Final result: {known}"
+        )
+        return known
+
     def _enhance_lldp_data(self, parsed_lldp, platform='ios'):
-        """Convert parsed LLDP data to the required neighbor format matching CDP structure."""
+        """Convert parsed LLDP data to the required neighbor format."""
         enhanced_lldp = {}
 
         # Define field mappings for different platforms
@@ -442,56 +580,107 @@ class NetworkDiscovery:
                 'mgmt_ip': 'MGMT_ADDRESS',
                 'local_interface': 'LOCAL_INTERFACE',
                 'remote_interface': 'NEIGHBOR_INTERFACE'
+            },
+            'nxos_ssh': {
+                'device_id': 'NEIGHBOR_NAME',
+                'mgmt_ip': 'MGMT_ADDRESS',
+                'local_interface': 'LOCAL_INTERFACE',
+                'remote_interface': 'NEIGHBOR_PORT_ID'
             }
         }
 
-        # Get the appropriate field mapping
-        fields = field_mappings.get(platform, field_mappings['ios'])  # Default to IOS mapping
+        # Get the appropriate field mapping with fallback to IOS
+        fields = field_mappings.get(platform, field_mappings['ios'])
 
         for entry in parsed_lldp:
+            # Get and normalize device ID
             device_id = entry.get(fields['device_id'], '')
             if not device_id:
+                device_id = entry.get('CHASSIS_ID', '').replace(':', '').lower()
+
+            if not device_id or not self._is_valid_device_id(device_id):
+                self.logger.debug(f"LLDP: Skipping invalid device ID: {device_id}")
                 continue
 
-            # Only process valid device entries
-            if any(x in device_id.lower() for x in ['show', 'invalid', 'total']):
-                continue
+            # Normalize the device ID
+            normalized_device_id = self._normalize_hostname(device_id)
 
-            # Get management IP
+            # Get management IP with fallback
             ip_address = entry.get(fields['mgmt_ip'], '')
+            if not ip_address:
+                ip_address = entry.get('INTERFACE_IP', '')
 
-            # Initialize or update device structure
-            if device_id not in enhanced_lldp:
-                enhanced_lldp[device_id] = {
+            self.logger.info(f"LLDP: Processing neighbor {normalized_device_id} with IP {ip_address}")
+
+            # Initialize device entry if needed
+            if normalized_device_id not in enhanced_lldp:
+                enhanced_lldp[normalized_device_id] = {
                     'ip': ip_address,
-                    'platform': platform,  # Use the actual platform instead of hardcoding to 'ios'
+                    'platform': self._determine_platform_from_capabilities(
+                        entry.get('CAPABILITIES', entry.get('NEIGHBOR_DESCRIPTION', ''))
+                    ),
                     'connections': []
                 }
 
-            # Add connection using mapped interface fields
-            if entry.get(fields['local_interface']) and entry.get(fields['remote_interface']):
-                connection = [
-                    entry[fields['local_interface']],
-                    entry[fields['remote_interface']]
-                ]
-                if connection not in enhanced_lldp[device_id]['connections']:
-                    enhanced_lldp[device_id]['connections'].append(connection)
+            # Process connection information
+            local_port = entry.get(fields['local_interface'])
+            remote_port = entry.get(fields['remote_interface'])
+            if local_port and remote_port:
+                connection = [local_port, remote_port]
+                if connection not in enhanced_lldp[normalized_device_id]['connections']:
+                    enhanced_lldp[normalized_device_id]['connections'].append(connection)
+                    self.logger.debug(f"LLDP: Added connection {connection} for {normalized_device_id}")
+
+            # Handle device queueing
+            if ip_address:
+                self.logger.info(f"LLDP: Evaluating {normalized_device_id} ({ip_address}) for queuing")
+                self.logger.debug(f"LLDP Queue state for {ip_address}:")
+                self.logger.debug(f"  - In visited IPs: {ip_address in self.visited_ips}")
+                self.logger.debug(f"  - In visited hostnames: {normalized_device_id in self.visited_hostnames}")
+                self.logger.debug(f"  - In unreachable: {ip_address in self.unreachable_hosts}")
+
+                if not self._check_known_device(device_id, ip_address):
+                    new_device = DeviceInfo(
+                        hostname=ip_address,
+                        ip=ip_address,
+                        username=self.config.username,
+                        password=self.config.password,
+                        timeout=self.config.timeout,
+                        platform=enhanced_lldp[normalized_device_id]['platform']
+                    )
+                    self.logger.info(
+                        f"LLDP: Queueing new device <font color='green'>{ip_address}</font> from <font color='yellow'>{normalized_device_id}</font>")
+                    self.queue.put(new_device)
+                else:
+                    self.logger.info(f"LLDP: Skipping known device {ip_address} ({normalized_device_id})")
 
         return enhanced_lldp
 
-    def _determine_platform_from_capabilities(self, capabilities):
-        """Determine platform based on LLDP capabilities."""
-        capabilities = capabilities.lower()
-        if 'router' in capabilities:
-            if 'cisco' in capabilities:
-                return 'ios'
-            elif 'arista' in capabilities:
+    def _determine_platform_from_capabilities(self, capabilities_str: str) -> str:
+        """Determine platform based on LLDP capabilities or description."""
+        if not capabilities_str:
+            return 'unknown'
+
+        capabilities_str = capabilities_str.lower()
+
+        # Check for explicit platform indicators
+        if 'nx-os' in capabilities_str:
+            return 'nxos_ssh'
+        elif 'eos' in capabilities_str or 'arista' in capabilities_str:
+            return 'eos'
+        elif 'ios' in capabilities_str or 'cisco' in capabilities_str:
+            return 'ios'
+
+        # Platform inference from capabilities
+        if 'router' in capabilities_str or 'switch' in capabilities_str:
+            if 'cisco' in capabilities_str:
+                return 'ios'  # Default Cisco platform
+            elif 'arista' in capabilities_str:
                 return 'eos'
-            elif 'juniper' in capabilities:
+            elif 'juniper' in capabilities_str:
                 return 'junos'
-        return 'ios'  # Default to ios if unable to determine
 
-
+        return 'ios'  # Default platform if unable to determine
 
     def create_multipartite_layout(self, G, subset_key='layer', min_layer_dist=1.0, min_node_dist=0.2):
         """Creates a multipartite layout with customizable spacing."""
@@ -822,17 +1011,17 @@ class NetworkDiscovery:
                     existing_peer['connections'] = [list(conn) for conn in combined_connections]
 
         return normalized_hosts
+
     def transform_map(self, network_map: Dict[str, NetworkDevice]) -> Dict:
-        """
-        Transform NetworkDevice objects into the format required by the mapping utility,
-        with normalized interface names.
-        """
+        """Transform NetworkDevice objects into the format required by the mapping utility."""
         transformed_map = {}
 
         # Process each device in the network map
         for hostname, device in network_map.items():
+            normalized_hostname = self._normalize_hostname(hostname)
+
             # Add base device information
-            transformed_map[hostname] = {
+            transformed_map[normalized_hostname] = {
                 "node_details": {
                     "ip": device.ip,
                     "platform": device.platform
@@ -842,10 +1031,21 @@ class NetworkDiscovery:
 
             # Process each peer connection
             for peer_id, connections in device.connections.items():
-                # Initialize peer entry with empty strings for IP and platform
-                transformed_map[hostname]["peers"][peer_id] = {
-                    "ip": "",  # Set to empty as per example
-                    "platform": "",  # Set to empty as per example
+                normalized_peer = self._normalize_hostname(peer_id)
+
+                # Find peer IP from connections or network map
+                peer_ip = ""
+                # First try to get IP from connection info
+                if connections and connections[0].neighbor_ip:
+                    peer_ip = connections[0].neighbor_ip
+                # If not found, try to get from network map
+                elif normalized_peer in network_map:
+                    peer_ip = network_map[normalized_peer].ip
+
+                # Initialize peer entry
+                transformed_map[normalized_hostname]["peers"][normalized_peer] = {
+                    "ip": peer_ip,
+                    "platform": "",  # Platform will be enriched later
                     "connections": []
                 }
 
@@ -857,8 +1057,10 @@ class NetworkDiscovery:
 
                     # Check if this connection pair already exists
                     connection_pair = [local_port, remote_port]
-                    if connection_pair not in transformed_map[hostname]["peers"][peer_id]["connections"]:
-                        transformed_map[hostname]["peers"][peer_id]["connections"].append(connection_pair)
+                    if connection_pair not in transformed_map[normalized_hostname]["peers"][normalized_peer][
+                        "connections"]:
+                        transformed_map[normalized_hostname]["peers"][normalized_peer]["connections"].append(
+                            connection_pair)
 
         return transformed_map
 
@@ -1026,72 +1228,19 @@ class NetworkDiscovery:
         )
         return device
 
-    def _process_neighbors(self, device: NetworkDevice, neighbors: Dict) -> None:
-        """Process neighbors for both CDP and LLDP."""
-        for protocol in ['cdp', 'lldp']:
-            for neighbor_id, data in neighbors.get(protocol, {}).items():
-
-                if not self._is_excluded(neighbor_id):
-                    for connection in data.get('connections', []):
-                        if data.get('ip'):  # Only process if we have an IP
-                            # Check if we've already processed this IP
-                            if (data['ip'] not in self.visited and
-                                    data['ip'] not in self.network_map and
-                                    data['ip'] not in self.unreachable_hosts):
-
-                                # Create new device info and queue it
-                                neighbor_device = DeviceInfo(
-                                    hostname=data['ip'],
-                                    ip=data['ip'],
-                                    username=self.config.username,
-                                    password=self.config.password,
-                                    timeout=self.config.timeout
-                                )
-                                self.queue.put(neighbor_device)
-                                self.logger.debug(f"Queued new device: {data['ip']}")
-                            else:
-                                self.logger.debug(f"Skipping already processed device: {data['ip']}")
-
-                        # Add connection info regardless of queuing
-                        connection_data = {
-                            'local_port': connection[0],
-                            'remote_port': connection[1],
-                            'ip': data.get('ip', ''),
-                            'platform': data.get('platform', 'unknown')
-                        }
-                        if device is not None:
-                            self._add_neighbor(device, neighbor_id, connection_data, protocol)
-
-    # def _process_neighbors(self, device: NetworkDevice, neighbors: Dict) -> None:
-    #     """Process neighbors for both CDP and LLDP."""
-    #     print(f"DEBUG - Processing neighbors for device {device.hostname}:")
-    #     print(f"CDP data: {neighbors.get('cdp', {})}")
-    #     print(f"LLDP data: {neighbors.get('lldp', {})}")
-    #     for protocol in ['cdp', 'lldp']:
-    #         for neighbor_id, data in neighbors.get(protocol, {}).items():
-    #             if not self._is_excluded(neighbor_id):
-    #                 # Handle multiple connections for the same neighbor
-    #                 for connection in data.get('connections', []):
-    #                     # Create a new data dictionary with the connection info
-    #                     connection_data = {
-    #                         'local_port': connection[0],
-    #                         'remote_port': connection[1],
-    #                         'ip': data.get('ip', ''),
-    #                         'platform': data.get('platform', 'unknown')
-    #                     }
-    #                     if device is not None:
-    #                         self._add_neighbor(device, neighbor_id, connection_data, protocol)
-    #                     else:
-    #                         print("device missing")
-
     def _add_neighbor(self, device: NetworkDevice, neighbor_id: str, data: Dict, protocol: str) -> None:
         """Add neighbor to device connections."""
         if not hasattr(device, 'connections'):
             device.connections = {}
 
-        if neighbor_id not in device.connections:
-            device.connections[neighbor_id] = []
+        # Normalize the neighbor_id
+        normalized_neighbor_id = self._normalize_hostname(neighbor_id)
+        self.logger.debug(f"Normalized neighbor ID: {neighbor_id} -> {normalized_neighbor_id}")
 
+        if normalized_neighbor_id not in device.connections:
+            device.connections[normalized_neighbor_id] = []
+
+        # Create the connection object
         connection = DeviceConnection(
             local_port=data.get('local_port', 'unknown'),
             remote_port=data.get('remote_port', 'unknown'),
@@ -1100,22 +1249,35 @@ class NetworkDiscovery:
             neighbor_platform=data.get('platform', 'unknown')
         )
 
-        # Enhanced duplicate check - check both ports and protocol
+        # Enhanced duplicate check
         is_duplicate = False
-        for existing_connection in device.connections[neighbor_id]:
+        for existing_connection in device.connections[normalized_neighbor_id]:
             if (existing_connection.local_port == connection.local_port and
                     existing_connection.remote_port == connection.remote_port):
-                # If this is CDP and we already have LLDP (or vice versa), update IP/platform if they're empty
-                if existing_connection.protocol != protocol:
-                    if not existing_connection.neighbor_ip:
-                        existing_connection.neighbor_ip = connection.neighbor_ip
-                    if not existing_connection.neighbor_platform or existing_connection.neighbor_platform == 'unknown':
-                        existing_connection.neighbor_platform = connection.neighbor_platform
+                self.logger.debug(
+                    f"Duplicate connection detected: {connection.local_port} -> {connection.remote_port} "
+                    f"for neighbor {normalized_neighbor_id}. Protocol: {protocol}"
+                )
+                # Update IP/platform if they're empty
+                if not existing_connection.neighbor_ip:
+                    existing_connection.neighbor_ip = connection.neighbor_ip
+                if not existing_connection.neighbor_platform or existing_connection.neighbor_platform == 'unknown':
+                    existing_connection.neighbor_platform = connection.neighbor_platform
                 is_duplicate = True
                 break
 
+        # Add the connection if it's not a duplicate
         if not is_duplicate:
-            device.connections[neighbor_id].append(connection)
+            device.connections[normalized_neighbor_id].append(connection)
+            self.logger.info(
+                f"Added connection: {connection.local_port} -> {connection.remote_port} "
+                f"for neighbor {normalized_neighbor_id}. Protocol: {protocol}, IP: {connection.neighbor_ip}"
+            )
+        else:
+            self.logger.info(
+                f"Skipped adding duplicate connection: {connection.local_port} -> {connection.remote_port} "
+                f"for neighbor {normalized_neighbor_id}"
+            )
 
     def _is_excluded(self, device_id: str) -> bool:
         if not self.config.exclude_string:

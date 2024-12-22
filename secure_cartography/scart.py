@@ -200,8 +200,6 @@ class NetworkMapperWidget(QWidget):
         self.dark_mode = self.settings.value('dark_mode', defaultValue=True, type=bool)
         self.parent = parent
         self.setup_ui()
-
-
         self.load_settings()
         # self.apply_theme(self.dark_mode)
         self.toggle_theme(True)
@@ -296,8 +294,6 @@ class NetworkMapperWidget(QWidget):
 
         # Progress section
         progress_group = QGroupBox("Discovery Progress")
-        progress_group.setMinimumSize(450, 250)  # Adjusted minimum size
-
         progress_layout = QVBoxLayout()
 
         # Progress bar
@@ -413,7 +409,7 @@ class NetworkMapperWidget(QWidget):
         preview_group = QGroupBox("Map Preview")
         preview_layout = QVBoxLayout()
         self.preview_widget = QSvgWidget()
-        self.preview_widget.setMinimumSize(400, 250)  # Adjusted minimum size
+        self.preview_widget.setMinimumSize(600, 200)  # Adjusted minimum size
         preview_layout.addWidget(self.preview_widget)
         preview_group.setLayout(preview_layout)
 
@@ -501,7 +497,6 @@ class NetworkMapperWidget(QWidget):
         self.light_palette.setColor(QPalette.ColorRole.Link, QColor(0, 0, 255))
         self.light_palette.setColor(QPalette.ColorRole.Highlight, QColor(76, 163, 224))
         self.light_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.white)
-
 
     def toggle_theme(self, checked):
         """Toggle between dark and light themes"""
@@ -839,18 +834,6 @@ class NetworkMapperWidget(QWidget):
             print(f"Error in on_progress_update: {str(e)}")
             traceback.print_exc()
 
-def center_window(window):
-    """Center the window on the screen"""
-    # Get the screen geometry
-    screen = window.screen().geometry()
-    # Calculate the center point
-    center_point = screen.center()
-    # Get the window geometry
-    window_geometry = window.frameGeometry()
-    # Move window's center point to screen's center point
-    window_geometry.moveCenter(center_point)
-    # Move window to the new position
-    window.move(window_geometry.topLeft())
 def main():
     print(f"Starting Secure Cartograph... wait for master password prompt...")
     app = QApplication(sys.argv)
@@ -912,8 +895,8 @@ def main():
     window.setWindowTitle("Secure Cartography - an SSH Based Network Mapping Anomaly")
     mapper_widget = NetworkMapperWidget(creds_manager=creds_manager, parent=window)  # Pass creds_manager to widget
     window.setCentralWidget(mapper_widget)
+
     window.show()
-    center_window(window)
 
     return app.exec()
 

@@ -1,9 +1,7 @@
 import traceback
 from pathlib import Path
 
-import pkg_resources
 from PyQt6.QtCore import QUrl
-from PyQt6.QtWebEngineCore import QWebEngineSettings
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QDialog
 
@@ -19,14 +17,6 @@ class HelpDialog(QDialog):
 
         # Create WebEngine view
         self.web_view = QWebEngineView()
-
-        # Configure WebEngine settings for this specific web view
-        page_profile = self.web_view.page().profile()
-        page_settings = self.web_view.page().settings()
-        page_settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
-        page_settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessFileUrls, True)
-        page_settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
-
         layout.addWidget(self.web_view)
 
         # Add standard buttons
@@ -39,40 +29,16 @@ class HelpDialog(QDialog):
 
     def load_help_content(self):
         """Load the help HTML file"""
+        help_file = "index.html"  # You'll need to create this file
         try:
-            # First try development path
-            dev_path = Path(__file__).parent / 'resources' / 'index.html'
-            print(f"Trying development path: {dev_path}")
-
-            # If dev path doesn't exist, try package resources
-            if not dev_path.exists():
-                print(f"Development path not found")
-                help_file = pkg_resources.resource_filename(
-                    'secure_cartography',
-                    'resources/index.html'
-                )
-                print(f"Trying package resource path: {help_file}")
-                url = QUrl.fromLocalFile(str(Path(help_file).absolute()))
-            else:
-                print(f"Found development path")
-                url = QUrl.fromLocalFile(str(dev_path.absolute()))
-
-            print(f"Loading URL: {url.toString()}")
+            # Try to load local file
+            url = QUrl.fromLocalFile(str(Path(help_file).absolute()))
             self.web_view.setUrl(url)
-
-            # Add error handling for load failures
-            self.web_view.loadFinished.connect(self._handle_load_finished)
-
         except Exception as e:
-            print(f"Error loading help file: {e}")
+            # Fallback to basic HTML if file not found
             traceback.print_exc()
-            # Ensure fallback content is shown
             self.web_view.setHtml(self.get_fallback_content())
-    def _handle_load_finished(self, ok):
-        """Handle web view load completion"""
-        if not ok:
-            print("Failed to load help file, using fallback content")
-            self.web_view.setHtml(self.get_fallback_content())
+            print(f"Error loading help file: {e}")
 
     def get_fallback_content(self):
         html_text = '''<!DOCTYPE html>

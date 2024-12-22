@@ -2,17 +2,17 @@
 
 Secure Cartography is a secure, Python-based network discovery and mapping tool designed for network engineers and IT professionals. It leverages SSH-based device interrogation to automate network discovery, visualize network topologies, and merge network maps across multi-vendor environments.
 
-![Main Application](screenshots/scart.png)
+![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/scart.png)
 
 **Topology Merge Tool**
    ```bash
    python -m secure_cartography.merge_dialog
    ```
 
-![Map Merge Tool](screenshots/map_merge.png)
+![Map Merge Tool](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/map_merge.png)
 
 **Architecture**
-![arch](docs/architecture.png)
+![arch](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/docs/architecture.png)
 
 
 ## Quick Start Guide
@@ -30,7 +30,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 ## Key Features
 
 ### Medium to Large diagrams
-![Complex Network Map](screenshots/complexmap.png)
+![Complex Network Map](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/complexmap.png)
 
 ### Network Discovery
 - Multi-threaded SSH-based device discovery
@@ -65,6 +65,11 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 
 ## Installation
 
+### From PyPI
+```bash
+pip install secure-cartography
+```
+
 ### From GitHub
 ```bash
 # Clone the repository
@@ -79,8 +84,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-PyPI package coming soon!
-
 ## Core Requirements
 - Python 3.9+
 - PyQt6
@@ -90,23 +93,47 @@ PyPI package coming soon!
 - PyYAML
 - Paramiko
 
+## System Compatibility
+
+### Tested Environments
+- Windows 10 & 11
+- Ubuntu 24.04
+- Mac OSX (latest as of 12-20-24)
+- Python versions 3.9 and 3.12
+
+### Known Issues
+- Python 3.13: Compatibility issues with Napalm library
+
 ## Supported Export Formats
 
 ### yEd GraphML (.graphml)
-![yEd Example](screenshots/yed1.png)
+![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/yed1.png)
 - Multiple automatic layout algorithms
 - Advanced grouping capabilities
 - Neighborhood analysis for large networks
 - High-quality vector export
 
 ### draw.io (.drawio)
-![draw.io Example](screenshots/drawio.png)
+![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/drawio.png)
 - Collaborative diagram editing
 - Web-based access
 - Multiple export formats
 - Custom stencils and shapes
 
-[Technical documentation continues below...]
+## Version History
+
+### 0.2.0
+Major improvements in this release:
+
+- Added support for Aruba/HP ProCurve switches (non-CX)
+- Improved device discovery reliability with better hostname and IP tracking
+- Enhanced neighbor discovery with platform-specific optimizations
+- Added comprehensive debug logging for better troubleshooting
+- Improved handling of device connections and topology mapping
+- Better platform detection and validation across vendors
+- More robust error handling and recovery
+
+Note: This version maintains backward compatibility with 0.1.0 configurations and outputs.
 
 ## Technology Stack
 
@@ -159,7 +186,8 @@ PyPI package coming soon!
 
 TFSM_Fire represents a novel approach to TextFSM template matching that uses an intelligent scoring system and thread-safe database operations to automatically select the best parsing template for network device output.
 
-![tfsm_fire](docs/tfsm_fire.png)
+![tfsm_fire](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/docs/tfsm_fire.png)
+
 ## Key Features
 
 ### 1. Intelligent Template Selection
@@ -210,4 +238,3 @@ def get_filtered_templates(self, connection: sqlite3.Connection, filter_string: 
 - Handles hyphenated command names
 - Minimum term length requirements
 - SQL injection prevention
-
