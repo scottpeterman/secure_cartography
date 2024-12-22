@@ -82,6 +82,18 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# then run the executable
+scart 
+
+# or
+
+merge-dialog
+
+# first tme run will take a bit for byte code to compile
+
+# for additional debuge detail from the console, you can also run as a module:
+>python -m secure_cartography.scart
 ```
 
 ## Core Requirements
