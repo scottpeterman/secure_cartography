@@ -28,7 +28,7 @@ import threading
 
 from secure_cartography.util import get_db_path
 
-from logger_manager import logger_manager
+from secure_cartography.logger_manager import logger_manager
 
 class TimeoutError(Exception):
     pass

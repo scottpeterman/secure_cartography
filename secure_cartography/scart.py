@@ -17,7 +17,7 @@ from PyQt6.QtSvgWidgets import QSvgWidget
 from secure_cartography.credslib import SecureCredentials
 from secure_cartography.help_dialog import HelpDialog
 from secure_cartography.network_discovery import NetworkDiscovery, DiscoveryConfig
-from logger_manager import logger_manager as logger_manager
+from secure_cartography.logger_manager import logger_manager as logger_manager
 
 
 class MasterPasswordDialog(QDialog):
