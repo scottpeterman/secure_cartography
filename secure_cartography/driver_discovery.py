@@ -595,7 +595,7 @@ class DriverDiscovery:
                 )
                 self.logger.info(f"CDP Template: {best_template}, Score: {score}")
 
-                if parsed_cdp and score > 10:
+                if parsed_cdp:
                     for entry in parsed_cdp:
                         device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0]
                         if not device_id or not self._is_valid_device_id(device_id):
@@ -641,7 +641,7 @@ class DriverDiscovery:
             self.logger.info(f"LLDP Template: {best_template}, Score: {score}")
             self.logger.debug(f"Parsed LLDP Data:\n{json.dumps(parsed_lldp, indent=2)}")
 
-            if parsed_lldp and score > 10:
+            if parsed_lldp:
                 for entry in parsed_lldp:
                     device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0]
                     if not device_id:
@@ -694,7 +694,7 @@ class DriverDiscovery:
             # self.logger.info(f"CDP raw output:\n{cdp_output}")
             best_cdp_template, parsed_cdp, score = self.parser.find_best_template(cdp_output, 'show_cdp_neighbors_detail')
             print(f"[{device_conn.hostname}] Best CDP Template Selected: {best_cdp_template}")
-            if parsed_cdp and score > 1:  # Only use results with decent score
+            if parsed_cdp:  # Only use results with decent score
                 neighbors['cdp'] = self._normalize_cdp_output(parsed_cdp, platform)
 
         lldp_output = device_conn._netmiko_device.send_command('show lldp neighbors detail')
@@ -703,7 +703,7 @@ class DriverDiscovery:
         best_lldp_template, parsed_lldp, score = self.parser.find_best_template(lldp_output, 'show_lldp_neighbors_detail')
         print(f"[{device_conn.hostname}] Best LLDP Template Selected: {best_lldp_template} Score: {score}")
         print(parsed_lldp)
-        if parsed_lldp and score > 1:  # Only use results with decent score
+        if parsed_lldp:  # Only use results with decent score
             neighbors['lldp'] = self._normalize_lldp_output(parsed_lldp, platform)
 
         return neighbors

@@ -1,3 +1,4 @@
+# import logging
 import os
 import sys
 import traceback
@@ -16,6 +17,7 @@ from PyQt6.QtSvgWidgets import QSvgWidget
 from secure_cartography.credslib import SecureCredentials
 from secure_cartography.help_dialog import HelpDialog
 from secure_cartography.network_discovery import NetworkDiscovery, DiscoveryConfig
+from logger_manager import logger_manager as logger_manager
 
 
 class MasterPasswordDialog(QDialog):
@@ -204,9 +206,9 @@ class NetworkMapperWidget(QWidget):
         # self.apply_theme(self.dark_mode)
         self.toggle_theme(True)
 
-
     def setup_ui(self):
-        main_layout = QHBoxLayout(self)  # Changed to horizontal layout
+        """Initialize the user interface"""
+        main_layout = QHBoxLayout(self)  # Main horizontal layout
 
         # Left side (original controls)
         left_widget = QWidget()
@@ -215,17 +217,14 @@ class NetworkMapperWidget(QWidget):
         # Configuration group
         config_group = QGroupBox("Configuration")
         config_group.setStyleSheet("""
-
             QLineEdit, QSpinBox, QComboBox {
-                // background-color: #2c3e50;
-                border: none;
+                border: 1px solid #666;
                 border-radius: 3px;
                 padding: 8px 4px; 
                 margin: 2px;      
                 min-height: 20px; 
-                color: white;
             }
-                """)
+        """)
         config_layout = QGridLayout()
 
         # Create form widgets
@@ -265,20 +264,27 @@ class NetworkMapperWidget(QWidget):
         left_form.addRow("Seed IP:", self.seed_ip)
         left_form.addRow("Username:", self.username)
         left_form.addRow("Password:", self.password)
-        # left_form.addRow("Alt Username:", self.alt_username)
-        # left_form.addRow("Alt Password:", self.alt_password)
         left_form.addRow("Timeout (sec):", self.timeout)
         left_form.addRow("Dark Mode:", self.theme_toggle)
 
-        # Right column
+        # Right column with modified output directory row
         right_form = QFormLayout()
         right_form.addRow("Max Devices:", self.max_devices)
-        # right_form.addRow("Domain:", self.domain)
         right_form.addRow("Map Name:", self.map_name)
         right_form.addRow("Exclude Pattern:", self.exclude)
-        right_form.addRow("Output Directory:", self.output_dir)
+
+        # Output directory with browse button
+        output_dir_layout = QHBoxLayout()
+        output_dir_layout.addWidget(self.output_dir)
+        self.browse_button = QPushButton()
+        self.browse_button.setIcon(self.style().standardIcon(self.style().StandardPixmap.SP_DirIcon))
+        self.browse_button.clicked.connect(self.browse_output_dir)
+        self.browse_button.setMaximumWidth(30)
+        self.browse_button.setToolTip("Browse for output directory")
+        output_dir_layout.addWidget(self.browse_button)
+        right_form.addRow("Output Directory:", output_dir_layout)
+
         right_form.addRow("Diagram Layout:", self.layout_algo)
-        # right_form.addRow("", self.save_debug)
 
         # Add both columns to grid
         left_widget_form = QWidget()
@@ -320,83 +326,88 @@ class NetworkMapperWidget(QWidget):
         progress_group.setLayout(progress_layout)
         left_layout.addWidget(progress_group)
 
+        # Define button styles
         utility_button_style = """
-                    QPushButton {
-                        background-color: #34495e;
-                        border: none;
-                        color: white;
-                        padding: 5px 15px;
-                        border-radius: 3px;
-                    }
-                    QPushButton:hover {
-                        background-color: #2c3e50;
-                    }
-                    QPushButton:disabled {
-                        background-color: #95a5a6;
-                    }
-                """
+            QPushButton {
+                background-color: #34495e;
+                border: none;
+                color: white;
+                padding: 5px 15px;
+                border-radius: 3px;
+            }
+            QPushButton:hover {
+                background-color: #2c3e50;
+            }
+            QPushButton:disabled {
+                background-color: #95a5a6;
+            }
+        """
+
         # Control buttons
         button_layout = QHBoxLayout()
-        # Start button (renamed)
+
+        # Start button
         self.start_button = QPushButton("Start")
         self.start_button.clicked.connect(self.start_discovery)
         self.start_button.setStyleSheet("""
-                    QPushButton {
-                        background-color: #2ecc71;
-                        border: none;
-                        color: white;
-                        padding: 5px 15px;
-                        border-radius: 3px;
-                    }
-                    QPushButton:hover {
-                        background-color: #27ae60;
-                    }
-                    QPushButton:disabled {
-                        background-color: #95a5a6;
-                    }
-                """)
+            QPushButton {
+                background-color: #2ecc71;
+                border: none;
+                color: white;
+                padding: 5px 15px;
+                border-radius: 3px;
+            }
+            QPushButton:hover {
+                background-color: #27ae60;
+            }
+            QPushButton:disabled {
+                background-color: #95a5a6;
+            }
+        """)
         button_layout.addWidget(self.start_button)
 
         # Cancel button
         self.cancel_button = QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.cancel_discovery)
         self.cancel_button.setStyleSheet("""
-                    QPushButton {
-                        background-color: #e74c3c;
-                        border: none;
-                        color: white;
-                        padding: 5px 15px;
-                        border-radius: 3px;
-                    }
-                    QPushButton:hover {
-                        background-color: #c0392b;
-                    }
-                    QPushButton:disabled {
-                        background-color: #95a5a6;
-                    }
-                """)
-        self.cancel_button.setEnabled(False)  # Initially disabled
+            QPushButton {
+                background-color: #e74c3c;
+                border: none;
+                color: white;
+                padding: 5px 15px;
+                border-radius: 3px;
+            }
+            QPushButton:hover {
+                background-color: #c0392b;
+            }
+            QPushButton:disabled {
+                background-color: #95a5a6;
+            }
+        """)
+        self.cancel_button.setEnabled(False)
         button_layout.addWidget(self.cancel_button)
 
         # Log button
         self.show_log_button = QPushButton("Log")
         self.show_log_button.clicked.connect(self.toggle_log)
         self.show_log_button.setStyleSheet(utility_button_style)
-
         button_layout.addWidget(self.show_log_button)
+
+        # Open Folder button
+        self.open_folder_button = QPushButton()
+        self.open_folder_button.setIcon(self.style().standardIcon(self.style().StandardPixmap.SP_DirOpenIcon))
+        self.open_folder_button.clicked.connect(self.open_output_folder)
+        self.open_folder_button.setStyleSheet(utility_button_style)
+        self.open_folder_button.setToolTip("Open output folder")
+        button_layout.addWidget(self.open_folder_button)
 
         # Help button
         self.help_button = QPushButton("Help")
         self.help_button.clicked.connect(self.show_help)
         self.help_button.setStyleSheet(utility_button_style)
-
         button_layout.addWidget(self.help_button)
 
-
         left_layout.addLayout(button_layout)
-
-        # Right side (preview pane)
-        # In the setup_ui method, modify the right_widget section:
 
         # Right side
         right_widget = QWidget()
@@ -409,7 +420,7 @@ class NetworkMapperWidget(QWidget):
         preview_group = QGroupBox("Map Preview")
         preview_layout = QVBoxLayout()
         self.preview_widget = QSvgWidget()
-        self.preview_widget.setMinimumSize(600, 200)  # Adjusted minimum size
+        self.preview_widget.setMinimumSize(600, 200)
         preview_layout.addWidget(self.preview_widget)
         preview_group.setLayout(preview_layout)
 
@@ -420,26 +431,38 @@ class NetworkMapperWidget(QWidget):
         self.log_textarea.setReadOnly(True)
         log_layout.addWidget(self.log_textarea)
 
-        # Button layout for log controls
+        # Log controls layout
         log_button_layout = QHBoxLayout()
+
+        # Save button
         self.save_log_button = QPushButton("Save")
         self.save_log_button.setMaximumWidth(50)
+        self.save_log_button.clicked.connect(self.save_log)
+        log_button_layout.addWidget(self.save_log_button)
+
+        # Clear button
         self.clear_log_button = QPushButton("Clear")
         self.clear_log_button.setMaximumWidth(50)
+        self.clear_log_button.clicked.connect(self.clear_log)
+        log_button_layout.addWidget(self.clear_log_button)
+
+        # Close button
         self.close_log_button = QPushButton("Close")
         self.close_log_button.setMaximumWidth(50)
-
-        # Connect the button signals to their respective slots
-        self.save_log_button.clicked.connect(self.save_log)
-        self.clear_log_button.clicked.connect(self.clear_log)
         self.close_log_button.clicked.connect(self.close_log)
-        spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        # Add buttons to horizontal layout
-        log_button_layout.addWidget(self.save_log_button)
-        log_button_layout.addWidget(self.clear_log_button)
         log_button_layout.addWidget(self.close_log_button)
+
+        # Add log level combo box
+        self.log_level_combo = QComboBox()
+        self.log_level_combo.addItems(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
+        self.log_level_combo.setCurrentText('INFO')
+        self.log_level_combo.currentTextChanged.connect(self.change_log_level)
+        self.log_level_combo.setMaximumWidth(100)
+
+        # Add spacer and combo box
+        spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         log_button_layout.addItem(spacer)
+        log_button_layout.addWidget(self.log_level_combo)
 
         # Add button layout to log group
         log_layout.addLayout(log_button_layout)
@@ -450,7 +473,7 @@ class NetworkMapperWidget(QWidget):
         right_splitter.addWidget(self.log_group)
 
         # Set initial sizes for the splitter
-        right_splitter.setSizes([600, 400])  # Preview gets 600px, Log gets 200px
+        right_splitter.setSizes([600, 400])
 
         # Add the splitter to the right layout
         right_layout.addWidget(right_splitter)
@@ -462,9 +485,10 @@ class NetworkMapperWidget(QWidget):
 
         main_layout.addWidget(splitter)
 
-        def setup_theme_support(self):
-            """Initialize theme support"""
-
+        # Initialize theme support
+        self.setup_theme_support()
+    def setup_theme_support(self):
+        """Initialize theme support"""
         self.dark_palette = QPalette()
         self.light_palette = QPalette()
 
@@ -498,6 +522,54 @@ class NetworkMapperWidget(QWidget):
         self.light_palette.setColor(QPalette.ColorRole.Highlight, QColor(76, 163, 224))
         self.light_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.white)
 
+        self.theme_toggle.setChecked(self.dark_mode)
+
+    def browse_output_dir(self):
+        """Open file dialog to browse for output directory"""
+        directory = QFileDialog.getExistingDirectory(
+            self,
+            "Select Output Directory",
+            self.output_dir.text(),
+            QFileDialog.Option.ShowDirsOnly | QFileDialog.Option.DontResolveSymlinks
+        )
+        if directory:
+            self.output_dir.setText(directory)
+
+    def open_output_folder(self):
+        """Open the output folder in the system's file explorer"""
+        import os
+        import platform
+        import subprocess
+
+        path = os.path.abspath(self.output_dir.text())
+
+        if not os.path.exists(path):
+            QMessageBox.warning(self, "Error", "Output directory does not exist")
+            return
+
+        try:
+            if platform.system() == "Windows":
+                os.startfile(path)
+            elif platform.system() == "Darwin":  # macOS
+                subprocess.Popen(["open", path])
+            else:  # Linux
+                subprocess.Popen(["xdg-open", path])
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"Could not open folder: {str(e)}")
+
+    def change_log_level(self, string_level):
+        """Change the logging level"""
+        try:
+            # Let logger_manager handle the level validation and setting
+            logger_manager.set_level(string_level)
+
+            # Store setting and update UI
+            self.log_textarea.append(f"Changed logging level to: {string_level.upper()}")
+            self.settings.setValue('log_level', string_level.upper())
+
+        except Exception as e:
+            print(f"Error changing log level: {str(e)}")
+            traceback.print_exc()
     def toggle_theme(self, checked):
         """Toggle between dark and light themes"""
         try:
@@ -682,7 +754,7 @@ class NetworkMapperWidget(QWidget):
         self.exclude.setText(self.settings.value('exclude_string', ''))
         self.output_dir.setText(self.settings.value('output_dir', './output'))
         self.timeout.setValue(int(self.settings.value('timeout', 30)))
-        self.max_devices.setValue(int(self.settings.value('max_devices', 100)))
+        self.max_devices.setValue(int(self.settings.value('max_devices', 300)))
         self.save_debug.setChecked(self.settings.value('save_debug_info', False, type=bool))
 
         layout = self.settings.value('layout_algo', 'kk')

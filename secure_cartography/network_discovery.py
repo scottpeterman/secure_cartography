@@ -28,6 +28,7 @@ import threading
 
 from secure_cartography.util import get_db_path
 
+from logger_manager import logger_manager
 
 class TimeoutError(Exception):
     pass
@@ -152,28 +153,11 @@ class NetworkDiscovery:
         self.unreachable_hosts: Set[str] = set()
         self.network_map: Dict[str, NetworkDevice] = {}
 
-        # Logger setup with duplicate handler prevention
-        self.logger = logging.getLogger(__name__)
-
-        # Remove any existing handlers to prevent duplicates
-        while self.logger.handlers:
-            self.logger.removeHandler(self.logger.handlers[0])
-
-        class CallbackHandler(logging.Handler):
-            def __init__(self, callback):
-                super().__init__()
-                self.callback = callback
-
-            def emit(self, record):
-                if self.callback:
-                    self.callback(self.format(record))
-
-        # Configure logger with callback
-        self.callback_handler = CallbackHandler(self._handle_log)
-        self.callback_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-        self.logger.addHandler(self.callback_handler)
-        self.logger.setLevel(logging.DEBUG)  # Set to DEBUG for maximum verbosity
-
+        # Logger setup with the manager
+        try:
+            self.logger = logger_manager.get_logger(callback=self._handle_log)
+        except Exception as e:
+            traceback.print_exc()
         # Additional initialization
         self.config.output_dir.mkdir(parents=True, exist_ok=True)
         self.max_devices = config.max_devices
@@ -309,7 +293,7 @@ class NetworkDiscovery:
                 # Discover device capabilities and neighbors
                 try:
                     if processing_seed_device:
-                        self.logger.setLevel(logging.INFO)
+                        # self.logger.setLevel(logging.INFO)
                         self.logger.info("Discovering seed device...")
                         # self.logger.setLevel(logging.WARNING)
                         processing_seed_device = False
