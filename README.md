@@ -2,14 +2,14 @@
 
 Secure Cartography is a secure, Python-based network discovery and mapping tool designed for network engineers and IT professionals. It leverages SSH-based device interrogation to automate network discovery, visualize network topologies, and merge network maps across multi-vendor environments.
 
-![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/scart2.png)
+![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides.gif)
 
 **Topology Merge Tool**
    ```bash
    python -m secure_cartography.merge_dialog
    ```
 
-![Map Merge Tool](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/map_merge.png)
+![viewer](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/viewer.png)
 
 **Architecture**
 ![arch](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/docs/architecture.png)
@@ -30,7 +30,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 ## Key Features
 
 ### Medium to Large diagrams
-![Complex Network Map](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/complexmap.png)
+![Complex Network Map](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/large_map.png)
 
 ### Network Discovery
 - Multi-threaded SSH-based device discovery
