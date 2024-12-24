@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class SecureCredentials:
     """Secure credential management system for Windows, Linux, and macOS."""
 
-    def __init__(self, app_name: str = "Termtel"):
+    def __init__(self, app_name: str = "NetworkMapper"):
         self.app_name = app_name
         self._fernet = None
         self.config_dir = self._get_config_dir()
@@ -203,7 +203,7 @@ class SecureCredentials:
 
         if not filepath.exists():
             return []
-
+        print(filepath)
         with open(filepath) as f:
             data = yaml.safe_load(f) or {'credentials': []}
 

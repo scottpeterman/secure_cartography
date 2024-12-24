@@ -1,4 +1,5 @@
 # import logging
+import json
 import os
 import sys
 import traceback
@@ -13,11 +14,12 @@ from PyQt6.QtCore import Qt, pyqtSignal, QThread, QSettings
 from pathlib import Path
 from PyQt6.QtSvgWidgets import QSvgWidget
 
-
+from secure_cartography.mviewer import TopologyViewer
 from secure_cartography.credslib import SecureCredentials
 from secure_cartography.help_dialog import HelpDialog
 from secure_cartography.network_discovery import NetworkDiscovery, DiscoveryConfig
 from secure_cartography.logger_manager import logger_manager as logger_manager
+from secure_cartography.splash import WebPasswordDialog
 
 
 class MasterPasswordDialog(QDialog):
@@ -253,7 +255,7 @@ class NetworkMapperWidget(QWidget):
         self.save_debug = QCheckBox("Save Debug Info")
 
         self.layout_algo = QComboBox()
-        self.layout_algo.addItems(["kk", "rt", "circular", "multipartite"])
+        self.layout_algo.addItems(["kk", "rt", "circular"])
 
         self.theme_toggle = QCheckBox()
         self.theme_toggle.setChecked(self.dark_mode)
@@ -422,8 +424,15 @@ class NetworkMapperWidget(QWidget):
         self.preview_widget = QSvgWidget()
         self.preview_widget.setMinimumSize(600, 200)
         preview_layout.addWidget(self.preview_widget)
-        preview_group.setLayout(preview_layout)
 
+        # Add Viewer button
+        self.viewer_button = QPushButton("Viewer")
+        self.viewer_button.setMaximumWidth(100)
+        self.viewer_button.clicked.connect(self.open_topology_viewer)
+        self.viewer_button.setEnabled(True)  # Initially disabled until map is generated
+        preview_layout.addWidget(self.viewer_button)
+
+        preview_group.setLayout(preview_layout)
         # Log group
         self.log_group = QGroupBox("Log Output")
         log_layout = QVBoxLayout()
@@ -535,6 +544,27 @@ class NetworkMapperWidget(QWidget):
         if directory:
             self.output_dir.setText(directory)
 
+    def open_topology_viewer(self):
+        """Open the topology viewer window"""
+        try:
+            # Get the output directory and map name from current config
+            config = self.get_config()
+
+            json_path = Path(config['output_dir']) / f"{config['map_name']}.json"
+            topology_data = None
+            if json_path.exists():
+                with open(json_path, 'r') as f:
+                    topology_data = json.load(f)
+
+            if self.dark_mode:
+                show_dark_map = True
+            else:
+                show_dark_map = False
+
+            viewer = TopologyViewer(topology_data=topology_data, dark_mode=show_dark_map, parent=self)
+            viewer.show()
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to open topology viewer: {str(e)}")
     def open_output_folder(self):
         """Open the output folder in the system's file explorer"""
         import os
@@ -641,6 +671,7 @@ class NetworkMapperWidget(QWidget):
                 """)
 
             self.settings.setValue('dark_mode', checked)
+            self.dark_mode = checked
 
         except Exception as e:
             print(f"Error toggling theme: {str(e)}")
@@ -780,7 +811,7 @@ class NetworkMapperWidget(QWidget):
     def start_discovery(self):
         """Start the network discovery process"""
         config = self.get_config()
-
+        self.preview_widget.load("")
         # Save settings before starting discovery
         self.save_settings()
 
@@ -942,7 +973,7 @@ def main():
 
 
     # Show password dialog
-    password_dialog = MasterPasswordDialog(creds_manager)
+    password_dialog = WebPasswordDialog(creds_manager)
     if password_dialog.exec() != QDialog.DialogCode.Accepted:
         return 1
 
@@ -968,6 +999,13 @@ def main():
     mapper_widget = NetworkMapperWidget(creds_manager=creds_manager, parent=window)  # Pass creds_manager to widget
     window.setCentralWidget(mapper_widget)
 
+    # Center window on screen
+    screen = app.primaryScreen().geometry()
+    window.setGeometry(0, 0, 1200, 800)  # Set initial size
+    window_geometry = window.frameGeometry()
+    center_point = screen.center()
+    window_geometry.moveCenter(center_point)
+    window.move(window_geometry.topLeft())
     window.show()
 
     return app.exec()

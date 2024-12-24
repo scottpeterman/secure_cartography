@@ -1,0 +1,16 @@
+# Include the README file
+include README.md
+
+# Include the requirements file
+include requirements.txt
+
+# Include the database file
+include secure_cartography/tfsm_templates.db
+
+# Include HTML and other resource files
+recursive-include secure_cartography/resources *.html *.css *.js *.jpeg
+
+# Exclude unnecessary files or directories
+exclude .venv
+exclude *.pyc
+exclude __pycache__

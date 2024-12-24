@@ -118,7 +118,7 @@ class DriverDiscovery:
             is_nxos = False
 
         # Optimize driver sequence based on pre-check
-        driver_sequence = ['nxos_ssh', 'ios', 'eos'] if is_nxos else ['ios', 'eos', 'nxos_ssh']
+        driver_sequence = ['nxos_ssh', 'ios', 'eos'] if is_nxos else ['ios', 'eos', 'procurve', 'nxos_ssh']
 
         for driver_name in driver_sequence:
             try:
@@ -171,82 +171,39 @@ class DriverDiscovery:
         return None
 
     def _normalize_napalm_neighbors(self, napalm_neighbors: Dict) -> Dict:
-        """Normalize NAPALM LLDP neighbor data for Aruba/HP format"""
+        """Normalize NAPALM LLDP neighbor data"""
         normalized = {}
 
         for interface, neighbors in napalm_neighbors.items():
             for neighbor in neighbors:
-                # Get hostname, handle empty case
-                device_id = neighbor.get('hostname', '')
-                if not device_id:
-                    # For Aruba, sometimes need to reconstruct port from MAC
-                    mac = neighbor.get('port', '').replace(' ', '')
-                    if len(mac) == 12:  # Valid MAC length
-                        continue  # Skip pure MAC entries
+                device_id = neighbor.get('hostname', '').split('.')[0]
 
-                # Skip invalid device IDs
+                # Skip empty hostnames or MAC-only entries
+                if not device_id or ':' in device_id:
+                    continue
+
                 if not self._is_valid_device_id(device_id):
                     continue
 
-                # Normalize port numbers for Aruba
+                # For Aruba/Procurve, normalize port IDs
                 remote_port = neighbor.get('port', '')
-                # If it looks like a MAC or is just numbers, make it a proper port
-                if ':' in remote_port or remote_port.replace(' ', '').isalnum():
-                    remote_port = f"Port-{remote_port}"
+                if ':' in remote_port:  # It's a MAC address
+                    remote_port = f"Port-{interface}"  # Use local port number as fallback
 
                 if device_id not in normalized:
                     normalized[device_id] = {
-                        'ip': neighbor.get('management_ip', ''),  # May need fallback for Aruba
-                        'platform': 'procurve',  # Default for Aruba/HP devices
+                        'ip': neighbor.get('management_ip', ''),
+                        'platform': self._detect_platform_from_desc(
+                            neighbor.get('system_description', '')
+                        ),
                         'connections': []
                     }
 
-                # Format interface number for Aruba (strip any leading zeros)
-                local_interface = str(interface).lstrip('0')
-                if not local_interface.startswith('Port-'):
-                    local_interface = f"Port-{local_interface}"
-
-                connection = [local_interface, remote_port]
+                connection = [str(interface), remote_port]
                 if connection not in normalized[device_id]['connections']:
-                    self.logger.debug(f"Adding connection {connection} for {device_id}")
                     normalized[device_id]['connections'].append(connection)
 
-        self.logger.warning(f"Normalized neighbors: {json.dumps(normalized, indent=2)}")
         return normalized
-    # def _normalize_napalm_neighbors(self, napalm_neighbors: Dict) -> Dict:
-    #     """Normalize NAPALM LLDP neighbor data"""
-    #     normalized = {}
-    #
-    #     for interface, neighbors in napalm_neighbors.items():
-    #         for neighbor in neighbors:
-    #             device_id = neighbor.get('hostname', '').split('.')[0]
-    #
-    #             # Skip empty hostnames or MAC-only entries
-    #             if not device_id or ':' in device_id:
-    #                 continue
-    #
-    #             if not self._is_valid_device_id(device_id):
-    #                 continue
-    #
-    #             # For Aruba/Procurve, normalize port IDs
-    #             remote_port = neighbor.get('port', '')
-    #             if ':' in remote_port:  # It's a MAC address
-    #                 remote_port = f"Port-{interface}"  # Use local port number as fallback
-    #
-    #             if device_id not in normalized:
-    #                 normalized[device_id] = {
-    #                     'ip': neighbor.get('management_ip', ''),
-    #                     'platform': self._detect_platform_from_desc(
-    #                         neighbor.get('system_description', '')
-    #                     ),
-    #                     'connections': []
-    #                 }
-    #
-    #             connection = [str(interface), remote_port]
-    #             if connection not in normalized[device_id]['connections']:
-    #                 normalized[device_id]['connections'].append(connection)
-    #
-    #     return normalized
 
     def _validate_device_facts(self, facts: dict, driver_name: str) -> bool:
         """
@@ -299,7 +256,7 @@ class DriverDiscovery:
         return False
 
     def get_device_capabilities(self, device: DeviceInfo, config=None) -> Dict:
-        """Get device capabilities with enhanced Aruba/Procurve support"""
+        """Get device capabilities with Aruba/Procurve support"""
         if not device.platform:
             device.platform = self.detect_platform(device, config=config)
             if not device.platform:
@@ -317,72 +274,84 @@ class DriverDiscovery:
         device_dict.pop('ip', None)  # Remove ip key if it exists
 
         with driver(**device_dict) as device_conn:
-            # try:
-            #     interfaces = device_conn.get_interfaces()
-            # except Exception as e:
-            #     self.logger.debug(f"Napalm failure to get interfaces on: {device_conn.hostname}")
-            #     self.logger.debug(str(e))
-            interfaces = {}
+            try:
+                interfaces = device_conn.get_interfaces()
+            except Exception as e:
+                print(f"Napalm failure to get interfaces on: {device_conn.hostname}")
+                print(e)
+                interfaces = {}
 
             # Get standard Napalm data
             capabilities = {
                 'facts': device_conn.get_facts(),
                 'interfaces': interfaces,
-                'driver_connection': device_conn,
+                'driver_connection': device_conn,  # Pass the connection object
                 'platform': device.platform
             }
 
-            # Handle neighbor discovery based on platform
             if device.platform == 'procurve':
                 try:
                     # Initialize neighbors dict
                     neighbors = {'cdp': {}, 'lldp': {}}
 
-                    # Get LLDP data from NAPALM
+                    # First get basic LLDP data from NAPALM
                     raw_lldp = device_conn.get_lldp_neighbors()
-                    self.logger.debug(f"Raw LLDP from device: {raw_lldp}")
                     normalized_lldp = self._normalize_napalm_neighbors(raw_lldp)
-                    self.logger.debug(f"Normalized LLDP data: {json.dumps(normalized_lldp, indent=2)}")
 
-                    try:
-                        # Try to get enhanced LLDP details via CLI
-                        command = 'show lldp info remote-device detail'
-                        cli_output = device_conn.cli([command])
-                        lldp_detail = cli_output[command]
-                        self.logger.debug(f"CLI LLDP detail output: {lldp_detail}")
+                    # Get detailed LLDP info via CLI
+                    command = 'show lldp info remote-device detail'
+                    cli_output = device_conn.cli([command])
+                    lldp_detail = cli_output[command]
 
-                        best_template, parsed_detail, score = self.parser.find_best_template(
-                            lldp_detail, 'hp_procurve_show_lldp_info_remote_detail'
-                        )
-                        self.logger.debug(f"Parsed LLDP detail (score {score}): {json.dumps(parsed_detail, indent=2)}")
+                    best_template, parsed_detail, score = self.parser.find_best_template(
+                        lldp_detail, 'hp_procurve_show_lldp_info_remote_detail'
+                    )
 
-                        if parsed_detail:
-                            # Enhance normalized data with CLI details
-                            for entry in parsed_detail:
-                                device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0].lower()
-                                if device_id and device_id in normalized_lldp:
-                                    # Add management IP if available
-                                    if entry.get('MGMT_ADDRESS') and not entry['MGMT_ADDRESS'].startswith('fe80:'):
-                                        normalized_lldp[device_id]['ip'] = entry['MGMT_ADDRESS']
-                                        self.logger.debug(f"Added IP {entry['MGMT_ADDRESS']} for {device_id}")
+                    if parsed_detail and score > 10:
+                        for entry in parsed_detail:
+                            # Get device ID, prioritizing NEIGHBOR_NAME
+                            device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0].lower()
 
-                                    # Add platform information if available
-                                    if desc := entry.get('NEIGHBOR_DESCRIPTION'):
-                                        if 'Aruba' in desc or 'HP' in desc or 'ProCurve' in desc:
-                                            normalized_lldp[device_id]['platform'] = 'procurve'
-                                        elif 'Cisco' in desc:
-                                            normalized_lldp[device_id][
-                                                'platform'] = 'nxos' if 'NX-OS' in desc else 'ios'
-                                        elif 'Arista' in desc:
-                                            normalized_lldp[device_id]['platform'] = 'eos'
-                                        self.logger.debug(
-                                            f"Set platform for {device_id} to {normalized_lldp[device_id]['platform']}")
-                    except Exception as e:
-                        self.logger.error(f"Failed to get enhanced LLDP details: {str(e)}")
+                            # Skip if no valid device ID
+                            if not device_id or ':' in device_id:
+                                continue
+
+                            if not self._is_valid_device_id(device_id):
+                                continue
+
+                            # Find this device in our normalized data
+                            if device_id in normalized_lldp:
+                                # Update IP address if available (skip link-local IPv6)
+                                if entry.get('MGMT_ADDRESS') and not entry['MGMT_ADDRESS'].startswith('fe80:'):
+                                    normalized_lldp[device_id]['ip'] = entry['MGMT_ADDRESS']
+
+                                # Update platform information if available
+                                if entry.get('NEIGHBOR_DESCRIPTION'):
+                                    desc = entry['NEIGHBOR_DESCRIPTION']
+                                    if 'Aruba' in desc or 'HP' in desc or 'ProCurve' in desc:
+                                        normalized_lldp[device_id]['platform'] = 'procurve'
+                                    elif 'Cisco' in desc:
+                                        if 'NX-OS' in desc:
+                                            normalized_lldp[device_id]['platform'] = 'nxos'
+                                        else:
+                                            normalized_lldp[device_id]['platform'] = 'ios'
+                                    elif 'Arista' in desc:
+                                        normalized_lldp[device_id]['platform'] = 'eos'
+
+                                # Normalize port names
+                                normalized_ports = []
+                                for conn in normalized_lldp[device_id]['connections']:
+                                    local_port = conn[0]
+                                    remote_port = entry.get('NEIGHBOR_INTERFACE_DESCRIPTION') or entry.get(
+                                        'NEIGHBOR_INTERFACE', '')
+                                    if ':' in remote_port or " " in remote_port:  # If it's a MAC address
+                                        remote_port = f"Port-{entry['LOCAL_INTERFACE']}"
+                                    normalized_ports.append([local_port, remote_port])
+
+                                normalized_lldp[device_id]['connections'] = normalized_ports
 
                     neighbors['lldp'] = normalized_lldp
                     capabilities['neighbors'] = neighbors
-                    self.logger.debug(f"Final neighbor data: {json.dumps(neighbors, indent=2)}")
 
                 except Exception as e:
                     self.logger.error(f"Error getting LLDP neighbors for {device.hostname}: {str(e)}")
@@ -392,300 +361,7 @@ class DriverDiscovery:
                 capabilities['neighbors'] = self._get_enhanced_neighbors(device_conn, device.platform)
 
             return capabilities
-    # def get_device_capabilities(self, device: DeviceInfo, config=None) -> Dict:
-    #     """Get device capabilities with Aruba/Procurve support"""
-    #     if not device.platform:
-    #         device.platform = self.detect_platform(device, config=config)
-    #         if not device.platform:
-    #             raise ValueError(f"Unable to detect platform for {device.hostname}")
-    #     if device.platform == "unknown":
-    #         device.platform = self.detect_platform(device, config=config)
-    #         if not device.platform:
-    #             raise ValueError(f"Unable to detect platform for {device.hostname}")
-    #
-    #     if device.platform == 'eos':
-    #         device.optional_args = {'transport': 'ssh', 'use_eapi': False}
-    #
-    #     driver = get_network_driver(device.platform)
-    #     device_dict = device.to_dict()
-    #     device_dict.pop('ip', None)  # Remove ip key if it exists
-    #
-    #     with driver(**device_dict) as device_conn:
-    #         try:
-    #             interfaces = device_conn.get_interfaces()
-    #         except Exception as e:
-    #             print(f"Napalm failure to get interfaces on: {device_conn.hostname}")
-    #             print(e)
-    #             interfaces = {}
-    #
-    #         # Get standard Napalm data
-    #         capabilities = {
-    #             'facts': device_conn.get_facts(),
-    #             'interfaces': interfaces,
-    #             'driver_connection': device_conn,  # Pass the connection object
-    #             'platform': device.platform
-    #         }
-    #
-    #         # Handle neighbor discovery based on platform
-    #         # if device.platform == 'procurve':
-    #         #     try:
-    #         #         # Initialize neighbors dict in same format as _get_enhanced_neighbors
-    #         #         neighbors = {'cdp': {}, 'lldp': {}}
-    #         #
-    #         #         # Get LLDP data and normalize it using our helper function
-    #         #         raw_lldp = device_conn.get_lldp_neighbors()
-    #         #         normalized_lldp = self._normalize_napalm_neighbors(raw_lldp)
-    #         #
-    #         #         # Store in same structure as _get_enhanced_neighbors
-    #         #         neighbors['lldp'] = normalized_lldp
-    #         #         capabilities['neighbors'] = neighbors
-    #         #
-    #         #     except Exception as e:
-    #         #         self.logger.error(f"Error getting LLDP neighbors for {device.hostname}: {str(e)}")
-    #         #         capabilities['neighbors'] = {'lldp': {}, 'cdp': {}}
-    #         # if device.platform == 'procurve':
-    #         #     try:
-    #         #         # Initialize neighbors dict in same format as _get_enhanced_neighbors
-    #         #         neighbors = {'cdp': {}, 'lldp': {}}
-    #         #
-    #         #         # First get basic LLDP data from NAPALM
-    #         #         raw_lldp = device_conn.get_lldp_neighbors()
-    #         #         normalized_lldp = self._normalize_napalm_neighbors(raw_lldp)
-    #         #
-    #         #         # Now enhance with CLI data for more details
-    #         #         try:
-    #         #             # Use netmiko connection from the NAPALM driver
-    #         #             lldp_detail = device_conn.cli(['show lldp info remote-device detail'])[
-    #         #                 'show lldp info remote-device detail']
-    #         #             best_template, parsed_detail, score = self.parser.find_best_template(
-    #         #                 lldp_detail, 'hp_procurve_show_lldp_info_remote-device_detail'
-    #         #             )
-    #         #
-    #         #             if parsed_detail and score > 10:
-    #         #                 # Enhance the normalized data with additional details
-    #         #                 for entry in parsed_detail:
-    #         #                     device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0]
-    #         #
-    #         #                     # If no hostname, try to match by interface
-    #         #                     if not device_id:
-    #         #                         # Find matching neighbor in normalized data by port
-    #         #                         for norm_id, norm_data in normalized_lldp.items():
-    #         #                             for conn in norm_data['connections']:
-    #         #                                 if str(conn[0]) == entry.get('LOCAL_INTERFACE'):
-    #         #                                     device_id = norm_id
-    #         #                                     break
-    #         #                             if device_id:
-    #         #                                 break
-    #         #
-    #         #                     if device_id and device_id in normalized_lldp:
-    #         #                         # Update IP address if available
-    #         #                         if entry.get('MGMT_ADDRESS'):
-    #         #                             normalized_lldp[device_id]['ip'] = entry['MGMT_ADDRESS']
-    #         #
-    #         #                         # Update platform based on description
-    #         #                         if entry.get('NEIGHBOR_DESCRIPTION'):
-    #         #                             normalized_lldp[device_id]['platform'] = self._detect_platform_from_desc(
-    #         #                                 entry['NEIGHBOR_DESCRIPTION']
-    #         #                             )
-    #         #
-    #         #             # Store enhanced data
-    #         #             neighbors['lldp'] = normalized_lldp
-    #         #             capabilities['neighbors'] = neighbors
-    #         #
-    #         #         except Exception as e:
-    #         #             self.logger.error(f"Error enhancing LLDP data via CLI: {str(e)}")
-    #         #             # Fall back to basic NAPALM data
-    #         #             neighbors['lldp'] = normalized_lldp
-    #         #             capabilities['neighbors'] = neighbors
-    #         #
-    #         #     except Exception as e:
-    #         #         self.logger.error(f"Error getting LLDP neighbors for {device.hostname}: {str(e)}")
-    #         #         capabilities['neighbors'] = {'lldp': {}, 'cdp': {}}
-    #         if device.platform == 'procurve':
-    #             try:
-    #                 # Initialize neighbors dict
-    #                 neighbors = {'cdp': {}, 'lldp': {}}
-    #
-    #                 # First get basic LLDP data from NAPALM
-    #                 raw_lldp = device_conn.get_lldp_neighbors()
-    #                 normalized_lldp = self._normalize_napalm_neighbors(raw_lldp)
-    #
-    #                 # Get detailed LLDP info via CLI
-    #                 command = 'show lldp info remote-device detail'
-    #                 cli_output = device_conn.cli([command])
-    #                 lldp_detail = cli_output[command]
-    #
-    #                 best_template, parsed_detail, score = self.parser.find_best_template(
-    #                     lldp_detail, 'hp_procurve_show_lldp_info_remote_detail'
-    #                 )
-    #
-    #                 if parsed_detail:
-    #                     for entry in parsed_detail:
-    #                         # Get device ID, prioritizing NEIGHBOR_NAME
-    #                         device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0].lower()
-    #
-    #                         # Skip if no valid device ID
-    #                         if not device_id or ':' in device_id:
-    #                             continue
-    #
-    #                         if not self._is_valid_device_id(device_id):
-    #                             continue
-    #
-    #                         # Find this device in our normalized data
-    #                         if device_id in normalized_lldp:
-    #                             # Update IP address if available (skip link-local IPv6)
-    #                             if entry.get('MGMT_ADDRESS') and not entry['MGMT_ADDRESS'].startswith('fe80:'):
-    #                                 normalized_lldp[device_id]['ip'] = entry['MGMT_ADDRESS']
-    #
-    #                             # Update platform information if available
-    #                             if entry.get('NEIGHBOR_DESCRIPTION'):
-    #                                 desc = entry['NEIGHBOR_DESCRIPTION']
-    #                                 if 'Aruba' in desc or 'HP' in desc or 'ProCurve' in desc:
-    #                                     normalized_lldp[device_id]['platform'] = 'procurve'
-    #                                 elif 'Cisco' in desc:
-    #                                     if 'NX-OS' in desc:
-    #                                         normalized_lldp[device_id]['platform'] = 'nxos'
-    #                                     else:
-    #                                         normalized_lldp[device_id]['platform'] = 'ios'
-    #                                 elif 'Arista' in desc:
-    #                                     normalized_lldp[device_id]['platform'] = 'eos'
-    #
-    #                             # Normalize port names
-    #                             normalized_ports = []
-    #                             for conn in normalized_lldp[device_id]['connections']:
-    #                                 local_port = conn[0]
-    #                                 remote_port = entry.get('NEIGHBOR_INTERFACE_DESCRIPTION') or entry.get(
-    #                                     'NEIGHBOR_INTERFACE', '')
-    #                                 if ':' in remote_port or " " in remote_port:  # If it's a MAC address
-    #                                     remote_port = f"Port-{entry['LOCAL_INTERFACE']}"
-    #                                 normalized_ports.append([local_port, remote_port])
-    #
-    #                             normalized_lldp[device_id]['connections'] = normalized_ports
-    #
-    #                 neighbors['lldp'] = normalized_lldp
-    #                 capabilities['neighbors'] = neighbors
-    #
-    #             except Exception as e:
-    #                 self.logger.error(f"Error getting LLDP neighbors for {device.hostname}: {str(e)}")
-    #                 capabilities['neighbors'] = {'lldp': {}, 'cdp': {}}
-    #         else:
-    #             # Use enhanced neighbor discovery for other platforms
-    #             capabilities['neighbors'] = self._get_enhanced_neighbors(device_conn, device.platform)
-    #
-    #         return capabilities
 
-    def _get_enhanced_neighbors(self, device_conn, platform: str) -> Dict:
-        """Get enhanced neighbor information using Netmiko and TextFSM parsing."""
-        neighbors = {'cdp': {}, 'lldp': {}}
-        db_path = get_db_path()
-        parser = TextFSMAutoEngine(db_path)
-        hostname = device_conn.hostname if hasattr(device_conn, 'hostname') else 'unknown'
-        netmiko_conn = device_conn._netmiko_device  # Already established netmiko connection
-
-        # CDP Processing
-        if platform != 'eos':
-            try:
-                self.logger.debug(f"Getting CDP neighbors for {hostname}")
-                cdp_output = netmiko_conn.send_command("show cdp neighbors detail")
-                self.logger.debug(f"Raw CDP Output:\n{cdp_output}")
-
-                best_template, parsed_cdp, score = parser.find_best_template(
-                    cdp_output,
-                    'show_cdp_neighbors_detail'
-                )
-                self.logger.info(f"CDP Template: {best_template}, Score: {score}")
-
-                if parsed_cdp:
-                    for entry in parsed_cdp:
-                        device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0]
-                        if not device_id or not self._is_valid_device_id(device_id):
-                            self.logger.debug(f"Skipping invalid CDP device ID: {device_id}")
-                            continue
-
-                        ip_address = entry.get('MGMT_ADDRESS', '')
-                        if not ip_address:
-                            ip_address = entry.get('INTERFACE_IP', '')
-
-                        connections = []
-                        if 'LOCAL_INTERFACE' in entry and 'NEIGHBOR_INTERFACE' in entry:
-                            local_port = entry['LOCAL_INTERFACE']
-                            remote_port = entry['NEIGHBOR_INTERFACE']
-                            if local_port and remote_port:
-                                connections.append([local_port, remote_port])
-
-                        neighbors['cdp'][device_id] = {
-                            'ip': ip_address,
-                            'platform': self._detect_platform_from_desc(entry.get('PLATFORM', '')),
-                            'connections': connections
-                        }
-
-            except Exception as e:
-                self.logger.error(f"Error getting CDP neighbors: {str(e)}")
-                self.logger.debug("CDP Exception details:", exc_info=True)
-
-        # LLDP Processing
-        try:
-            self.logger.debug(f"Getting LLDP neighbors for {hostname}")
-            lldp_output = netmiko_conn.send_command("show lldp neighbor detail")
-            self.logger.debug(f"Raw LLDP Output:\n{lldp_output}")
-
-            # Select appropriate template based on platform
-            template_map = {
-                'eos': 'arista_eos_show_lldp_neighbors_detail',
-                'ios': 'cisco_ios_show_lldp_neighbors_detail',
-                'nxos_ssh': 'cisco_nxos_show_lldp_neighbors_detail'
-            }
-            template_name = template_map.get(platform, 'cisco_ios_show_lldp_neighbors_detail')
-
-            best_template, parsed_lldp, score = parser.find_best_template(lldp_output, template_name)
-            self.logger.info(f"LLDP Template: {best_template}, Score: {score}")
-            self.logger.debug(f"Parsed LLDP Data:\n{json.dumps(parsed_lldp, indent=2)}")
-
-            if parsed_lldp:
-                for entry in parsed_lldp:
-                    device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0]
-                    if not device_id:
-                        device_id = entry.get('CHASSIS_ID', '').replace(':', '').lower()
-
-                    if not device_id or not self._is_valid_device_id(device_id):
-                        self.logger.debug(f"Skipping invalid LLDP device ID: {device_id}")
-                        continue
-
-                    ip_address = entry.get('MGMT_ADDRESS', '')
-                    if not ip_address:
-                        ip_address = entry.get('MANAGEMENT_IP', '')
-
-                    connections = []
-                    local_port = entry.get('LOCAL_INTERFACE', '')
-                    remote_port = (entry.get('NEIGHBOR_INTERFACE') or
-                                   entry.get('NEIGHBOR_PORT_ID', '') or
-                                   entry.get('PORT_ID', ''))
-
-                    if local_port and remote_port:
-                        connections.append([local_port, remote_port])
-
-                    neighbors['lldp'][device_id] = {
-                        'ip': ip_address,
-                        'platform': self._detect_platform_from_desc(entry.get('NEIGHBOR_DESCRIPTION', '')),
-                        'connections': connections
-                    }
-
-        except Exception as e:
-            self.logger.error(f"Error getting LLDP neighbors: {str(e)}")
-            self.logger.debug("LLDP Exception details:", exc_info=True)
-
-        # Save debug data
-        output_dir = os.path.join('.', 'output')
-        os.makedirs(output_dir, exist_ok=True)
-        host = hostname.split('.')[0]
-
-        try:
-            with open(os.path.join(output_dir, f"{host}_neighbors.json"), "w") as fhn:
-                json.dump(neighbors, indent=2, fp=fhn)
-        except Exception as e:
-            self.logger.error(f"Unable to save topology data for {host}: {str(e)}")
-
-        return neighbors
     def _get_neighbors(self, device_conn, platform: str) -> Dict:
         neighbors = {'cdp': {}, 'lldp': {}}
 
@@ -694,7 +370,7 @@ class DriverDiscovery:
             # self.logger.info(f"CDP raw output:\n{cdp_output}")
             best_cdp_template, parsed_cdp, score = self.parser.find_best_template(cdp_output, 'show_cdp_neighbors_detail')
             print(f"[{device_conn.hostname}] Best CDP Template Selected: {best_cdp_template}")
-            if parsed_cdp:  # Only use results with decent score
+            if parsed_cdp and score > 1:  # Only use results with decent score
                 neighbors['cdp'] = self._normalize_cdp_output(parsed_cdp, platform)
 
         lldp_output = device_conn._netmiko_device.send_command('show lldp neighbors detail')
@@ -703,7 +379,7 @@ class DriverDiscovery:
         best_lldp_template, parsed_lldp, score = self.parser.find_best_template(lldp_output, 'show_lldp_neighbors_detail')
         print(f"[{device_conn.hostname}] Best LLDP Template Selected: {best_lldp_template} Score: {score}")
         print(parsed_lldp)
-        if parsed_lldp:  # Only use results with decent score
+        if parsed_lldp and score > 1:  # Only use results with decent score
             neighbors['lldp'] = self._normalize_lldp_output(parsed_lldp, platform)
 
         return neighbors
@@ -782,6 +458,140 @@ class DriverDiscovery:
 
         return mapped
 
+    def _get_enhanced_neighbors(self, device_conn, platform: str) -> Dict:
+        """Get enhanced neighbor information using direct SSH and TextFSM parsing."""
+        neighbors = {'cdp': {}, 'lldp': {}}
+        db_path = get_db_path()
+        parser = TextFSMAutoEngine(db_path)
+        # parser = TextFSMAutoEngine('tfsm_templates.db')
+        parsed_cdp = []
+        parsed_lldp = []
+        device_id = None
+
+        try:
+            # Get device hostname for logging
+            hostname = device_conn.hostname if hasattr(device_conn, 'hostname') else 'unknown'
+
+            # CDP Processing
+            if platform != 'eos':
+                try:
+                    cdp_output = ssh_client(
+                        host=hostname,
+                        user=device_conn._netmiko_device.username,
+                        password=device_conn._netmiko_device.password,
+                        cmds="show cdp neighbor detail",
+                        invoke_shell=False,
+                        prompt="#",
+                        prompt_count=1,
+                        timeout=5,
+                        disable_auto_add_policy=False,
+                        look_for_keys=False,
+                        inter_command_time=.5
+                    )
+
+                    self.logger.debug(f"Raw CDP Output:\n{cdp_output}")
+
+                    best_template, parsed_cdp, score = parser.find_best_template(cdp_output,
+                                                                                 'show_cdp_neighbor')
+                    self.logger.info(f"CDP Template: {best_template}, Score: {score}")
+                    self.logger.debug(f"Parsed CDP Data:\n{json.dumps(parsed_cdp, indent=2)}")
+
+                    if parsed_cdp and score > 10:
+                        for entry in parsed_cdp:
+                            device_id = entry['NEIGHBOR_NAME'].split('.')[0]
+
+                            if not self._is_valid_device_id(device_id):
+                                self.logger.debug(f"Skipping invalid CDP device ID: {device_id}")
+                                continue
+
+                            mapped_data = self._map_neighbor_fields(entry, 'cdp')
+                            self.logger.debug(f"Mapped CDP data for {device_id}: {json.dumps(mapped_data, indent=2)}")
+                            neighbors['cdp'][device_id] = mapped_data
+
+                except Exception as e:
+                    self.logger.error(f"Error getting CDP neighbors: {str(e)}")
+                    self.logger.debug("CDP Exception details:", exc_info=True)
+
+            # LLDP Processing
+            try:
+                lldp_output = ssh_client(
+                    host=hostname,
+                    user=device_conn._netmiko_device.username,
+                    password=device_conn._netmiko_device.password,
+                    cmds="show lldp neighbor detail",
+                    invoke_shell=False,
+                    prompt="#",
+                    prompt_count=3,
+                    timeout=3,
+                    disable_auto_add_policy=False,
+                    look_for_keys=False,
+                    inter_command_time=.5
+                )
+
+                self.logger.debug(f"Raw LLDP Output:\n{lldp_output}")
+                show_command = "show_lldp_neighbor"
+                if platform == 'eos':
+                    show_command = 'arista_eos_show_lldp_neighbors_detail'
+                if platform == 'ios':
+                    show_command = 'cisco_ios_show_lldp_neighbors_detail'
+                if platform == 'nxos_ssh':
+                    show_command = 'cisco_nxos_show_lldp_neighbors_detail'
+
+                best_template, parsed_lldp, score = parser.find_best_template(lldp_output, show_command)
+                self.logger.info(f"LLDP Template: {best_template}, Score: {score}")
+                self.logger.debug(f"Parsed LLDP Data:\n{json.dumps(parsed_lldp, indent=2)}")
+
+                if parsed_lldp and score > 10:
+                    for entry in parsed_lldp:
+                        temp_device_id = entry.get('NEIGHBOR_NAME', '').split('.')[0]
+                        if not temp_device_id:
+                            temp_device_id = entry.get('CHASSIS_ID', '').replace(':', '').lower()
+
+                        if not self._is_valid_device_id(temp_device_id):
+                            self.logger.debug(f"Skipping invalid LLDP device ID: {temp_device_id}")
+                            continue
+
+                        device_id = temp_device_id
+                        mapped_data = self._map_neighbor_fields(entry, 'lldp')
+                        self.logger.debug(f"Mapped LLDP data for {device_id}: {json.dumps(mapped_data, indent=2)}")
+                        neighbors['lldp'][device_id] = mapped_data
+
+            except Exception as e:
+                self.logger.error(f"Error getting LLDP neighbors: {str(e)}")
+                self.logger.debug("LLDP Exception details:", exc_info=True)
+
+            # Save the data to files
+            output_dir = os.path.join('.', 'output')
+            os.makedirs(output_dir, exist_ok=True)
+
+            host = device_id if device_id else hostname
+
+            # Save CDP data
+            try:
+                with open(os.path.join(output_dir, f"{host}_cdp.json"), "w") as fhc:
+                    fhc.write(json.dumps(parsed_cdp, indent=2))
+            except Exception as e:
+                self.logger.error(f"Unable to save CDP neighbor data for {host}: {str(e)}")
+
+            # Save LLDP data
+            try:
+                with open(os.path.join(output_dir, f"{host}_lldp.json"), "w") as fhl:
+                    fhl.write(json.dumps(parsed_lldp, indent=2))
+            except Exception as e:
+                self.logger.error(f"Unable to save LLDP neighbor data for {host}: {str(e)}")
+
+            # Save combined neighbors data
+            try:
+                with open(os.path.join(output_dir, f"{host}_neighbors.json"), "w") as fhn:
+                    fhn.write(json.dumps(neighbors, indent=2))
+            except Exception as e:
+                self.logger.error(f"Unable to save topology data for {host}: {str(e)}")
+
+            return neighbors
+
+        except Exception as e:
+            self.logger.error(f"Error in _get_enhanced_neighbors: {str(e)}")
+            return neighbors
 
     def _normalize_lldp_output(self, parsed_data: List[Dict], local_platform: str) -> Dict:
         neighbors = {}

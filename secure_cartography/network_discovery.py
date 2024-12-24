@@ -520,7 +520,7 @@ class NetworkDiscovery:
                     else:
                         self.logger.warning("Device object is None, cannot add neighbor connection")
 
-        self.logger.info(f"Completed neighbor processing for {device.hostname}")
+        self.logger.info(f"Completed neighbor processing for <font color='green'>{device.hostname}</font>")
         self.logger.info(f"Current queue size: {self.queue.qsize()}")
         self.logger.debug(f"Current visited IPs: {self.visited_ips}")
 
@@ -912,9 +912,9 @@ class NetworkDiscovery:
         self.create_network_svg(normalized_map, svg_path, min_layer_dist=1.0, min_node_dist=0.2)
 
         self.logger.info(f"Created network map files in {output_dir}:")
-        self.logger.info(f" - {map_name}.json")
-        self.logger.info(f" - {map_name}.graphml")
-        self.logger.info(f" - {map_name}.drawio")
+        self.logger.info(f" - <font color='orange'>{map_name}.json</font>")
+        self.logger.info(f" - <font color='orange'>{map_name}.graphml</font>")
+        self.logger.info(f" - <font color='orange'>{map_name}.drawio</font>")
 
     def _normalize_hostnames(self, map_data: Dict) -> Dict:
         """

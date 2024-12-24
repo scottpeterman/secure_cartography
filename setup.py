@@ -15,9 +15,9 @@ requirements = [
 
 setup(
     name="secure-cartography",
-    version="0.3.0",
+    version="0.6.0",
     author="Scott Peterman",
-    author_email="scottpeterman@gmail.com", 
+    author_email="scottpeterman@gmail.com",
     description="A secure, Python-based network discovery and mapping tool using SSH-based device interrogation",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -32,17 +32,21 @@ setup(
         "Topic :: System :: Monitoring",
         "Topic :: Security",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.9",
     install_requires=requirements,
     package_data={
-        'secure_cartography': ['tfsm_templates.db',
-        'resources/index.html'],
+        "secure_cartography": [
+            "tfsm_templates.db",
+            "resources/index.html",
+            "resources/splash.jpeg"
+        ],
     },
     include_package_data=True,
     entry_points={
         'gui_scripts': [
             'scart=secure_cartography.scart:main',
             'merge-dialog=secure_cartography.merge_dialog:main',
+            'mviewer=secure_cartography.mviewer:main'
         ],
     },
 )

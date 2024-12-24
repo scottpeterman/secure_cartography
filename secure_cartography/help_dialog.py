@@ -2,6 +2,7 @@ import traceback
 from pathlib import Path
 
 from PyQt6.QtCore import QUrl
+from PyQt6.QtWebEngineCore import QWebEngineSettings
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QDialog
 
@@ -17,6 +18,7 @@ class HelpDialog(QDialog):
 
         # Create WebEngine view
         self.web_view = QWebEngineView()
+        self.enable_external_content()
         layout.addWidget(self.web_view)
 
         # Add standard buttons
@@ -27,21 +29,53 @@ class HelpDialog(QDialog):
         # Load the help content
         self.load_help_content()
 
+    def enable_external_content(self):
+        """Configure WebEngineView to load external content."""
+        settings = self.web_view.settings()
+
+        # Enable loading external resources
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True)
+
+        print("External content and JavaScript enabled.")
     def load_help_content(self):
-        """Load the help HTML file"""
-        help_file = "index.html"  # You'll need to create this file
-        try:
-            # Try to load local file
-            url = QUrl.fromLocalFile(str(Path(help_file).absolute()))
-            self.web_view.setUrl(url)
-        except Exception as e:
-            # Fallback to basic HTML if file not found
-            traceback.print_exc()
-            self.web_view.setHtml(self.get_fallback_content())
-            print(f"Error loading help file: {e}")
+        """Load the help HTML file."""
+        # Define potential file locations
+        primary_path = Path(__file__).parent / "resources" / "index.html"
+        fallback_path = Path(__file__).parent / "index.html"
+
+        # Determine which file to load
+        if primary_path.exists() and primary_path.is_file():
+            help_file = primary_path
+        elif fallback_path.exists() and fallback_path.is_file():
+            help_file = fallback_path
+        else:
+            help_file = None
+
+        if help_file:
+            try:
+                # Try to load local file
+                url = QUrl.fromLocalFile(str(help_file.resolve()))
+                self.web_view.setUrl(url)
+                print(f"Loaded help content from: {help_file}")
+            except Exception as e:
+                print("Failed to load the local help file.")
+                traceback.print_exc()
+                self.load_fallback_content(e)
+        else:
+            print("Help file not found in any location. Loading fallback content.")
+            self.load_fallback_content("Help file not found.")
+
+    def load_fallback_content(self, error_message):
+        """Load fallback HTML content."""
+        self.web_view.setHtml(self.get_fallback_content())
+        print(f"Error encountered: {error_message}")
 
     def get_fallback_content(self):
-        html_text = '''<!DOCTYPE html>
+        """Return basic HTML content as a fallback."""
+        html_text ='''<!DOCTYPE html>
 <html>
 <head>
     <style>

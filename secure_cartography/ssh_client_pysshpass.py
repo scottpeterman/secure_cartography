@@ -15,7 +15,10 @@ def ssh_client(host, user, password, cmds, invoke_shell, prompt, prompt_count, t
     pysshpass -h "172.16.1.101" -u "cisco" -p "cisco" -c "term len 0,show users,show run,show cdp neigh,show int desc" --invoke-shell --prompt "#" --prompt-count 4 -t 360
     """
     # Set log file path
-    log_file = os.path.join('./log', f'{host}.log')
+    # log_file = os.path.join('../log', f'{host}.log')
+    log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'log'))
+    os.makedirs(log_dir, exist_ok=True)
+    log_file = os.path.join(log_dir, f'{host}.log')
 
     # Initialize SSH client
     client = paramiko.SSHClient()
