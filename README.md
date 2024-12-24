@@ -4,16 +4,16 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 
 ![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides.gif)
 
-**Topology Merge Tool**
-   ```bash
-   python -m secure_cartography.merge_dialog
-   ```
+## Version 0.7.0 Highlights
 
-![viewer](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/viewer.png)
-
-**Architecture**
-![arch](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/docs/architecture.png)
-
+- **Major Performance Improvements**: 10x faster device discovery and processing
+- **Enhanced Visualization**: New interactive Mermaid-based network topology viewer
+- **Improved Device Support**: Added support for Aruba/HP ProCurve switches (non-CX)
+- **Advanced Logging**: Configurable logging levels with improved output formatting
+- **UI Improvements**: 
+  - Quick-access buttons for browsing output folders and files
+  - Modernized topology merge dialog with interactive preview
+  - Enhanced dark/light mode support
 
 ## Quick Start Guide
 
@@ -29,16 +29,29 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 
 ## Key Features
 
-### Medium to Large diagrams
-![Complex Network Map](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/large_map.png)
-
 ### Network Discovery
-- Multi-threaded SSH-based device discovery
-- Support for multiple vendor platforms (Cisco IOS, NX-OS, Arista EOS)
-- Configurable discovery depth and timeout settings
-- Real-time discovery progress monitoring
-- Device platform auto-detection
-- Smart exclusion pattern support (e.g., `othersite-,sep` to exclude specific sites and IP phones)
+- Multi-threaded SSH-based device discovery with optimized queue management
+- Support for multiple vendor platforms:
+  - Cisco IOS
+  - Cisco NX-OS
+  - Arista EOS
+  - Aruba/HP ProCurve (non-CX)
+- Improved device tracking and neighbor discovery
+- Real-time progress monitoring with enhanced logging
+- Smart platform detection and validation
+- Configurable exclusion patterns (e.g., `othersite-,sep` to exclude specific sites and IP phones)
+
+### Visualization
+- Interactive topology viewer with Mermaid diagrams
+- Dark/Light mode theme support
+- Multiple export formats:
+  - SVG for high-quality graphics
+  - GraphML for yEd integration
+  - Draw.io compatible format
+- Multiple layout algorithms:
+  - Kamada-Kawai (KK) for general topologies
+  - Circular layout for ring networks
+  - Multipartite for layered networks
 
 ### Security
 - Master password-based encryption system
@@ -47,21 +60,11 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 - PBKDF2-based key derivation
 - Encrypted credential storage
 
-### Visualization
-- Dark mode optimized network diagrams
-- Multiple layout algorithms:
-  - Kamada-Kawai (KK) for general topologies
-  - Circular layout for ring networks
-  - Multipartite for layered networks
-- SVG output for high-quality graphics
-- Real-time preview capabilities
-
 ### Map Merging
-- Intelligent topology merging with preview
-- Maintains connection integrity
-- Connection de-duplication
-- Multiple file support
+- Interactive topology preview
+- Intelligent topology merging with connection deduplication
 - Comprehensive merge logging
+- Multiple file support
 
 ## Installation
 
@@ -72,34 +75,29 @@ pip install secure-cartography
 
 ### From GitHub
 ```bash
-# Clone the repository
 git clone https://github.com/scottpeterman/secure_cartography.git
 cd secure_cartography
-
-# Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# then run the executable
-scart 
-
-# or
-
-merge-dialog
-
-# first tme run will take a bit for byte code to compile
-
-# for additional debuge detail from the console, you can also run as a module:
->python -m secure_cartography.scart
 ```
 
-## Core Requirements
+### Running the Application
+```bash
+# Run as installed package
+scart
+merge-dialog
+
+# Or run as module for additional console output
+python -m secure_cartography.scart
+python -m secure_cartography.merge_dialog
+```
+
+## System Requirements
 - Python 3.9+
 - PyQt6
 - NetworkX
+- N2G
 - Matplotlib
 - Cryptography
 - PyYAML
@@ -116,13 +114,13 @@ merge-dialog
 ### Known Issues
 - Python 3.13: Compatibility issues with Napalm library
 
-## Supported Export Formats
+## External Tool Integration
 
 ### yEd GraphML (.graphml)
 ![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/yed1.png)
 - Multiple automatic layout algorithms
 - Advanced grouping capabilities
-- Neighborhood analysis for large networks
+- Neighborhood analysis
 - High-quality vector export
 
 ### draw.io (.drawio)
@@ -134,18 +132,21 @@ merge-dialog
 
 ## Version History
 
+### 0.7.0 (Current)
+- 10x performance improvement in device discovery
+- Added Aruba/HP ProCurve switch support
+- New interactive Mermaid-based topology viewer
+- Enhanced logging with configurable levels
+- Improved UI with quick-access file management
+- Better error handling and recovery
+
 ### 0.2.0
-Major improvements in this release:
-
-- Added support for Aruba/HP ProCurve switches (non-CX)
-- Improved device discovery reliability with better hostname and IP tracking
-- Enhanced neighbor discovery with platform-specific optimizations
-- Added comprehensive debug logging for better troubleshooting
-- Improved handling of device connections and topology mapping
-- Better platform detection and validation across vendors
-- More robust error handling and recovery
-
-Note: This version maintains backward compatibility with 0.1.0 configurations and outputs.
+- Initial ProCurve support
+- Improved device discovery reliability
+- Enhanced neighbor discovery
+- Added debug logging
+- Improved topology mapping
+- Better platform detection
 
 ## Technology Stack
 
@@ -191,62 +192,3 @@ Note: This version maintains backward compatibility with 0.1.0 configurations an
    - Memory-safe credential handling
    - Secure credential cleanup
    - Protected GUI input fields
-
-# Appendix A: TFSM_Fire - Intelligent Template Matching
-
-## Overview
-
-TFSM_Fire represents a novel approach to TextFSM template matching that uses an intelligent scoring system and thread-safe database operations to automatically select the best parsing template for network device output.
-
-![tfsm_fire](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/docs/tfsm_fire.png)
-
-## Key Features
-
-### 1. Intelligent Template Selection
-```python
-def find_best_template(self, device_output: str, filter_string: Optional[str] = None) -> Tuple[
-    Optional[str], Optional[List[Dict]], float]:
-```
-- Automatically evaluates multiple templates against device output
-- Returns the best matching template, parsed output, and confidence score
-- Uses sophisticated scoring algorithm to determine template fitness
-- Supports optional filtering to narrow template search space
-
-### 2. Thread-Safe Design
-```python
-class ThreadSafeConnection:
-    """Thread-local storage for SQLite connections"""
-    def __init__(self, db_path: str, verbose: bool = False):
-        self.db_path = db_path
-        self.verbose = verbose
-        self._local = threading.local()
-```
-- Implements thread-local storage for database connections
-- Ensures safe concurrent access to template database
-- Manages connection lifecycle automatically
-- Supports high-performance parallel template matching
-
-### 3. Scoring Algorithm
-The template scoring system evaluates matches based on multiple factors:
-- Number of successfully parsed records
-- Special handling for version command output
-- Intelligent weighting based on command type
-- Score normalization for consistent evaluation
-
-### 4. Template Filtering
-```python
-def get_filtered_templates(self, connection: sqlite3.Connection, filter_string: Optional[str] = None):
-    """Get filtered templates from database using provided connection."""
-    if filter_string:
-        filter_terms = filter_string.replace('-', '_').split('_')
-        query = "SELECT * FROM templates WHERE 1=1"
-        params = []
-        for term in filter_terms:
-            if term and len(term) > 2:
-                query += " AND cli_command LIKE ?"
-                params.append(f"%{term}%")
-```
-- Smart filtering of template database
-- Handles hyphenated command names
-- Minimum term length requirements
-- SQL injection prevention

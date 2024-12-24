@@ -216,7 +216,7 @@ class WebPasswordDialog(QDialog):
                 <h2 class="text-3xl font-bold mb-8 text-cyan-400 text-center tracking-wider">SECURE CARTOGRAPHY</h2>
                 <form id="passwordForm" class="space-y-6">
                     <div class="relative">
-                        <input type="password" 
+                        &nbsp;&nbsp;<input type="password" 
                                id="masterPassword" 
                                placeholder="ENTER MASTER KEY" 
                                autocomplete="off"
