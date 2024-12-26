@@ -4,7 +4,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 
 ![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides.gif)
 
-## Version 0.7.0 Highlights
+## Version 0.8.0 Highlights
 
 - **Major Performance Improvements**: 10x faster device discovery and processing
 - **Enhanced Visualization**: New interactive Mermaid-based network topology viewer
@@ -14,6 +14,9 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
   - Quick-access buttons for browsing output folders and files
   - Modernized topology merge dialog with interactive preview
   - Enhanced dark/light mode support
+- **CLI for automated mapping**:
+  - cli args, yaml conf, and env vars for secrets
+  - See Appendix
 
 ## Quick Start Guide
 
@@ -56,8 +59,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 ### Security
 - Master password-based encryption system
 - Machine-specific keyring integration
-- No plaintext passwords stored
-- PBKDF2-based key derivation
+ - PBKDF2-based key derivation
 - Encrypted credential storage
 
 ### Map Merging
@@ -192,3 +194,92 @@ python -m secure_cartography.merge_dialog
    - Memory-safe credential handling
    - Secure credential cleanup
    - Protected GUI input fields
+
+## Appendix A: CLI Usage
+
+Secure Cartography includes a CLI tool for automation and scripting. The tool can be run as either an installed package or module:
+
+```bash
+# Run as installed package
+sc --help
+
+# Run as module
+python -m secure_cartography.sc --help
+```
+
+### Configuration Options
+
+#### YAML Configuration
+Create a YAML file with your settings:
+```yaml
+seed_ip: 172.16.101.1
+max_devices: 500
+output_dir: "./cli/home"
+#username: admin   --- can be here, but its clear text! Please use the environment variable option
+#password: pw
+verbose: true
+map_name: home_network
+layout: "rt"  # Optional, defaults to kk
+domain: ''    # Optional
+exclude: ''   # Optional
+timeout: 60   # Optional
+```
+
+#### Environment Variables
+Set credentials using environment variables:
+- `SC_USERNAME`: Primary device username
+- `SC_PASSWORD`: Primary device password
+- `SC_ALT_USERNAME`: Alternate device username (optional)
+- `SC_ALT_PASSWORD`: Alternate device password (optional)
+
+```bash
+# Windows
+set SC_USERNAME=admin
+set SC_PASSWORD=mypass
+
+# Linux/Mac
+export SC_USERNAME=admin
+export SC_PASSWORD=mypass
+```
+
+#### CLI Arguments
+```bash
+sc --yaml config.yaml --seed-ip 192.168.1.1 --verbose
+```
+
+Full argument list:
+- `--yaml`: Path to YAML config file
+- `--seed-ip`: Starting IP address
+- `--username`: Device username
+- `--password`: Device password
+- `--alt-username`: Alternate username
+- `--alt-password`: Alternate password
+- `--domain`: Domain name
+- `--exclude`: Comma-separated exclude patterns
+- `--output-dir`: Output directory path
+- `--timeout`: Connection timeout (seconds)
+- `--max-devices`: Maximum devices to discover
+- `--map-name`: Output map name
+- `--layout`: Graph layout algorithm
+- `--verbose`: Enable debug logging
+
+### Example Usage
+
+Basic discovery with YAML config:
+```bash
+sc --yaml network_config.yaml --verbose
+```
+
+Full CLI configuration:
+```bash
+sc --seed-ip 192.168.1.1 --username admin --password secret \
+   --output-dir ./maps --max-devices 50 --timeout 60 \
+   --map-name office_network --layout kk --verbose
+```
+
+Using environment variables:
+```bash
+export SC_USERNAME=admin
+export SC_PASSWORD=secret
+sc --yaml config.yaml
+```

@@ -15,7 +15,7 @@ requirements = [
 
 setup(
     name="secure-cartography",
-    version="0.7.0",
+    version="0.8.0",
     author="Scott Peterman",
     author_email="scottpeterman@gmail.com",
     description="A secure, Python-based network discovery and mapping tool using SSH-based device interrogation",
@@ -46,7 +46,9 @@ setup(
         'gui_scripts': [
             'scart=secure_cartography.scart:main',
             'merge-dialog=secure_cartography.merge_dialog:main',
-            'mviewer=secure_cartography.mviewer:main'
+            'mviewer=secure_cartography.mviewer:main',
+
         ],
+        'console_scripts': ['sc=secure_cartography.sc:main']
     },
 )

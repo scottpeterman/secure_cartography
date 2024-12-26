@@ -1,0 +1,13 @@
+seed_ip: 172.16.101.1
+#username:
+#password:
+max_devices: 500
+output_dir: "./cli/home"
+verbose: true
+map_name: home_network
+layout: "rt"  # Optional, defaults to kk
+#alt_username: ''  # Optional
+#alt_password: ''  # Optional
+domain: ''  # Optional
+exclude: ''  # Optional
+timeout: 60  # Optional
