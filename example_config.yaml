@@ -1,13 +1,12 @@
 seed_ip: 172.16.101.1
-#username:
-#password:
+username: 'cisco' # use environment var SC_USERNAME
+password: 'cisco' # use env var SC_PASSWORD
 max_devices: 500
 output_dir: "./cli/home"
-verbose: true
 map_name: home_network
-layout: "rt"  # Optional, defaults to kk
-#alt_username: ''  # Optional
-#alt_password: ''  # Optional
-domain: ''  # Optional
-exclude: ''  # Optional
+layout_algo: "rt"  # Optional, should be one of: kk, spring, circular, random
+alternate_username: ''  # Optional
+alternate_password: ''  # Optional
+domain_name: ''  # Optional
+exclude_string: ''  # Optional
 timeout: 60  # Optional

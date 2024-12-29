@@ -18,6 +18,7 @@ import errno
 import networkx as nx
 import numpy as np
 from PyQt6.QtWidgets import QMessageBox
+from func_timeout import func_timeout, FunctionTimedOut
 from matplotlib import pyplot as plt
 
 from secure_cartography.enh_int_normalizer import InterfaceNormalizer
@@ -30,20 +31,17 @@ from secure_cartography.util import get_db_path
 
 from secure_cartography.logger_manager import logger_manager
 
-class TimeoutError(Exception):
-    pass
+
 
 def timeout_handler():
     raise TimeoutError("Operation timed out")
 
 def run_with_timeout(func, timeout, *args, **kwargs):
-    # Define a flag to signal timeout
-    timer = threading.Timer(timeout, timeout_handler)
+    """Timeout wrapper using func-timeout"""
     try:
-        timer.start()  # Start the timer
-        return func(*args, **kwargs)  # Execute the function
-    finally:
-        timer.cancel()  # Cancel the timer after execution
+        return func_timeout(timeout, func, args=args, kwargs=kwargs)
+    except FunctionTimedOut:
+        raise TimeoutError(f"Operation timed out after {timeout} seconds")
 
 @dataclass
 class DiscoveryConfig:
@@ -303,13 +301,33 @@ class NetworkDiscovery:
                             self.logger.info(f"Discovering platform for: {current_device.hostname}")
                             current_device.platform = self.driver_discovery.detect_platform(current_device,
                                                                                             config=self.config)
-
-                        capabilities = self.driver_discovery.get_device_capabilities(current_device, config=self.config)
+                        try:
+                            capabilities = run_with_timeout(
+                                self.driver_discovery.get_device_capabilities,
+                                60,  # 30 second timeout
+                                current_device,
+                                config=self.config
+                            )
+                            # capabilities = self.driver_discovery.get_device_capabilities(current_device, config=self.config)
+                        except Exception as e:
+                            print(f"Failed get capabilities in netdisco ({e})")
                         self.logger.info(
                             f"Capabilities discovered for {current_device.hostname}: {capabilities['facts'].get('hostname', 'N/A')}")
                         return capabilities
-
-                    capabilities = run_with_timeout(device_discovery_logic, 95)
+                    try:
+                        capabilities = run_with_timeout(
+                            self.driver_discovery.get_device_capabilities,
+                            60,  # 30 second timeout
+                            current_device,
+                            config=self.config
+                        )
+                        # capabilities = run_with_timeout(device_discovery_logic, 60)  # 30 second timeout
+                    except TimeoutError as e:
+                        self.logger.error(f"Timeout discovering capabilities for {current_device.hostname}: {str(e)}")
+                        continue
+                    except Exception as e:
+                        self.logger.error(f"Error discovering capabilities for {current_device.hostname}: {str(e)}")
+                        continue
 
                     if capabilities:
                         # Process neighbors and connections
@@ -844,6 +862,7 @@ class NetworkDiscovery:
             root = max(core_nodes, key=lambda x: G.degree(x))
         else:
             # Fall back to highest degree node
+            # failure here
             root = max(G.nodes(), key=lambda x: G.degree(x))
 
         # Initialize positions
@@ -1172,7 +1191,9 @@ class NetworkDiscovery:
                     )
 
                     # Get capabilities with nxos_ssh platform
-                    alternate_capabilities = self.driver_discovery.get_device_capabilities(
+                    alternate_capabilities = run_with_timeout(
+                        self.driver_discovery.get_device_capabilities,
+                        30,  # 15 second timeout
                         alternate_device,
                         config=self.config
                     )

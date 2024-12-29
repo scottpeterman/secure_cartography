@@ -357,8 +357,11 @@ class DriverDiscovery:
                     self.logger.error(f"Error getting LLDP neighbors for {device.hostname}: {str(e)}")
                     capabilities['neighbors'] = {'lldp': {}, 'cdp': {}}
             else:
+                try:
                 # Use enhanced neighbor discovery for other platforms
-                capabilities['neighbors'] = self._get_enhanced_neighbors(device_conn, device.platform)
+                    capabilities['neighbors'] = self._get_enhanced_neighbors(device_conn, device.platform)
+                except Exception as e:
+                    print(f"enhanced cdp extract failed")
             # print(json.dumps(capabilities['neighbors'], indent=2))
             return capabilities
 
