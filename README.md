@@ -4,7 +4,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 
 ![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides.gif)
 
-## Version 0.8.0 Highlights
+## Version 0.8.1 Highlights
 
 - **Major Performance Improvements**: 10x faster device discovery and processing
 - **Enhanced Visualization**: New interactive Mermaid-based network topology viewer
@@ -15,7 +15,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
   - Modernized topology merge dialog with interactive preview
   - Enhanced dark/light mode support
 - **CLI for automated mapping**:
-  - cli args, yaml conf, and env vars for secrets
+  - cli args, yaml conf, and env vars for secrets. ver 0.8.1 addresses a hanging bug
   - See Appendix
 
 ## Quick Start Guide
