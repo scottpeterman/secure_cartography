@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 from PyQt6.QtWebChannel import QWebChannel
-from PyQt6.QtCore import QUrl, QObject, pyqtSlot, Qt
+from PyQt6.QtCore import QObject, pyqtSlot, Qt
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QApplication, QMessageBox
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from importlib.resources import files
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class WebPasswordDialog(QDialog):
-    def __init__(self, creds_manager):
+    def __init__(self, creds_manager) -> None:
         super().__init__()
         self.creds_manager = creds_manager
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -58,7 +58,7 @@ class WebPasswordDialog(QDialog):
                     return
 
                 try:
-                    config_dir = self.dialog.creds_manager._get_config_dir()
+                    config_dir = self.dialog.creds_manager.config_dir
                     creds_path = Path(config_dir) / "NetworkMapper.yaml"
                     if not creds_path.exists():
                         self.dialog.accept()  # New installation
@@ -73,7 +73,7 @@ class WebPasswordDialog(QDialog):
                     self.dialog.creds_manager.decrypt_value(creds[0]['primary_password'])
                     self.dialog.accept()
 
-                except Exception as e:
+                except Exception as _:
                     QMessageBox.critical(self.dialog, 'Invalid Password',
                                          "Failed to decrypt credentials with provided password.")
                     self.dialog.reject()
@@ -93,12 +93,12 @@ class WebPasswordDialog(QDialog):
                 if reply == QMessageBox.StandardButton.Ok:
                     try:
                         # Remove the salt file
-                        salt_path = Path(self.dialog.creds_manager._get_config_dir()) / ".salt"
+                        salt_path = Path(self.dialog.creds_manager.config_dir) / ".salt"
                         if salt_path.exists():
                             salt_path.unlink()
 
                         # Remove credential files
-                        config_dir = Path(self.dialog.creds_manager._get_config_dir())
+                        config_dir = Path(self.dialog.creds_manager.config_dir)
                         cred_files = ["NetworkMapper.yaml", "network_mapper_passwords.yaml", "credentials.yaml"]
                         for file in cred_files:
                             creds_path = config_dir / file

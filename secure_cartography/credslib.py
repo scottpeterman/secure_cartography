@@ -2,7 +2,6 @@
 import os
 import sys
 import base64
-import json
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -16,76 +15,111 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
+def derive_key(password: str, salt: bytes) -> bytes:
+    """Derive a key from password and salt using PBKDF2."""
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=480000,
+    )
+    return base64.urlsafe_b64encode(kdf.derive(password.encode()))
+
+
+def get_machine_id() -> str:
+    """Get a unique machine identifier that persists across reboots."""
+    if sys.platform == "win32":
+        import winreg
+        try:
+            with winreg.OpenKey(
+                    winreg.HKEY_LOCAL_MACHINE,
+                    "SOFTWARE\\Microsoft\\Cryptography", 0,
+                    winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as key:
+
+                return winreg.QueryValueEx(key, "MachineGuid")[0]
+
+        except Exception:
+            logger.warning("Failed to get Windows MachineGuid")
+
+    elif sys.platform == "darwin":
+        try:
+            import subprocess
+            result = subprocess.run(
+                ['system_profiler', 'SPHardwareDataType'],
+                capture_output=True, text=True
+            )
+            for line in result.stdout.split('\n'):
+                if "Serial Number" in line:
+                    return line.split(":")[1].strip()
+
+        except Exception:
+            logger.warning("Failed to get macOS hardware serial")
+
+    try:
+        with open("/etc/machine-id", "r") as f:
+            return f.read().strip()
+
+    except Exception:
+        logger.warning("Using fallback machine ID method")
+        return str(hash(str(Path.home())))
+
+def get_config_dir(app_name: str) -> Path:
+    """Get the appropriate configuration directory for the current platform."""
+
+    default_path: Path = Path.home() / ".config"
+
+    os_path: dict = {
+        "win32": Path(os.environ["APPDATA"]),
+        "darwin": Path.home() / "Library" / "Application Support",
+        "linux": default_path
+    }
+
+    base_dir: Path = os_path.get(sys.platform, default_path)
+
+    config_dir = base_dir / app_name
+    config_dir.mkdir(parents=True, exist_ok=True)
+
+    return config_dir
+
+
 class SecureCredentials:
     """Secure credential management system for Windows, Linux, and macOS."""
 
-    def __init__(self, app_name: str = "NetworkMapper"):
-        self.app_name = app_name
-        self._fernet = None
-        self.config_dir = self._get_config_dir()
-        self.key_identifier = f"{app_name}_key_id"
-        self.is_initialized = self._check_initialization()
+    def __init__(self, app_name: str = "NetworkMapper") -> None:
+        self._app_name: str = app_name
+        self._fernet: Optional[Fernet] = None
+        self._config_dir: Path = get_config_dir(app_name=app_name)
+        self._key_identifier: str = f"{app_name}_key_id"
+        self._is_initialized: bool = self._check_initialization()
 
-    def _get_config_dir(self) -> Path:
-        """Get the appropriate configuration directory for the current platform."""
-        if sys.platform == "win32":
-            base_dir = Path(os.environ["APPDATA"])
-        elif sys.platform == "darwin":
-            base_dir = Path.home() / "Library" / "Application Support"
-        else:  # Linux and other Unix-like
-            base_dir = Path.home() / ".config"
+    @property
+    def app_name(self) -> str:
+        return self._app_name
 
-        config_dir = base_dir / self.app_name
-        config_dir.mkdir(parents=True, exist_ok=True)
-        return config_dir
+    @property
+    def key_identifier(self) -> str:
+        return self._key_identifier
+
+    @property
+    def config_dir(self) -> Path:
+        return self._config_dir
+
+    @property
+    def is_initialized(self) -> bool:
+        return self._is_initialized
+
+    @is_initialized.setter
+    def is_initialized(self, value: bool) -> None:
+        self._is_initialized = value
 
     def _check_initialization(self) -> bool:
         """Check if the credential system has been initialized."""
-        salt_path = self.config_dir / ".salt"
+        salt_path: Path = self._config_dir / ".salt"
         return salt_path.exists()
 
     def is_unlocked(self) -> bool:
         """Check if the credential manager is unlocked."""
         return self._fernet is not None
-
-    def _derive_key(self, password: str, salt: bytes) -> bytes:
-        """Derive a key from password and salt using PBKDF2."""
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
-            salt=salt,
-            iterations=480000,
-        )
-        return base64.urlsafe_b64encode(kdf.derive(password.encode()))
-
-    def _get_machine_id(self) -> str:
-        """Get a unique machine identifier that persists across reboots."""
-        if sys.platform == "win32":
-            import winreg
-            try:
-                with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
-                                    "SOFTWARE\\Microsoft\\Cryptography", 0,
-                                    winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as key:
-                    return winreg.QueryValueEx(key, "MachineGuid")[0]
-            except Exception:
-                logger.warning("Failed to get Windows MachineGuid")
-        elif sys.platform == "darwin":
-            try:
-                import subprocess
-                result = subprocess.run(['system_profiler', 'SPHardwareDataType'],
-                                        capture_output=True, text=True)
-                for line in result.stdout.split('\n'):
-                    if "Serial Number" in line:
-                        return line.split(":")[1].strip()
-            except Exception:
-                logger.warning("Failed to get macOS hardware serial")
-
-        try:
-            with open("/etc/machine-id", "r") as f:
-                return f.read().strip()
-        except Exception:
-            logger.warning("Using fallback machine ID method")
-            return str(hash(str(Path.home())))
 
     def setup_new_credentials(self, master_password: str) -> bool:
         """Initialize the encryption system with a master password."""
@@ -94,27 +128,28 @@ class SecureCredentials:
             salt = os.urandom(16)
 
             # Generate the encryption key
-            key = self._derive_key(master_password, salt)
+            key = derive_key(password=master_password, salt=salt)
 
             # Create a new Fernet instance
             self._fernet = Fernet(key)
 
             # Store the salt securely
-            salt_path = self.config_dir / ".salt"
+            salt_path: Path = self._config_dir / ".salt"
+
             with open(salt_path, "wb") as f:
                 f.write(salt)
 
             # Store an identifier in the system keyring
-            machine_id = self._get_machine_id()
-            keyring.set_password(self.app_name, self.key_identifier, machine_id)
+            machine_id: str = get_machine_id()
+            keyring.set_password(self._app_name, self._key_identifier, machine_id)
 
             # Create empty credentials file
-            creds_path = self.config_dir / "credentials.yaml"
+            creds_path = self._config_dir / "credentials.yaml"
             self.save_credentials([], creds_path)
-            creds_path = self.config_dir / "network_mapper_passwords.yaml"
+            creds_path = self._config_dir / "network_mapper_passwords.yaml"
             self.save_credentials([], creds_path)
 
-            self.is_initialized = True
+            self._is_initialized = True
             return True
 
         except Exception as e:
@@ -125,13 +160,13 @@ class SecureCredentials:
         """Unlock the credential manager with the master password."""
         try:
             # Verify the keyring identifier
-            stored_id = keyring.get_password(self.app_name, self.key_identifier)
-            if stored_id != self._get_machine_id():
+            stored_id = keyring.get_password(self._app_name, self._key_identifier)
+            if stored_id != get_machine_id():
                 logger.warning("Machine ID mismatch - possible security breach")
                 return False
 
             # Load the salt
-            salt_path = self.config_dir / ".salt"
+            salt_path = self._config_dir / ".salt"
             if not salt_path.exists():
                 logger.error("Encryption not initialized")
                 return False
@@ -140,14 +175,15 @@ class SecureCredentials:
                 salt = f.read()
 
             # Recreate the encryption key
-            key = self._derive_key(master_password, salt)
+            key: bytes = derive_key(password=master_password, salt=salt)
             self._fernet = Fernet(key)
 
             # Test the encryption
-            test_data = self.encrypt_value("test")
+            test_data: str = self.encrypt_value("test")
             try:
                 self.decrypt_value(test_data)
                 return True
+
             except Exception:
                 self._fernet = None
                 return False
@@ -162,7 +198,7 @@ class SecureCredentials:
         if not self._fernet:
             raise RuntimeError("Credential manager not unlocked")
 
-        encrypted = self._fernet.encrypt(value.encode())
+        encrypted: bytes = self._fernet.encrypt(value.encode())
         return base64.b64encode(encrypted).decode('utf-8')
 
     def decrypt_value(self, encrypted_value: str) -> str:
@@ -218,6 +254,7 @@ class SecureCredentials:
                 except Exception as e:
                     logger.error(f"Failed to decrypt credential: {e}")
                     raise
+
             decrypted_creds.append(decrypted_cred)
 
         return decrypted_creds

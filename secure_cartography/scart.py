@@ -950,9 +950,10 @@ def main():
             return 1
 
     # Initialize credentials manager
-    creds_manager = SecureCredentials(app_name="NetworkMapper")
-    creds_path = creds_manager.config_dir / "network_mapper_passwords.yaml"
+    creds_manager: SecureCredentials = SecureCredentials(app_name="NetworkMapper")
+    creds_path: Path = creds_manager.config_dir / "network_mapper_passwords.yaml"
     print(f"creds_path: {creds_path}")
+
     if not creds_path.exists():
         password, ok = QInputDialog.getText(
             None,
