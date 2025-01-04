@@ -92,7 +92,7 @@ def ssh_client(host, user, password, cmds, invoke_shell, prompt, prompt_count, t
         with open(log_file, 'a') as f:
             f.write(error_msg)
             f.flush()
-        sys.exit(1)
+        raise ValueError(f"Authentication failed, please verify your credentials.")
     except paramiko.SSHException as e:
         error_msg = f"Could not establish SSH connection: {str(e)}\n"
         print(error_msg)
