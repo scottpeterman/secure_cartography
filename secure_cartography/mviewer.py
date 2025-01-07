@@ -66,12 +66,18 @@ class TopologyViewer(QMainWindow):
         zoom_reset_action.triggered.connect(self.zoom_reset)
         toolbar.addAction(zoom_reset_action)
 
+        fit_action = QAction('Fit to View', self)
+        zoom_reset_action.setShortcut('Ctrl+f')
+
+        fit_action.triggered.connect(self.fit_to_view)
+        toolbar.addAction(fit_action)
+
         # Add layout selector
         layout_label = QLabel("Layout:")
         toolbar.addWidget(layout_label)
 
         self.layout_combo = QComboBox()
-        self.layout_combo.addItems(['TD', 'LR', 'circle'])
+        self.layout_combo.addItems(['TD', 'LR'])
         self.layout_combo.currentTextChanged.connect(self.render_diagram)
         toolbar.addWidget(self.layout_combo)
 
@@ -161,19 +167,19 @@ class TopologyViewer(QMainWindow):
             """)
 
     def zoom_in(self):
-        """Increase the zoom level"""
-        if self.web_view:
-            self.web_view.setZoomFactor(self.web_view.zoomFactor() + 0.1)
+        self.web_view.page().runJavaScript("window.zoom(1.2);")
 
     def zoom_out(self):
-        """Decrease the zoom level"""
-        if self.web_view:
-            self.web_view.setZoomFactor(max(0.1, self.web_view.zoomFactor() - 0.1))
+        self.web_view.page().runJavaScript("window.zoom(0.8);")
 
     def zoom_reset(self):
-        """Reset zoom to default level"""
-        if self.web_view:
-            self.web_view.setZoomFactor(1.0)
+        self.web_view.page().runJavaScript("document.getElementById('mermaidDiagram').style.transform = 'scale(1)';")
+
+    def fit_to_view(self):
+        """Fit the diagram to the viewable area."""
+        # self.web_view.page().runJavaScript("fitToView();")
+        self.web_view.page().runJavaScript("window.zoom(4);")
+
 
     def open_file(self):
         """Open and load a topology JSON file"""
@@ -269,23 +275,17 @@ class TopologyViewer(QMainWindow):
         layout_mapping = {
             'TD': 'TD',
             'LR': 'LR',
-            'circle': 'TB',
-            'kk': 'LR',
-            'rt': 'TD',
-            'circular': 'TB',
-            'multipartite': 'LR'
+            # 'circle': 'TB',
+            # 'kk': 'LR',
+            # 'rt': 'TD',
+            # 'circular': 'TB',
+            # 'multipartite': 'LR'
         }
 
         mermaid_layout = layout_mapping.get(layout, 'TD')
         diagram_type = "flowchart" if layout == "circle" else "graph"
         lines = [f"{diagram_type} {mermaid_layout}"]
 
-        # Add styling classes
-        # lines.extend([
-        #     "classDef core fill:#ff7676,stroke:#333,stroke-width:2px;",
-        #     "classDef gateway fill:#76ff76,stroke:#333,stroke-width:2px;",
-        #     "classDef edge fill:#7676ff,stroke:#333,stroke-width:1px;"
-        # ])
 
         processed_nodes = set()
         processed_connections = set()
@@ -325,11 +325,19 @@ class TopologyViewer(QMainWindow):
                     processed_connections.add(connection_pair)
 
         return "\n".join(lines)
-    def generate_html(self, mermaid_code):
-        """Generate HTML with enhanced styling and interactivity"""
+
+    def generate_html(self, mermaid_code, show_device_list=True):
         theme = "dark" if self.dark_mode else "default"
-        return f'''
-        <!DOCTYPE html>
+
+        # Generate node list from network_graph
+        node_list = sorted([node for node in self.network_graph.nodes()]) if self.network_graph else []
+        node_list_json = json.dumps(node_list)
+
+        # Set display property and diagram container margin based on show_device_list
+        display_legend = "block" if show_device_list else "none"
+        diagram_margin = "margin-left: 250px;" if show_device_list else "margin-left: 0;"
+
+        return f'''<!DOCTYPE html>
         <html>
         <head>
             <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
@@ -338,88 +346,135 @@ class TopologyViewer(QMainWindow):
                     startOnLoad: true,
                     theme: '{theme}',
                     securityLevel: 'loose',
-                    maxZoom: 3,
-                    minZoom: 0.1,
                     flowchart: {{
                         curve: 'basis',
-                        padding: 20,
-                        nodeSpacing: 50,
-                        rankSpacing: 50,
-                        htmlLabels: true
-                    }}
+                        padding: 20
+                    }},
+                    maxTextSize: 100000
                 }});
+
+                // Store nodes list globally
+                const nodeNames = {node_list_json};
             </script>
             <style>
                 body {{
                     margin: 0;
-                    padding: 20px;
+                    padding: 10px;
                     background-color: {self.dark_mode and '#1a1a1a' or '#ffffff'};
-                    overflow: hidden;
+                    display: flex;
+                }}
+                #legend-panel {{
+                    width: 250px;
+                    background: {self.dark_mode and '#2b2b2b' or '#f5f5f5'};
+                    border-right: 1px solid {self.dark_mode and '#404040' or '#ddd'};
+                    padding: 10px;
+                    overflow-y: auto;
+                    height: 95vh;
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    display: {display_legend};
+                }}
+                .node-list {{
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    color: {self.dark_mode and '#fff' or '#000'};
+                }}
+                .node-item {{
+                    padding: 5px;
+                    cursor: pointer;
+                }}
+                .node-item:hover {{
+                    background: {self.dark_mode and '#404040' or '#eee'};
+                }}
+                .diagram-container {{
+                    {diagram_margin}
+                    flex-grow: 1;
+                    overflow: auto;
+                    height: 90vh;
+                    width: 100%;
                 }}
                 .mermaid {{
-                    cursor: move;
+                    transform-origin: 0 0;
+                }}
+                .highlight {{
+                    filter: brightness(2);
+                    transition: filter 0.3s;
                 }}
             </style>
         </head>
         <body>
-            <div class="mermaid">
-                {mermaid_code}
+            <div id="legend-panel">
+                <ul id="node-list" class="node-list">
+                    <li class="node-item">Loading nodes...</li>
+                </ul>
+            </div>
+            <div class="diagram-container">
+                <div class="mermaid" id="mermaidDiagram">
+                    {mermaid_code}
+                </div>
             </div>
             <script>
-                document.addEventListener('DOMContentLoaded', function() {{
-                    const diagram = document.querySelector('.mermaid');
-                    let isPanning = false;
-                    let startPoint = {{ x: 0, y: 0 }};
-                    let currentTranslate = {{ x: 0, y: 0 }};
-                    let currentZoom = 1;
+                function populateNodeList() {{
+                    const nodeList = document.getElementById('node-list');
+                    nodeList.innerHTML = '';
+                    nodeNames.forEach(name => {{
+                        const li = document.createElement('li');
+                        li.textContent = name;
+                        li.className = 'node-item';
+                        li.onclick = () => highlightNode(name);
+                        nodeList.appendChild(li);
+                    }});
+                }}
 
-                    diagram.addEventListener('mousedown', (e) => {{
-                        isPanning = true;
-                        startPoint = {{
-                            x: e.clientX - currentTranslate.x,
-                            y: e.clientY - currentTranslate.y
-                        }};
+                function highlightNode(name) {{
+                    const nodeId = name.replace(/-/g, '_');
+                    document.querySelectorAll('.node-item').forEach(item => {{
+                        item.style.color = item.textContent === name ? '#4ade80' : '';
                     }});
 
-                    document.addEventListener('mousemove', (e) => {{
-                        if (!isPanning) return;
-                        currentTranslate = {{
-                            x: e.clientX - startPoint.x,
-                            y: e.clientY - startPoint.y
-                        }};
-                        updateTransform();
-                    }});
-
-                    document.addEventListener('mouseup', () => {{
-                        isPanning = false;
-                    }});
-
-                    diagram.addEventListener('wheel', (e) => {{
-                        if (e.ctrlKey) {{
-                            e.preventDefault();
-                            const delta = e.deltaY > 0 ? 0.9 : 1.1;
-                            const newZoom = currentZoom * delta;
-                            if (newZoom >= 0.1 && newZoom <= 3) {{
-                                currentZoom = newZoom;
-                                const rect = diagram.getBoundingClientRect();
-                                const mouseX = e.clientX - rect.left;
-                                const mouseY = e.clientY - rect.top;
-                                currentTranslate.x = e.clientX - (mouseX * delta);
-                                currentTranslate.y = e.clientY - (mouseY * delta);
-                                updateTransform();
+                    document.querySelectorAll('g.node').forEach(node => {{
+                        const text = node.textContent || '';
+                        if (text.includes(name)) {{
+                            const rect = node.querySelector('rect');
+                            if (rect) {{
+                                rect.style.fill = '#4ade80';
+                                node.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                            }}
+                        }} else {{
+                            const rect = node.querySelector('rect');
+                            if (rect) {{
+                                rect.style.fill = '';
                             }}
                         }}
                     }});
+                }}
 
-                    function updateTransform() {{
-                        diagram.style.transform = 
-                            `translate(${{currentTranslate.x}}px, ${{currentTranslate.y}}px) scale(${{currentZoom}})`;
+                setTimeout(() => {{
+                    populateNodeList();
+                }}, 2000);
+
+                function zoomDiagram(factor) {{
+                    const diagram = document.getElementById('mermaidDiagram');
+                    const currentZoom = parseFloat(diagram.style.transform.replace(/[^0-9.]/g, '') || 1);
+                    const newZoom = currentZoom * factor;
+                    if (newZoom >= 0.1 && newZoom <= 30) {{
+                        diagram.style.transform = `scale(${{newZoom}})`;
+                    }}
+                }}
+                window.zoom = zoomDiagram;
+
+                document.querySelector('.diagram-container').addEventListener('wheel', (e) => {{
+                    if (e.ctrlKey) {{
+                        e.preventDefault();
+                        const factor = e.deltaY > 0 ? 0.9 : 1.1;
+                        zoomDiagram(factor);
                     }}
                 }});
             </script>
         </body>
-        </html>
-        '''
+        </html>'''
 
     def render_diagram(self):
         """Render the current diagram in the web view"""
@@ -443,6 +498,12 @@ def main():
 
     viewer = TopologyViewer(dark_mode=dark_mode)
     viewer.show()
+    screen_geometry = app.primaryScreen().availableGeometry()
+
+    # Calculate the center position
+    x = (screen_geometry.width() - viewer.width()) // 2
+    y = (screen_geometry.height() - viewer  .height()) // 2
+    viewer.move(x, y)
 
     return app.exec()
 

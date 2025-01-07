@@ -31,6 +31,9 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
    ```
 
 ## Key Features
+- New improved native map viewer
+- Find and Highlight Node on map
+- ![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/viewer_slides.gif)
 
 ### Network Discovery
 - Multi-threaded SSH-based device discovery with optimized queue management

@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
 from PyQt6.QtCore import Qt, pyqtSignal, QThread, QSettings
 from pathlib import Path
 from PyQt6.QtSvgWidgets import QSvgWidget
-
+from secure_cartography.preview_widget import TopologyPreviewWidget
 from secure_cartography.mviewer import TopologyViewer
 from secure_cartography.credslib import SecureCredentials
 from secure_cartography.help_dialog import HelpDialog
@@ -206,7 +206,7 @@ class NetworkMapperWidget(QWidget):
         self.setup_ui()
         self.load_settings()
         # self.apply_theme(self.dark_mode)
-        self.toggle_theme(True)
+        self.set_dark_mode(self.dark_mode)
 
     def setup_ui(self):
         """Initialize the user interface"""
@@ -421,9 +421,12 @@ class NetworkMapperWidget(QWidget):
         # Preview group
         preview_group = QGroupBox("Map Preview")
         preview_layout = QVBoxLayout()
-        self.preview_widget = QSvgWidget()
+        # self.preview_widget = QSvgWidget(
+        self.preview_widget = TopologyPreviewWidget()
         self.preview_widget.setMinimumSize(600, 200)
+        self.preview_widget.dark_mode = self.dark_mode
         preview_layout.addWidget(self.preview_widget)
+        self.reset_preview_page()
 
         # Add Viewer button
         self.viewer_button = QPushButton("Viewer")
@@ -562,9 +565,24 @@ class NetworkMapperWidget(QWidget):
                 show_dark_map = False
 
             viewer = TopologyViewer(topology_data=topology_data, dark_mode=show_dark_map, parent=self)
+
+            # Get the screen geometry
+            screen_geometry = app.primaryScreen().availableGeometry()
+
+            # Get the window size (using sizeHint if the window size isn't explicitly set)
+            window_size = viewer.sizeHint()
+
+            # Calculate the center position
+            x = (screen_geometry.width() - window_size.width()) // 2
+            y = (screen_geometry.height() - window_size.height()) // 2
+
+            # Set the geometry before showing the window
+            viewer.setGeometry(x, y, window_size.width(), window_size.height())
             viewer.show()
+
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to open topology viewer: {str(e)}")
+
     def open_output_folder(self):
         """Open the output folder in the system's file explorer"""
         import os
@@ -600,15 +618,19 @@ class NetworkMapperWidget(QWidget):
         except Exception as e:
             print(f"Error changing log level: {str(e)}")
             traceback.print_exc()
-    def toggle_theme(self, checked):
-        """Toggle between dark and light themes"""
+
+    def set_dark_mode(self, is_dark: bool, save_setting: bool = True):
+        """Set the dark mode state programmatically
+
+        Args:
+            is_dark: Whether to enable dark mode
+            save_setting: Whether to save the setting to persistent storage
+        """
         try:
             app = self.parent.app
-            if checked:  # Dark mode
+            if is_dark:  # Dark mode
                 app.setPalette(self.dark_palette)
-                app.setStyle("fusion")  # Fusion style works best with custom palettes
-
-                # Update specific widget styles for dark mode
+                app.setStyle("fusion")
                 self.setStyleSheet("""
                     QGroupBox {
                         border: 1px solid #666;
@@ -622,25 +644,22 @@ class NetworkMapperWidget(QWidget):
                         padding: 0 3px;
                     }
                     QLineEdit, QSpinBox, QComboBox {
-                        // background-color: #2c3e50;
                         border: 1px solid #666;
                         border-radius: 3px;
                         padding: 5px;
                         color: white;
                     }
                     QListWidget {
-                        // background-color: #2c3e50;
                         color: white;
                     }
                     QTextEdit {
-                    background-color: #000000;
-                    color: white;
+                        background-color: #000000;
+                        color: white;
+                    }
                 """)
             else:  # Light mode
                 app.setPalette(self.light_palette)
                 app.setStyle("fusion")
-
-                # Update specific widget styles for light mode
                 self.setStyleSheet("""
                     QGroupBox {
                         border: 1px solid #999;
@@ -670,12 +689,29 @@ class NetworkMapperWidget(QWidget):
                     }
                 """)
 
-            self.settings.setValue('dark_mode', checked)
-            self.dark_mode = checked
+            self.dark_mode = is_dark
+            self.theme_toggle.setChecked(is_dark)
+            self.preview_widget.dark_mode = is_dark
+
+            # Reload preview if exists
+            if hasattr(self, 'current_json_path'):
+                self.preview_widget.load_topology(self.current_json_path)
+
+            if save_setting:
+                self.settings.setValue('dark_mode', is_dark)
 
         except Exception as e:
-            print(f"Error toggling theme: {str(e)}")
+            print(f"Error setting dark mode: {str(e)}")
             traceback.print_exc()
+
+    def toggle_theme(self, checked: bool):
+        """Handle user toggling the theme via checkbox"""
+        self.set_dark_mode(checked, save_setting=True)
+        if self.preview_widget.current_json_path is None:
+            self.preview_widget.clear_view()
+        else:
+            self.preview_widget.load_topology(self.preview_widget.current_json_path)
+
     def save_log(self):
             """Save log content to file"""
             file_name, _ = QFileDialog.getSaveFileName(
@@ -726,10 +762,9 @@ class NetworkMapperWidget(QWidget):
         """Hide the log group box"""
         self.log_group.hide()
 
-
     def get_config(self):
         """Get current configuration as a dictionary"""
-        return {
+        config = {
             'seed_ip': self.seed_ip.text(),
             'username': self.username.text(),
             'password': self.password.text(),
@@ -742,10 +777,53 @@ class NetworkMapperWidget(QWidget):
             'output_dir': self.output_dir.text(),
             'timeout': self.timeout.value(),
             'save_debug_info': self.save_debug.isChecked(),
-            # Store layout separately as it's not part of DiscoveryConfig
-            'layout_algo': self.layout_algo.currentText()
+            'layout_algo': self.layout_algo.currentText(),
+            'dark_mode': self.dark_mode
         }
+        return config
 
+    def load_settings(self):
+        """Load settings with passwords loaded securely"""
+        # Load non-sensitive settings from QSettings
+        self.seed_ip.setText(self.settings.value('seed_ip', ''))
+        self.username.setText(self.settings.value('username', ''))
+        self.alt_username.setText(self.settings.value('alternate_username', 'rtradmin'))
+        self.domain.setText(self.settings.value('domain_name', ''))
+        self.map_name.setText(self.settings.value('map_name', 'map'))
+        self.exclude.setText(self.settings.value('exclude_string', ''))
+        self.output_dir.setText(self.settings.value('output_dir', './output'))
+        self.timeout.setValue(int(self.settings.value('timeout', 30)))
+        self.max_devices.setValue(int(self.settings.value('max_devices', 300)))
+        self.save_debug.setChecked(self.settings.value('save_debug_info', False, type=bool))
+
+        # Load and set theme state
+        dark_mode = self.settings.value('dark_mode', True, type=bool)
+        self.dark_mode = dark_mode
+        self.theme_toggle.setChecked(dark_mode)
+        self.preview_widget.dark_mode = dark_mode
+
+        # Set layout algorithm
+        layout = self.settings.value('layout_algo', 'kk')
+        index = self.layout_algo.findText(layout)
+        if index >= 0:
+            self.layout_algo.setCurrentIndex(index)
+
+        # Load passwords from secure storage if available
+        if self.creds_manager.is_unlocked():
+            try:
+                creds = self.creds_manager.load_credentials(
+                    self.creds_manager.config_dir / "network_mapper_passwords.yaml")
+                if creds and len(creds) > 0:
+                    self.password.setText(self.creds_manager.decrypt_value(creds[0]['primary_password']))
+                    self.alt_password.setText(self.creds_manager.decrypt_value(creds[0]['alternate_password']))
+            except Exception as e:
+                QMessageBox.critical(self, 'Credentials Failure',
+                                     "Failed to unload cached credentials, restart and try again")
+                print(f"Error loading credentials: {e}")
+                sys.exit()
+
+        # Apply theme after loading all settings
+        self.toggle_theme(self.dark_mode)
     def save_settings(self):
         """Save settings with passwords stored securely"""
         # Save non-sensitive settings to QSettings
@@ -811,7 +889,7 @@ class NetworkMapperWidget(QWidget):
     def start_discovery(self):
         """Start the network discovery process"""
         config = self.get_config()
-        self.preview_widget.load("")
+        # self.preview_widget.load("")
         # Save settings before starting discovery
         self.save_settings()
 
@@ -873,16 +951,18 @@ class NetworkMapperWidget(QWidget):
             # Load and display the SVG
             config = self.get_config()
             svg_path = Path(config['output_dir']) / f"{config['map_name']}.svg"
+            json_map_path = Path(config['output_dir']) / f"{config['map_name']}.json"
             print(f"Looking for SVG at: {svg_path}")
 
             # Add a small delay to ensure file is completely written
             QThread.msleep(500)  # Wait for 500ms
 
             if svg_path.exists():
-                print(f"SVG file found, loading...")
+                print(f"file found, loading...")
                 try:
-                    self.preview_widget.load(str(svg_path.absolute()))
-                    print("SVG loaded successfully")
+                    # self.preview_widget.load(str(svg_path.absolute()))
+                    self.preview_widget.load_topology(json_map_path)
+                    print("Preview loaded successfully")
                 except Exception as e:
                     print(f"Error loading SVG: {str(e)}")
             else:
@@ -897,20 +977,56 @@ class NetworkMapperWidget(QWidget):
             print(f"Error in on_discovery_complete: {str(e)}")
             traceback.print_exc()
 
+    # def on_error(self, error_msg):
+    #     """Handle errors during discovery"""
+    #     self.start_button.setEnabled(True)
+    #     print(f"Error during discovery: {error_msg}")
+    #     self.progress_bar.setEnabled(False)
+    #     try:
+    #         # Load and display the SVG
+    #         config = self.get_config()
+    #         svg_path = Path(config['output_dir']) / f"{config['map_name']}.svg"
+    #         # if svg_path.exists():
+    #         #     self.preview_widget.load(str(svg_path))
+    #     except Exception:
+    #         print(f"unable to load svg preview")
+    #         traceback.print_exc()
+
     def on_error(self, error_msg):
         """Handle errors during discovery"""
         self.start_button.setEnabled(True)
-        print(f"Error during discovery: {error_msg}")
         self.progress_bar.setEnabled(False)
+
+        # Log the error (assuming logging is already handled elsewhere)
+        print(f"Error during discovery: {error_msg}")
+        self.reset_preview_page()
+
+
+    def reset_preview_page(self):
         try:
-            # Load and display the SVG
-            config = self.get_config()
-            svg_path = Path(config['output_dir']) / f"{config['map_name']}.svg"
-            if svg_path.exists():
-                self.preview_widget.load(str(svg_path))
-        except Exception:
-            print(f"unable to load svg preview")
-            traceback.print_exc()
+            # Determine background color based on the theme
+            background_color = "#000000" if self.dark_mode else "#FFFFFF"
+
+            # Set the web view to display a blank page with the appropriate background color
+            blank_page_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {{
+                        margin: 0;
+                        padding: 0;
+                        background-color: {background_color};
+                    }}
+                </style>
+            </head>
+            <body>
+            </body>
+            </html>
+            """
+            self.preview_widget.web_view.setHtml(blank_page_content)
+        except Exception as e:
+            print(f"Error while handling discovery error: {e}")
 
     def on_progress_update(self, stats):
         """Handle progress updates from worker"""
@@ -937,8 +1053,10 @@ class NetworkMapperWidget(QWidget):
             print(f"Error in on_progress_update: {str(e)}")
             traceback.print_exc()
 
+
 def main():
     print(f"Starting Secure Cartograph... wait for master password prompt...")
+    global app
     app = QApplication(sys.argv)
     app.setStyle('fusion')
     log_dir = os.path.join(os.getcwd(), "log")
@@ -966,11 +1084,8 @@ def main():
             else:
                 QMessageBox.information(None, "Master Password Reset", "Application will shutdown now")
                 sys.exit()
-
-                # return 1
         else:
             sys.exit()
-
 
     # Show password dialog
     password_dialog = WebPasswordDialog(creds_manager)
@@ -996,20 +1111,37 @@ def main():
     window = QMainWindow()
     window.app = app
     window.setWindowTitle("Secure Cartography - an SSH Based Network Mapping Anomaly")
-    mapper_widget = NetworkMapperWidget(creds_manager=creds_manager, parent=window)  # Pass creds_manager to widget
+    mapper_widget = NetworkMapperWidget(creds_manager=creds_manager, parent=window)
     window.setCentralWidget(mapper_widget)
 
-    # Center window on screen
-    screen = app.primaryScreen().geometry()
-    window.setGeometry(0, 0, 1200, 800)  # Set initial size
-    window_geometry = window.frameGeometry()
-    center_point = screen.center()
-    window_geometry.moveCenter(center_point)
-    window.move(window_geometry.topLeft())
+    # Set size and center window properly
+    window.resize(800, 500)  # Set size first
+
+    # Get the screen geometry
+    screen_geometry = app.primaryScreen().availableGeometry()
+
+    # Calculate the center position
+    x = (screen_geometry.width() - window.width()) // 2
+    y = (screen_geometry.height() - window.height()) // 2
     window.show()
+    # Move window to center
+    window.move(x, y)
+
+    # Get the desired screen (primary screen)
+    screen = app.primaryScreen()
+    screen_geometry = screen.availableGeometry()
+
+    # Calculate center position
+    frame_geometry = window.frameGeometry()
+    center_point = screen_geometry.center()
+    frame_geometry.moveCenter(center_point)
+
+    # Move window to center position
+    window.move(frame_geometry.topLeft())
 
     return app.exec()
 
 
 if __name__ == '__main__':
     sys.exit(main())
+# --webEngineArgs --remote-debugging-port=9222
