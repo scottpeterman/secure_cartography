@@ -1,0 +1,55 @@
+{
+  "cdp": {},
+  "lldp": {
+    "SEP84B517084EC8": {
+      "ip": "10.42.6.40",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet24",
+          "84B517084EC8:P1"
+        ]
+      ]
+    },
+    "SEP84B517089806": {
+      "ip": "10.42.6.39",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet39",
+          "84B517089806:P1"
+        ]
+      ]
+    },
+    "ush-b2-ap08": {
+      "ip": "10.42.7.0",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet47",
+          "209c.b4c7.8918"
+        ]
+      ]
+    },
+    "ush-b2-sml-01": {
+      "ip": "10.42.42.22",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet49",
+          "Ethernet53/2"
+        ]
+      ]
+    },
+    "ush-b2-sml-02": {
+      "ip": "10.42.42.25",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet50",
+          "Ethernet53/2"
+        ]
+      ]
+    }
+  }
+}

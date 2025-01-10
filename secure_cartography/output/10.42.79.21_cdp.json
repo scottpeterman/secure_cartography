@@ -1,0 +1,29 @@
+[
+  {
+    "DEVICE_ID": "ush-m1a-swl-02.columbia.csc",
+    "IP_ADDRESS": "10.42.79.20",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "TenGigabitEthernet2/1/2",
+    "PORT_ID": "TenGigabitEthernet2/1/2",
+    "HOLDTIME": "152"
+  },
+  {
+    "DEVICE_ID": "ush-m1a-swl-02.columbia.csc",
+    "IP_ADDRESS": "10.42.79.20",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "TenGigabitEthernet1/1/1",
+    "PORT_ID": "TenGigabitEthernet1/1/1",
+    "HOLDTIME": "147"
+  },
+  {
+    "DEVICE_ID": "",
+    "IP_ADDRESS": "10.42.79.20",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "",
+    "PORT_ID": "",
+    "HOLDTIME": ""
+  }
+]

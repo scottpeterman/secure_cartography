@@ -1,0 +1,71 @@
+{
+  "script": "device_snmp.py",
+  "description": "Network SNMP Data Collection Tool",
+  "argument_groups": {
+    "required": {
+      "title": "Required Arguments",
+      "args": [
+        {
+          "name": "topology",
+          "flag": "--topology",
+          "type": "file",
+          "help": "Path to topology JSON file",
+          "required": true,
+          "file_filter": "JSON Files (*.json);;All Files (*)"
+        },
+        {
+          "name": "config",
+          "flag": "--config",
+          "type": "file",
+          "help": "Path to SNMP configuration YAML file",
+          "required": true,
+          "file_filter": "YAML Files (*.yaml *.yml);;All Files (*)"
+        }
+      ]
+    },
+    "optional": {
+      "title": "Optional Arguments",
+      "args": [
+        {
+          "name": "collect-only",
+          "flag": "--collect-only",
+          "type": "flag",
+          "help": "Only collect SNMP data and save to JSON file",
+          "required": false
+        },
+        {
+          "name": "store",
+          "flag": "--store",
+          "type": "flag",
+          "help": "Collect SNMP data and store in database",
+          "required": false
+        },
+        {
+          "name": "db",
+          "flag": "--db",
+          "type": "file",
+          "help": "Path to the SQLite database (only required with --store)",
+          "required": false,
+          "file_filter": "SQLite Database (*.db);;All Files (*)"
+        },
+        {
+          "name": "output",
+          "flag": "--output",
+          "type": "file",
+          "help": "Output JSON file for collected data (used with --collect-only)",
+          "default": "snmp_results.json",
+          "required": false,
+          "file_filter": "JSON Files (*.json);;All Files (*)",
+          "is_output": true
+        },
+        {
+          "name": "verbose",
+          "flag": "-v",
+          "type": "flag",
+          "help": "Enable verbose output",
+          "required": false
+        }
+      ]
+    }
+  }
+}

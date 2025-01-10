@@ -1,0 +1,35 @@
+{
+  "cdp": {},
+  "lldp": {
+    "SEPF0B2E5795C3D": {
+      "ip": "10.42.1.6",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet24",
+          "F0B2E5795C3D:P1"
+        ]
+      ]
+    },
+    "ush-a1-sml-01-1": {
+      "ip": "10.42.42.44",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet49",
+          "Ethernet53/4"
+        ]
+      ]
+    },
+    "ush-a1-sml-01-2": {
+      "ip": "10.42.42.45",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet50",
+          "Ethernet53/4"
+        ]
+      ]
+    }
+  }
+}

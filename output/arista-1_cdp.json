@@ -1,0 +1,29 @@
+[
+  {
+    "NEIGHBOR_NAME": "usa1-core-02.home.com",
+    "MGMT_ADDRESS": "172.16.101.2",
+    "PLATFORM": "Cisco ",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet0/1",
+    "LOCAL_INTERFACE": "GigabitEthernet0/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "usa1-access-02.home.com",
+    "MGMT_ADDRESS": "172.16.101.4",
+    "PLATFORM": "Cisco ",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet0/2",
+    "LOCAL_INTERFACE": "GigabitEthernet0/3",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "usa1-rtr-1.home.com",
+    "MGMT_ADDRESS": "172.16.101.100",
+    "PLATFORM": "Cisco 7206VXR",
+    "NEIGHBOR_INTERFACE": "Ethernet2/0",
+    "LOCAL_INTERFACE": "GigabitEthernet0/0",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M11, RELEASE SOFTWARE (fc2)",
+    "CAPABILITIES": "Router"
+  }
+]

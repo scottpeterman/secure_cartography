@@ -1,0 +1,29 @@
+[
+  {
+    "NEIGHBOR_NAME": "use-sw-03.columbia.csc",
+    "MGMT_ADDRESS": "10.35.254.31",
+    "PLATFORM": "cisco WS-C3850-48T",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet1/0/7",
+    "LOCAL_INTERFACE": "GigabitEthernet0/0/0",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.8, RELEASE SOFTWARE (fc1)",
+    "CAPABILITIES": "Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "use-sw-03.columbia.csc",
+    "MGMT_ADDRESS": "10.35.254.31",
+    "PLATFORM": "cisco WS-C3850-48T",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet2/0/7",
+    "LOCAL_INTERFACE": "GigabitEthernet0/0/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.8, RELEASE SOFTWARE (fc1)",
+    "CAPABILITIES": "Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "use-lan-sw-07.columbia.csc(SSI1537035A)",
+    "MGMT_ADDRESS": "10.35.190.10",
+    "PLATFORM": "N5K-C5548UP",
+    "NEIGHBOR_INTERFACE": "Ethernet107/1/40",
+    "LOCAL_INTERFACE": "GigabitEthernet0/0/2",
+    "NEIGHBOR_DESCRIPTION": "Cisco Nexus Operating System (NX-OS) Software, Version 7.3(8)N1(1)",
+    "CAPABILITIES": "Router Switch IGMP CVTA phone port"
+  }
+]

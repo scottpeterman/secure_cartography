@@ -1,0 +1,18 @@
+# SNMP Configuration
+---
+# SNMPv2c communities to try
+communities:
+  - Sbcdz302
+  - 0mniH3@T
+
+# SNMPv3 credentials
+snmpv3:
+  - username: svc_netautomation
+    auth_protocol: sha
+    auth_key: 4qKUQCG#Q!CiVLZtFS7J
+    priv_protocol: aes128
+    priv_key: 4qKUQCG#Q!CiVLZtFS7J
+# General settings
+timeout: 2  # seconds
+retries: 1
+max_threads: 5  # maximum number of concurrent credential tests

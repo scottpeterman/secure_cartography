@@ -1,0 +1,20 @@
+[
+  {
+    "DEVICE_ID": "ush-m1-swl-01.columbia.csc",
+    "IP_ADDRESS": "10.42.79.9",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "GigabitEthernet0/0",
+    "PORT_ID": "TwoGigabitEthernet1/0/19",
+    "HOLDTIME": "160"
+  },
+  {
+    "DEVICE_ID": "",
+    "IP_ADDRESS": "10.42.79.9",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "",
+    "PORT_ID": "",
+    "HOLDTIME": ""
+  }
+]

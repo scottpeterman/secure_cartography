@@ -1,0 +1,102 @@
+[
+  {
+    "NEIGHBOR_NAME": "usp-fcsw0",
+    "CHASSIS_ID": "f4cf.e27c.2f26",
+    "MGMT_ADDRESS": "10.45.140.10",
+    "NEIGHBOR_DESCRIPTION": "Cisco NX-OS(tm) m9700, Software (m9700-sf3ek9-mz), Version 8.4(2a), RELEASE SOFTWARE Copyright (c) 2002-2020 by Cisco Systems, Inc. Compiled 7/11/2020 12:00:00",
+    "NEIGHBOR_INTERFACE": "mgmt0",
+    "LOCAL_INTERFACE": "Ethernet4",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "7 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-pure-san-01-ct0",
+    "CHASSIS_ID": "24a9.375d.ecc7",
+    "MGMT_ADDRESS": "",
+    "NEIGHBOR_DESCRIPTION": "FlashArray FA-X70R4 usp-pure-san-01-ct0 202402272119+1bc153c0e357-65x",
+    "NEIGHBOR_INTERFACE": "ea91.a1ca.f0fc",
+    "LOCAL_INTERFACE": "Ethernet6",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "0 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "DJ3Q5S3",
+    "CHASSIS_ID": "f4ee.0840.84d2",
+    "MGMT_ADDRESS": "",
+    "NEIGHBOR_DESCRIPTION": "PowerEdge MX7000",
+    "NEIGHBOR_INTERFACE": "gbe1",
+    "LOCAL_INTERFACE": "Ethernet35",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "1 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-4a",
+    "CHASSIS_ID": "e478.76bf.3d4b",
+    "MGMT_ADDRESS": "10.45.7.18",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Management1",
+    "LOCAL_INTERFACE": "Ethernet45",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "1 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-3a",
+    "CHASSIS_ID": "e478.76bf.7c65",
+    "MGMT_ADDRESS": "10.45.7.16",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Management1",
+    "LOCAL_INTERFACE": "Ethernet46",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "23 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-6a",
+    "CHASSIS_ID": "e478.76ce.1153",
+    "MGMT_ADDRESS": "10.45.7.22",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050CX3-32S",
+    "NEIGHBOR_INTERFACE": "Management1",
+    "LOCAL_INTERFACE": "Ethernet47",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "29 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-5a",
+    "CHASSIS_ID": "cc1a.a3fd.4395",
+    "MGMT_ADDRESS": "10.45.7.20",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7010TX-48",
+    "NEIGHBOR_INTERFACE": "Management1",
+    "LOCAL_INTERFACE": "Ethernet48",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "29 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-3a",
+    "CHASSIS_ID": "e478.76bf.7c65",
+    "MGMT_ADDRESS": "10.45.7.16",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Ethernet47",
+    "LOCAL_INTERFACE": "Ethernet49",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "23 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-3b",
+    "CHASSIS_ID": "e478.76bf.8133",
+    "MGMT_ADDRESS": "10.45.7.17",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Ethernet47",
+    "LOCAL_INTERFACE": "Ethernet50",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "24 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-leaf-5a",
+    "CHASSIS_ID": "cc1a.a3fd.4395",
+    "MGMT_ADDRESS": "10.45.7.20",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7010TX-48",
+    "NEIGHBOR_INTERFACE": "Ethernet48",
+    "LOCAL_INTERFACE": "Management1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "29 seconds"
+  }
+]

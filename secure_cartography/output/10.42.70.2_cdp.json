@@ -1,0 +1,29 @@
+[
+  {
+    "DEVICE_ID": "ush-m1-core.columbia.csc",
+    "IP_ADDRESS": "10.42.79.1",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "FortyGigabitEthernet1/1/2",
+    "PORT_ID": "FortyGigabitEthernet1/0/10",
+    "HOLDTIME": "176"
+  },
+  {
+    "DEVICE_ID": "ush-l1b-swl-01.columbia.csc",
+    "IP_ADDRESS": "10.42.70.3",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "FortyGigabitEthernet1/1/1",
+    "PORT_ID": "FortyGigabitEthernet1/1/1",
+    "HOLDTIME": "178"
+  },
+  {
+    "DEVICE_ID": "",
+    "IP_ADDRESS": "10.42.70.3",
+    "PLATFORM": "",
+    "CAPABILITIES": "",
+    "LOCAL_INTERFACE": "",
+    "PORT_ID": "",
+    "HOLDTIME": ""
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "NEIGHBOR_NAME": "use-fwr-01",
+    "CHASSIS_ID": "8c36.7a25.fa92",
+    "MGMT_ADDRESS": "",
+    "NEIGHBOR_DESCRIPTION": "Palo Alto Networks PA-1400 series firewall",
+    "NEIGHBOR_INTERFACE": "ethernet1/21",
+    "LOCAL_INTERFACE": "Ethernet2",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "20 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-fwr-02",
+    "CHASSIS_ID": "8c36.7a25.fa8e",
+    "MGMT_ADDRESS": "",
+    "NEIGHBOR_DESCRIPTION": "Palo Alto Networks PA-1400 series firewall",
+    "NEIGHBOR_INTERFACE": "ethernet1/21",
+    "LOCAL_INTERFACE": "Ethernet3",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "16 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-fake-isp-rtr-01.columbia.csc",
+    "CHASSIS_ID": "a03d.6f01.ee30",
+    "MGMT_ADDRESS": "50.218.62.73",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Bengaluru], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 17.6.3a, RELEASE SOFTWARE (fc1)\\x0aTechnical Support: http://www.cisco.com/techsupport\\x0aCopyright (c) 1986-2022 by Cisco Systems, Inc.\\x0aCompiled Fri 08-Apr-22 04:52 by mcpr",
+    "NEIGHBOR_INTERFACE": "Gi0/0/0",
+    "LOCAL_INTERFACE": "Ethernet4",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "20 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-spine-01",
+    "CHASSIS_ID": "68bf.6ca2.b115",
+    "MGMT_ADDRESS": "10.35.7.10",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050CX3-32S",
+    "NEIGHBOR_INTERFACE": "Ethernet1/1",
+    "LOCAL_INTERFACE": "Ethernet49/1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "7 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-edge-1b",
+    "CHASSIS_ID": "a43f.68ce.f6e5",
+    "MGMT_ADDRESS": "10.35.7.29",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7280SR3K-48YC8A",
+    "NEIGHBOR_INTERFACE": "Ethernet50/1",
+    "LOCAL_INTERFACE": "Ethernet50/1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "20 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-spine-02",
+    "CHASSIS_ID": "68bf.6ca3.51f5",
+    "MGMT_ADDRESS": "10.35.7.11",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7050CX3-32S",
+    "NEIGHBOR_INTERFACE": "Ethernet1/1",
+    "LOCAL_INTERFACE": "Ethernet55/1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "7 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-edge-1b",
+    "CHASSIS_ID": "a43f.68ce.f6e5",
+    "MGMT_ADDRESS": "10.35.7.29",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7280SR3K-48YC8A",
+    "NEIGHBOR_INTERFACE": "Ethernet56/1",
+    "LOCAL_INTERFACE": "Ethernet56/1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "20 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "use-sw-03.columbia.csc",
+    "CHASSIS_ID": "2c0b.e947.e580",
+    "MGMT_ADDRESS": "10.35.254.31",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.8, RELEASE SOFTWARE (fc1)\\x0aTechnical Support: http://www.cisco.com/techsupport\\x0aCopyright (c) 1986-2022 by Cisco Systems, Inc.\\x0aCompiled Thu 15-Sep-22 06:03 ",
+    "NEIGHBOR_INTERFACE": "Gi1/0/40",
+    "LOCAL_INTERFACE": "Management1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "18 seconds"
+  }
+]

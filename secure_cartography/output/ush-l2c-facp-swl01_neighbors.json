@@ -1,0 +1,105 @@
+{
+  "cdp": {
+    "SEP706BB924F790": {
+      "ip": "10.43.72.96",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet2/0/7",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP84B517092432": {
+      "ip": "10.43.72.40",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet1/0/30",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP2C3ECF77ABC1": {
+      "ip": "10.43.73.49",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet4/0/33",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP84B51708546E": {
+      "ip": "10.43.72.26",
+      "platform": "ios",
+      "connections": [
+        [
+          "TenGigabitEthernet4/0/42",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP346288DA8B8A": {
+      "ip": "10.43.72.65",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet4/0/10",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP84B517093A06": {
+      "ip": "10.43.73.141",
+      "platform": "ios",
+      "connections": [
+        [
+          "TenGigabitEthernet1/0/42",
+          "Port 1"
+        ]
+      ]
+    },
+    "ush-m1-core": {
+      "ip": "10.42.79.1",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/1/1",
+          "FortyGigabitEthernet1/0/14"
+        ]
+      ]
+    },
+    "SEP5006AB09FCEC": {
+      "ip": "10.43.73.142",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet2/0/18",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP5486BC7FEEF2": {
+      "ip": "10.43.73.31",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet7/0/14",
+          "Port 1"
+        ]
+      ]
+    },
+    "ush-l2c-facp-swl01": {
+      "ip": "10.42.79.26",
+      "platform": "ios",
+      "connections": [
+        [
+          "TenGigabitEthernet4/0/45",
+          "TenGigabitEthernet2/0/48"
+        ]
+      ]
+    }
+  },
+  "lldp": {}
+}

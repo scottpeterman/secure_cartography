@@ -1,0 +1,65 @@
+{
+  "cdp": {},
+  "lldp": {
+    "SEPA0554FDACB60": {
+      "ip": "10.42.22.38",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet14",
+          "A0554FDACB60:P1"
+        ]
+      ]
+    },
+    "HTW_e4302269491f": {
+      "ip": "fe80::e630:22ff:fe69:491f",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet36",
+          "e430.2269.491f"
+        ]
+      ]
+    },
+    "HTW_e4302269491d": {
+      "ip": "fe80::e630:22ff:fe69:491d",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet38",
+          "e430.2269.491d"
+        ]
+      ]
+    },
+    "HTW_e4302269284b": {
+      "ip": "fe80::e630:22ff:fe69:284b",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet40",
+          "e430.2269.284b"
+        ]
+      ]
+    },
+    "ush-g1-sml-01": {
+      "ip": "10.42.42.55",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet49",
+          "Ethernet53/2"
+        ]
+      ]
+    },
+    "ush-g1-sml-02": {
+      "ip": "10.42.42.56",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet50",
+          "Ethernet53/2"
+        ]
+      ]
+    }
+  }
+}

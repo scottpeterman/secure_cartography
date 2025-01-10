@@ -1,0 +1,45 @@
+{
+  "cdp": {},
+  "lldp": {
+    "Test-AP": {
+      "ip": "10.42.42.125",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet41",
+          "4800.20c9.7c2a"
+        ]
+      ]
+    },
+    "ush-cr-core-a": {
+      "ip": "10.42.42.2",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet49",
+          "Ethernet46"
+        ]
+      ]
+    },
+    "ush-cr-core-b": {
+      "ip": "10.42.42.3",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet50",
+          "Ethernet46"
+        ]
+      ]
+    },
+    "ush-cr-swl-02": {
+      "ip": "10.42.42.5",
+      "platform": "eos",
+      "connections": [
+        [
+          "Management1",
+          "Ethernet8"
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,1431 @@
+{
+  "successful": {
+    "usa1-core-01": {
+      "name": "usa1-core-01",
+      "ip": "172.16.101.1",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/3",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:80:01",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:59:b7:69:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/3",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:59:b7:69:80:01",
+            "type": "dynamic",
+            "interface": "Gi0/3",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:01:8e:69:00:38",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:26.370233",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c18.3d17.cbe7",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c3d.dbc0.d81f",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4f.6392.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4f.6392.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/3"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4f.6392.8001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c59.b769.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/3"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c59.b769.8001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/3"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c96.dc37.c1c3",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca01.8e69.0038",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "usa1-core-02": {
+      "name": "usa1-core-02",
+      "ip": "172.16.101.2",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:59:b7:69:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ab:00:18:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:01:8e:69:00:38",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:26.386526",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c18.3d17.cbe7",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c3d.dbc0.d81f",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4f.6392.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c59.b769.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c96.dc37.c1c3",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cab.0018.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca01.8e69.0038",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "usa1-rtr-1": {
+      "name": "usa1-rtr-1",
+      "ip": "172.16.101.100",
+      "success": true,
+      "mac_table": {
+        "entries": [],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:26.510907",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            {}
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "usa2-rtr-1": {
+      "name": "usa2-rtr-1",
+      "ip": "172.16.128.2",
+      "success": true,
+      "mac_table": {
+        "entries": [],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:26.510907",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            {}
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "arista-1": {
+      "name": "arista-1",
+      "ip": "172.16.101.21",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "type": "dynamic",
+            "interface": "Ethernet3",
+            "moves": 1,
+            "last_move": 1736302896.603906,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "type": "dynamic",
+            "interface": "Ethernet2",
+            "moves": 1,
+            "last_move": 1736302891.150791,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:01",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.058046,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.04584,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:59:b7:69:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.362977,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ab:00:18:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302822.532786,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ab:00:18:80:01",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736504714.501689,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:01:8e:69:00:38",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302856.960528,
+            "_vendor": "arista"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:26.686088",
+          "source_vendor": "arista",
+          "schema_version": "1.0",
+          "raw_data": {
+            "multicastTable": {
+              "tableEntries": []
+            },
+            "unicastTable": {
+              "tableEntries": [
+                {
+                  "macAddress": "0c:18:3d:17:cb:e7",
+                  "lastMove": 1736302896.603906,
+                  "interface": "Ethernet3",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:3d:db:c0:d8:1f",
+                  "lastMove": 1736302891.150791,
+                  "interface": "Ethernet2",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:4f:63:92:00:01",
+                  "lastMove": 1736302857.058046,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:4f:63:92:00:02",
+                  "lastMove": 1736302857.04584,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:59:b7:69:00:02",
+                  "lastMove": 1736302857.362977,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:ab:00:18:00:02",
+                  "lastMove": 1736302822.532786,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:ab:00:18:80:01",
+                  "lastMove": 1736504714.501689,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "ca:01:8e:69:00:38",
+                  "lastMove": 1736302856.960528,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                }
+              ]
+            },
+            "disabledMacLearningVlans": []
+          }
+        }
+      },
+      "vendor": "arista"
+    },
+    "usa1-access-02": {
+      "name": "usa1-access-02",
+      "ip": "172.16.101.4",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ab:00:18:00:03",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:01:8e:69:00:38",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:27.855672",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c18.3d17.cbe7",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c3d.dbc0.d81f",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4f.6392.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4f.6392.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c96.dc37.c1c3",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cab.0018.0003",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca01.8e69.0038",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "usa2-core-02": {
+      "name": "usa2-core-02",
+      "ip": "172.16.201.2",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:21:c5:41:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:45:ab:92:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:27.994639",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c21.c541.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c45.ab92.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca02.8ea7.001e",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "usa2-core-01": {
+      "name": "usa2-core-01",
+      "ip": "172.16.201.1",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:45:ab:92:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:45:ab:92:80:01",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:80:01",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/3",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:80:01",
+            "type": "dynamic",
+            "interface": "Gi0/3",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:27.994639",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c45.ab92.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c45.ab92.8001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.8001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/3"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.8001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/3"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca02.8ea7.001e",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "arista-3": {
+      "name": "arista-3",
+      "ip": "172.16.21.2",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302483.342372,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:01",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.613249,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.606409,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:59:b7:69:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.922717,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302482.389554,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ab:00:18:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302823.092851,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:01:8e:69:00:38",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.52031,
+            "_vendor": "arista"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:28.371278",
+          "source_vendor": "arista",
+          "schema_version": "1.0",
+          "raw_data": {
+            "multicastTable": {
+              "tableEntries": []
+            },
+            "unicastTable": {
+              "tableEntries": [
+                {
+                  "macAddress": "0c:18:3d:17:cb:e7",
+                  "lastMove": 1736302483.342372,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:4f:63:92:00:01",
+                  "lastMove": 1736302857.613249,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:4f:63:92:00:02",
+                  "lastMove": 1736302857.606409,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:59:b7:69:00:02",
+                  "lastMove": 1736302857.922717,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:96:dc:37:c1:c3",
+                  "lastMove": 1736302482.389554,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:ab:00:18:00:02",
+                  "lastMove": 1736302823.092851,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "ca:01:8e:69:00:38",
+                  "lastMove": 1736302857.52031,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                }
+              ]
+            },
+            "disabledMacLearningVlans": []
+          }
+        }
+      },
+      "vendor": "arista"
+    },
+    "arista-2": {
+      "name": "arista-2",
+      "ip": "172.16.21.1",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302484.664155,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:01",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.387933,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4f:63:92:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.381579,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:59:b7:69:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.698123,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302482.149913,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ab:00:18:00:02",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302822.866474,
+            "_vendor": "arista"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:01:8e:69:00:38",
+            "type": "dynamic",
+            "interface": "Ethernet1",
+            "moves": 1,
+            "last_move": 1736302857.296116,
+            "_vendor": "arista"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:28.461050",
+          "source_vendor": "arista",
+          "schema_version": "1.0",
+          "raw_data": {
+            "multicastTable": {
+              "tableEntries": []
+            },
+            "unicastTable": {
+              "tableEntries": [
+                {
+                  "macAddress": "0c:3d:db:c0:d8:1f",
+                  "lastMove": 1736302484.664155,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:4f:63:92:00:01",
+                  "lastMove": 1736302857.387933,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:4f:63:92:00:02",
+                  "lastMove": 1736302857.381579,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:59:b7:69:00:02",
+                  "lastMove": 1736302857.698123,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:96:dc:37:c1:c3",
+                  "lastMove": 1736302482.149913,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "0c:ab:00:18:00:02",
+                  "lastMove": 1736302822.866474,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                },
+                {
+                  "macAddress": "ca:01:8e:69:00:38",
+                  "lastMove": 1736302857.296116,
+                  "interface": "Ethernet1",
+                  "moves": 1,
+                  "entryType": "dynamic",
+                  "vlanId": 1
+                }
+              ]
+            },
+            "disabledMacLearningVlans": []
+          }
+        }
+      },
+      "vendor": "arista"
+    },
+    "usa2-access-01": {
+      "name": "usa2-access-01",
+      "ip": "172.16.201.3",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:21:c5:41:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/1",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/2",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:29.857202",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c21.c541.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/1"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/2"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca02.8ea7.001e",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    },
+    "usa2-access-02": {
+      "name": "usa2-access-02",
+      "ip": "172.16.201.4",
+      "success": true,
+      "mac_table": {
+        "entries": [
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:21:c5:41:00:03",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:45:ab:92:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:00",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:4e:da:f9:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:01",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "0c:ff:d3:76:00:02",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          },
+          {
+            "vlan_id": 1,
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "type": "dynamic",
+            "interface": "Gi0/0",
+            "moves": 0,
+            "last_move": 0,
+            "_vendor": "cisco"
+          }
+        ],
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:35:29.857202",
+          "source_vendor": "cisco",
+          "schema_version": "1.0",
+          "raw_data": [
+            [
+              {
+                "vlan": "1",
+                "mac_address": "0c21.c541.0003",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c45.ab92.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0000",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0c4e.daf9.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0001",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "0cff.d376.0002",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              },
+              {
+                "vlan": "1",
+                "mac_address": "ca02.8ea7.001e",
+                "learned_type": "DYNAMIC",
+                "ports": "Gi0/0"
+              }
+            ]
+          ]
+        }
+      },
+      "vendor": "cisco"
+    }
+  },
+  "failed": {}
+}

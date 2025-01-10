@@ -1,0 +1,85 @@
+{
+  "cdp": {
+    "ush-k1-swl-01": {
+      "ip": "10.42.79.2",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/4",
+          "FortyGigabitEthernet1/1/1"
+        ]
+      ]
+    },
+    "ush-k2-swl-01": {
+      "ip": "10.42.79.3",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/6",
+          "FortyGigabitEthernet1/1/1"
+        ]
+      ]
+    },
+    "ush-k3-swl-01": {
+      "ip": "10.42.79.4",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/8",
+          "FortyGigabitEthernet1/1/1"
+        ]
+      ]
+    },
+    "ush-m1-swl-01": {
+      "ip": "10.42.79.9",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/18",
+          "FortyGigabitEthernet1/1/1"
+        ]
+      ]
+    },
+    "ush-l2a-swl-01": {
+      "ip": "10.42.79.7",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/14",
+          "FortyGigabitEthernet1/1/1"
+        ]
+      ]
+    },
+    "ush-m1a-swl-02": {
+      "ip": "10.42.79.20",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/20",
+          "TenGigabitEthernet1/1/8"
+        ]
+      ]
+    },
+    "ush-l2b-swl-01": {
+      "ip": "10.42.79.8",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/16",
+          "FortyGigabitEthernet1/1/1"
+        ]
+      ]
+    },
+    "ush-l1a-swl-01": {
+      "ip": "10.42.70.2",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/0/10",
+          "FortyGigabitEthernet1/1/2"
+        ]
+      ]
+    }
+  },
+  "lldp": {}
+}

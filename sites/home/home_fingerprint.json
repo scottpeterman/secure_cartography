@@ -1,0 +1,908 @@
+{
+  "successful": {
+    "usa1-core-01": {
+      "name": "usa1-core-01",
+      "ip": "172.16.101.1",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa1-core-01",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 8
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9M2G8CK29M4"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.250278",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa1-core-01",
+            "UPTIME": "2 days, 8 hours, 8 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "8",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9M2G8CK29M4"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa1-core-01#"
+      }
+    },
+    "usa1-core-02": {
+      "name": "usa1-core-02",
+      "ip": "172.16.101.2",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa1-core-02",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 15
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9R0M2S04HX3"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.250278",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa1-core-02",
+            "UPTIME": "2 days, 8 hours, 15 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "15",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9R0M2S04HX3"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa1-core-02#"
+      }
+    },
+    "usa1-rtr-1": {
+      "name": "usa1-rtr-1",
+      "ip": "172.16.101.100",
+      "platform": "7206VXR",
+      "device_info": {
+        "system": {
+          "hostname": "usa1-rtr-1",
+          "image": "//255.255.255.255/unknown",
+          "version": "15.2(4)M11",
+          "platform": "7206VXR",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 13
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "4279256517"
+          ],
+          "mac_addresses": [],
+          "model": "7206VXR",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4)M11",
+          "image": "C7200-ADVENTERPRISEK9-M",
+          "rommon": "ROMMON"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.250278",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "C7200-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4)M11",
+            "RELEASE": "fc2",
+            "ROMMON": "ROMMON",
+            "HOSTNAME": "usa1-rtr-1",
+            "UPTIME": "2 days, 8 hours, 13 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "13",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "//255.255.255.255/unknown",
+            "HARDWARE": [
+              "7206VXR"
+            ],
+            "SERIAL": [
+              "4279256517"
+            ],
+            "CONFIG_REGISTER": "0x2102",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa1-rtr-1#"
+      }
+    },
+    "arista-1": {
+      "name": "arista-1",
+      "ip": "172.16.101.21",
+      "platform": "vEOS",
+      "device_info": {
+        "system": {
+          "hostname": "",
+          "image": "4.18.4F",
+          "version": "",
+          "platform": "",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "boot_reason": ""
+        },
+        "hardware": {
+          "serial_numbers": [],
+          "mac_addresses": [
+            "0c96.dc37.c1c3"
+          ],
+          "model": "",
+          "memory": {
+            "total": 1893316,
+            "free": 704848
+          }
+        },
+        "software": {
+          "version": "",
+          "image": "4.18.4F",
+          "rommon": null
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.258370",
+          "source_template": "arista_eos_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "MODEL": "",
+            "HW_VERSION": "",
+            "SERIAL_NUMBER": "",
+            "SYS_MAC": "0c96.dc37.c1c3",
+            "IMAGE": "4.18.4F",
+            "TOTAL_MEMORY": "1893316",
+            "FREE_MEMORY": "704848",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "",
+            "UPTIME_HOURS": "",
+            "UPTIME_MINUTES": ""
+          }
+        },
+        "detected_vendor": "arista",
+        "paging_commands": [
+          [
+            "arista",
+            "terminal length 0"
+          ],
+          [
+            "arista",
+            "terminal width 32767"
+          ]
+        ],
+        "detected_prompt": "arista-1>"
+      }
+    },
+    "usa2-rtr-1": {
+      "name": "usa2-rtr-1",
+      "ip": "172.16.128.2",
+      "platform": "7206VXR",
+      "device_info": {
+        "system": {
+          "hostname": "usa2-rtr-1",
+          "image": "//255.255.255.255/unknown",
+          "version": "15.2(4)M11",
+          "platform": "7206VXR",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 1,
+            "hours": 7,
+            "minutes": 40
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "4279256517"
+          ],
+          "mac_addresses": [],
+          "model": "7206VXR",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4)M11",
+          "image": "C7200-ADVENTERPRISEK9-M",
+          "rommon": "ROMMON"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.355829",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "C7200-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4)M11",
+            "RELEASE": "fc2",
+            "ROMMON": "ROMMON",
+            "HOSTNAME": "usa2-rtr-1",
+            "UPTIME": "1 day, 7 hours, 40 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "1",
+            "UPTIME_HOURS": "7",
+            "UPTIME_MINUTES": "40",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "//255.255.255.255/unknown",
+            "HARDWARE": [
+              "7206VXR"
+            ],
+            "SERIAL": [
+              "4279256517"
+            ],
+            "CONFIG_REGISTER": "0x2102",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa2-rtr-1#"
+      }
+    },
+    "usa2-core-02": {
+      "name": "usa2-core-02",
+      "ip": "172.16.201.2",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa2-core-02",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 15
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9SQ80CQCVS2"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.380053",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa2-core-02",
+            "UPTIME": "2 days, 8 hours, 15 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "15",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9SQ80CQCVS2"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa2-core-02#"
+      }
+    },
+    "usa2-core-01": {
+      "name": "usa2-core-01",
+      "ip": "172.16.201.1",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa2-core-01",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 15
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9L1LE8GAN8R"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.396150",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa2-core-01",
+            "UPTIME": "2 days, 8 hours, 15 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "15",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9L1LE8GAN8R"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa2-core-01#"
+      }
+    },
+    "usa1-access-02": {
+      "name": "usa1-access-02",
+      "ip": "172.16.101.4",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa1-access-02",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 15
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9QMPH98YKE2"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.461033",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa1-access-02",
+            "UPTIME": "2 days, 8 hours, 15 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "15",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9QMPH98YKE2"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa1-access-02#"
+      }
+    },
+    "arista-3": {
+      "name": "arista-3",
+      "ip": "172.16.21.2",
+      "platform": "vEOS",
+      "device_info": {
+        "system": {
+          "hostname": "",
+          "image": "4.18.4F",
+          "version": "",
+          "platform": "",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "boot_reason": ""
+        },
+        "hardware": {
+          "serial_numbers": [],
+          "mac_addresses": [
+            "0c3d.dbc0.d81f"
+          ],
+          "model": "",
+          "memory": {
+            "total": 1893316,
+            "free": 729232
+          }
+        },
+        "software": {
+          "version": "",
+          "image": "4.18.4F",
+          "rommon": null
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.485283",
+          "source_template": "arista_eos_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "MODEL": "",
+            "HW_VERSION": "",
+            "SERIAL_NUMBER": "",
+            "SYS_MAC": "0c3d.dbc0.d81f",
+            "IMAGE": "4.18.4F",
+            "TOTAL_MEMORY": "1893316",
+            "FREE_MEMORY": "729232",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "",
+            "UPTIME_HOURS": "",
+            "UPTIME_MINUTES": ""
+          }
+        },
+        "detected_vendor": "arista",
+        "paging_commands": [
+          [
+            "arista",
+            "terminal length 0"
+          ],
+          [
+            "arista",
+            "terminal width 32767"
+          ]
+        ],
+        "detected_prompt": "arista-3>"
+      }
+    },
+    "arista-2": {
+      "name": "arista-2",
+      "ip": "172.16.21.1",
+      "platform": "vEOS",
+      "device_info": {
+        "system": {
+          "hostname": "",
+          "image": "4.18.4F",
+          "version": "",
+          "platform": "",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "boot_reason": ""
+        },
+        "hardware": {
+          "serial_numbers": [],
+          "mac_addresses": [
+            "0c18.3d17.cbe7"
+          ],
+          "model": "",
+          "memory": {
+            "total": 1893316,
+            "free": 729740
+          }
+        },
+        "software": {
+          "version": "",
+          "image": "4.18.4F",
+          "rommon": null
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:05.493371",
+          "source_template": "arista_eos_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "MODEL": "",
+            "HW_VERSION": "",
+            "SERIAL_NUMBER": "",
+            "SYS_MAC": "0c18.3d17.cbe7",
+            "IMAGE": "4.18.4F",
+            "TOTAL_MEMORY": "1893316",
+            "FREE_MEMORY": "729740",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "",
+            "UPTIME_HOURS": "",
+            "UPTIME_MINUTES": ""
+          }
+        },
+        "detected_vendor": "arista",
+        "paging_commands": [
+          [
+            "arista",
+            "terminal length 0"
+          ],
+          [
+            "arista",
+            "terminal width 32767"
+          ]
+        ],
+        "detected_prompt": "arista-2>"
+      }
+    },
+    "usa2-access-01": {
+      "name": "usa2-access-01",
+      "ip": "172.16.201.3",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa2-access-01",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 15
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9WQ550GPYF0"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:22.887636",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa2-access-01",
+            "UPTIME": "2 days, 8 hours, 15 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "15",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9WQ550GPYF0"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa2-access-01#"
+      }
+    },
+    "usa2-access-02": {
+      "name": "usa2-access-02",
+      "ip": "172.16.201.4",
+      "platform": "IOSv",
+      "device_info": {
+        "system": {
+          "hostname": "usa2-access-02",
+          "image": "/vios_l2-adventerprisek9-m",
+          "version": "15.2(4.0.55)E",
+          "platform": "IOSv",
+          "uptime": {
+            "years": 0,
+            "weeks": 0,
+            "days": 2,
+            "hours": 8,
+            "minutes": 15
+          },
+          "boot_reason": "Unknown reason"
+        },
+        "hardware": {
+          "serial_numbers": [
+            "9WRF2YE0PZH"
+          ],
+          "mac_addresses": [],
+          "model": "IOSv",
+          "memory": {
+            "total": null,
+            "free": null
+          }
+        },
+        "software": {
+          "version": "15.2(4.0.55)E",
+          "image": "vios_l2-ADVENTERPRISEK9-M",
+          "rommon": "Bootstrap"
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:28:22.895687",
+          "source_template": "cisco_ios_show_version",
+          "schema_version": "1.0",
+          "tfsm_data": {
+            "SOFTWARE_IMAGE": "vios_l2-ADVENTERPRISEK9-M",
+            "VERSION": "15.2(4.0.55)E",
+            "RELEASE": "",
+            "ROMMON": "Bootstrap",
+            "HOSTNAME": "usa2-access-02",
+            "UPTIME": "2 days, 8 hours, 15 minutes",
+            "UPTIME_YEARS": "",
+            "UPTIME_WEEKS": "",
+            "UPTIME_DAYS": "2",
+            "UPTIME_HOURS": "8",
+            "UPTIME_MINUTES": "15",
+            "RELOAD_REASON": "Unknown reason",
+            "RUNNING_IMAGE": "/vios_l2-adventerprisek9-m",
+            "HARDWARE": [
+              "IOSv"
+            ],
+            "SERIAL": [
+              "9WRF2YE0PZH"
+            ],
+            "CONFIG_REGISTER": "0x0",
+            "MAC_ADDRESS": [],
+            "RESTARTED": ""
+          }
+        },
+        "detected_vendor": "cisco",
+        "paging_commands": [
+          [
+            "cisco",
+            "terminal length 0"
+          ],
+          [
+            "cisco",
+            "terminal width 511"
+          ]
+        ],
+        "detected_prompt": "usa2-access-02#"
+      }
+    }
+  },
+  "failed": {}
+}

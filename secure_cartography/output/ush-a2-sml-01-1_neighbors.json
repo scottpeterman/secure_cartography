@@ -1,0 +1,65 @@
+{
+  "cdp": {},
+  "lldp": {
+    "SEP5067AEE0E433": {
+      "ip": "10.42.2.31",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet38",
+          "5067AEE0E433:P1"
+        ]
+      ]
+    },
+    "ush-a2-ap02": {
+      "ip": "10.42.2.21",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet42",
+          "209c.b4c7.8360"
+        ]
+      ]
+    },
+    "ush-a2-sml-01-1": {
+      "ip": "10.42.42.34",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet53/4",
+          "Ethernet52"
+        ]
+      ]
+    },
+    "ush-cr-core-b": {
+      "ip": "10.42.42.3",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet51",
+          "Ethernet2"
+        ]
+      ]
+    },
+    "ush-a2-swl-01-2": {
+      "ip": "10.42.42.35",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet53/1",
+          "Ethernet50"
+        ]
+      ]
+    },
+    "ush-a2-swl-01-3": {
+      "ip": "10.42.42.36",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet53/2",
+          "Ethernet50"
+        ]
+      ]
+    }
+  }
+}

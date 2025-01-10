@@ -1,0 +1,85 @@
+{
+  "cdp": {},
+  "lldp": {
+    "USP-P-UCS-B": {
+      "ip": "10.45.146.252",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet4",
+          "Eth1/48"
+        ]
+      ]
+    },
+    "usp-leaf-2a": {
+      "ip": "10.45.7.14",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet47",
+          "Ethernet50"
+        ]
+      ]
+    },
+    "usp-leaf-2b": {
+      "ip": "10.45.7.15",
+      "platform": "eos",
+      "connections": [
+        [
+          "Management1",
+          "Ethernet46"
+        ]
+      ]
+    },
+    "usp-spine-01": {
+      "ip": "10.45.7.10",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet49/1",
+          "Ethernet4/1"
+        ]
+      ]
+    },
+    "usp-leaf-1a": {
+      "ip": "10.45.7.12",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet56/1",
+          "Ethernet56/1"
+        ]
+      ]
+    },
+    "usp-dell-sw-01": {
+      "ip": "10.45.146.244",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet51/1",
+          "ethernet1/1/42:1"
+        ]
+      ]
+    },
+    "usp-dell-sw-02": {
+      "ip": "10.45.146.244",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet52/1",
+          "ethernet1/1/42:1"
+        ]
+      ]
+    },
+    "usp-spine-02": {
+      "ip": "10.45.7.11",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet55/1",
+          "Ethernet4/1"
+        ]
+      ]
+    }
+  }
+}

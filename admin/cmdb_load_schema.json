@@ -1,0 +1,39 @@
+{
+  "script": "cmdb_load.py",
+  "description": "Load network device fingerprint data into CMDB",
+  "argument_groups": {
+    "required": {
+      "title": "Required Arguments",
+      "args": [
+        {
+          "name": "database",
+          "flag": "--db",
+          "type": "file",
+          "help": "Path to the SQLite database",
+          "required": true,
+          "file_filter": "SQLite Database (*.db);;All Files (*)"
+        },
+        {
+          "name": "fingerprint",
+          "flag": "--fingerprint",
+          "type": "file",
+          "help": "Path to the fingerprint JSON file",
+          "required": true,
+          "file_filter": "JSON Files (*.json);;All Files (*)"
+        }
+      ]
+    },
+    "optional": {
+      "title": "Optional Arguments",
+      "args": [
+        {
+          "name": "verbose",
+          "flag": "-v",
+          "type": "flag",
+          "help": "Enable verbose output",
+          "required": false
+        }
+      ]
+    }
+  }
+}

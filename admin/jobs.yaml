@@ -1,0 +1,130 @@
+jobs:
+- args:
+  - --topology
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --max-workers
+  - '10'
+  log_file: logs/fingerprint.log
+  name: Device Fingerprint
+  schedule: 'cron: 0 */6 * * *'
+  script: home_fingerprint.py
+- args:
+  - --db
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/surveyor/cmdb.db
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  log_file: logs/cmdb_load.log
+  name: CMDB Loader
+  schedule: 'cron: 15 */6 * * *'
+  script: cmdb_load.py
+- args:
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_interfaces.json
+  - --max-workers
+  - '5'
+  log_file: logs/interfaces.log
+  name: Device Interfaces
+  schedule: manual
+  script: home_interfaces.py
+- args:
+  - --db
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/surveyor/cmdb.db
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --max-workers
+  - '5'
+  log_file: logs/config_backup.log
+  name: Device Config Backup
+  schedule: 'cron: 0 0 * * *'
+  script: home_config.py
+- args:
+  - --topology
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home.json
+  - --config
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/admin/snmp_config.yaml
+  - --collect-only
+  - --db
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/surveyor/cmdb.db
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_snmp.json
+  - -v
+  log_file: logs/snmp.log
+  name: Device SNMP Collection
+  schedule: 'cron: 0 */12 * * *'
+  script: home_snmp.py
+- args:
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_arp.json
+  - --max-workers
+  - '5'
+  log_file: logs/arp.log
+  name: Device ARP Collection
+  schedule: 'cron: 0 */4 * * *'
+  script: home_arp.py
+- args:
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_mac.json
+  - --max-workers
+  - '5'
+  log_file: logs/macs.log
+  name: Device MAC Collection
+  schedule: 'cron: 30 */4 * * *'
+  script: home_macs.py
+- args:
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_interfaces.json
+  - --max-workers
+  - '5'
+  log_file: logs/interfaces.log
+  name: Device Interfaces
+  schedule: manual
+  script: home_interfaces.py
+- args:
+  - --fingerprint
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_fingerprint.json
+  - --username
+  - cisco
+  - --password
+  - cisco
+  - --output
+  - C:/Users/speterman/PycharmProjects/secure_cartography_v2/sites/home/home_inventory.json
+  - --max-workers
+  - '5'
+  log_file: logs/inventory.log
+  name: Device Inventory
+  schedule: manual
+  script: home_inventory.py

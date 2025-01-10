@@ -1,0 +1,72 @@
+[
+  {
+    "NEIGHBOR_NAME": "SEP706BB924C910.columbia.csc",
+    "CHASSIS_ID": "10.42.13.40",
+    "MGMT_ADDRESS": "10.42.13.40",
+    "NEIGHBOR_DESCRIPTION": "Cisco IP Phone 8851, V1, sip88xx.14-1-1-0001-125.loads",
+    "NEIGHBOR_INTERFACE": "706BB924C910:P1",
+    "LOCAL_INTERFACE": "Ethernet7",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "11 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP5067AEE12E50.columbia.csc",
+    "CHASSIS_ID": "10.42.13.38",
+    "MGMT_ADDRESS": "10.42.13.38",
+    "NEIGHBOR_DESCRIPTION": "Cisco IP Phone 8961, V1, sip8961.9-4-2SR4-1",
+    "NEIGHBOR_INTERFACE": "5067AEE12E50:P1",
+    "LOCAL_INTERFACE": "Ethernet12",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "21 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP00778D3401B0.columbia.csc",
+    "CHASSIS_ID": "10.42.12.83",
+    "MGMT_ADDRESS": "fd73:36ce:a209:d249:277:8dff:fe34:1b0",
+    "NEIGHBOR_DESCRIPTION": "Cisco IP Phone 8851, V1, sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "NEIGHBOR_INTERFACE": "00778D3401B0:P1",
+    "LOCAL_INTERFACE": "Ethernet21",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "38 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP84B5170930AA.columbia.csc",
+    "CHASSIS_ID": "10.42.12.24",
+    "MGMT_ADDRESS": "fd73:36ce:a209:d249:86b5:17ff:fe09:30aa",
+    "NEIGHBOR_DESCRIPTION": "Cisco IP Phone 8851, V1, sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "NEIGHBOR_INTERFACE": "84B5170930AA:P1",
+    "LOCAL_INTERFACE": "Ethernet36",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "15 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "SEPA0554FDABA0C.columbia.csc",
+    "CHASSIS_ID": "10.42.13.41",
+    "MGMT_ADDRESS": "fd73:36ce:a209:d249:a255:4fff:feda:ba0c",
+    "NEIGHBOR_DESCRIPTION": "Cisco IP Phone 8851, V1, sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "NEIGHBOR_INTERFACE": "A0554FDABA0C:P1",
+    "LOCAL_INTERFACE": "Ethernet45",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "46 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-c2-sml-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.9e09",
+    "MGMT_ADDRESS": "10.42.42.50",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet53/3",
+    "LOCAL_INTERFACE": "Ethernet49",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "22 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-c2-sml-01-2.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.e1d9",
+    "MGMT_ADDRESS": "10.42.42.51",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet53/3",
+    "LOCAL_INTERFACE": "Ethernet50",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "7 seconds"
+  }
+]

@@ -1,0 +1,110 @@
+{
+  "usa1-core-01": {
+    "success": true,
+    "system": {
+      "sys_name": "usa1-core-01.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20245619,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa1-core-02": {
+    "success": true,
+    "system": {
+      "sys_name": "usa1-core-02.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20287220,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa1-access-02": {
+    "success": true,
+    "system": {
+      "sys_name": "usa1-access-02.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20287249,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa1-rtr-1": {
+    "success": true,
+    "system": {
+      "sys_name": "usa1-rtr-1.home.com",
+      "sys_descr": "Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M11, RELEASE SOFTWARE (fc2)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2016 by Cisco Systems, Inc.\r\nCompiled Sun 16-Oct-16 07:53 by prod_rel_team",
+      "sys_uptime": 20276500,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa2-rtr-1": {
+    "success": true,
+    "system": {
+      "sys_name": "usa2-rtr-1.home.com",
+      "sys_descr": "Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M11, RELEASE SOFTWARE (fc2)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2016 by Cisco Systems, Inc.\r\nCompiled Sun 16-Oct-16 07:53 by prod_rel_team",
+      "sys_uptime": 11429823,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa2-core-01": {
+    "success": true,
+    "system": {
+      "sys_name": "usa2-core-01.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20288744,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa2-core-02": {
+    "success": true,
+    "system": {
+      "sys_name": "usa2-core-02.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20288801,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa2-access-02": {
+    "success": true,
+    "system": {
+      "sys_name": "usa2-access-02.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20288821,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  },
+  "usa2-access-01": {
+    "success": true,
+    "system": {
+      "sys_name": "usa2-access-01.home.com",
+      "sys_descr": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2015 by Cisco Systems, Inc.\r\nCo",
+      "sys_uptime": 20288865,
+      "sys_contact": "",
+      "sys_location": "",
+      "snmp_version": "v2c",
+      "auth_info": "{\"community\": \"write\"}"
+    }
+  }
+}

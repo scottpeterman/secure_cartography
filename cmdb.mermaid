@@ -1,0 +1,137 @@
+erDiagram
+%% Entity Relationship Diagram
+    %%{init: {'theme': 'neutral', 'themeVariables': { 'primaryColor': '#3498db', 'lineColor': '#3498db', 'fontSize': '16px'}}}%%
+devices {
+    int device_id PK
+    string name NOT NULL
+    string ip_address NOT NULL
+    string platform
+    string vendor
+    string model
+    string hostname
+    string detected_prompt
+    date created_at
+    date last_updated
+}
+
+device_arp_table {
+    int arp_id PK
+    int device_id NOT NULL
+    string ip_address NOT NULL
+    string mac_address NOT NULL
+    string age
+    string interface
+    string type
+    string vrf
+    date last_updated
+}
+
+device_configs {
+    int config_id PK
+    int device_id NOT NULL
+    string config NOT NULL
+    date collected_at
+}
+
+device_hardware {
+    int hardware_id PK
+    int device_id NOT NULL
+    int total_memory
+    int free_memory
+    date last_updated
+}
+
+device_interfaces {
+    int interface_id PK
+    int device_id NOT NULL
+    string name NOT NULL
+    string link_status
+    string protocol_status
+    string interface_type
+    string mac_address
+    string bia
+    int mtu
+    string bandwidth
+    string duplex
+    string speed
+    string media_type
+    string description
+    string ip_address
+    int input_packets
+    int output_packets
+    int input_errors
+    int output_errors
+    date last_updated
+}
+
+device_inventory {
+    int inventory_id PK
+    int device_id NOT NULL
+    string name NOT NULL
+    string description
+    string serial_number
+    string version_id
+    string product_id
+    string port
+    string vendor
+    date last_updated
+}
+
+device_mac_addresses {
+    int mac_id PK
+    int device_id NOT NULL
+    string mac_address NOT NULL
+}
+
+device_mac_table {
+    int mac_table_id PK
+    int device_id NOT NULL
+    int vlan_id
+    string mac_address NOT NULL
+    string type
+    string interface
+    int moves
+    int last_move
+    string vendor
+    date last_updated
+}
+
+device_serial_numbers {
+    int serial_id PK
+    int device_id NOT NULL
+    string serial_number NOT NULL
+}
+
+device_system_info {
+    int system_info_id PK
+    int device_id NOT NULL
+    string software_version
+    string software_image
+    string running_image
+    string rommon_version
+    string boot_reason
+    string config_register
+    date last_updated
+}
+
+device_uptime {
+    int uptime_id PK
+    int device_id NOT NULL
+    int years
+    int weeks
+    int days
+    int hours
+    int minutes
+    date recorded_at
+}
+
+devices ||--o{ device_arp_table : has
+devices ||--o{ device_configs : has
+devices ||--o{ device_hardware : has
+devices ||--o{ device_interfaces : has
+devices ||--o{ device_inventory : has
+devices ||--o{ device_mac_addresses : has
+devices ||--o{ device_mac_table : has
+devices ||--o{ device_serial_numbers : has
+devices ||--o{ device_system_info : has
+devices ||--o{ device_uptime : has

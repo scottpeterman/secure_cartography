@@ -1,0 +1,101 @@
+[
+  {
+    "NEIGHBOR_NAME": "SEP706BB924F790",
+    "MGMT_ADDRESS": "10.43.72.96",
+    "PLATFORM": "Cisco IP Phone 8851",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet2/0/7",
+    "NEIGHBOR_DESCRIPTION": "sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP84B517092432",
+    "MGMT_ADDRESS": "10.43.72.40",
+    "PLATFORM": "Cisco IP Phone 8851",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet1/0/30",
+    "NEIGHBOR_DESCRIPTION": "sip88xx.12-0-3MPP0001-20230814-118077f353.loads",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP2C3ECF77ABC1",
+    "MGMT_ADDRESS": "10.43.73.49",
+    "PLATFORM": "Cisco IP Phone 8961",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet4/0/33",
+    "NEIGHBOR_DESCRIPTION": "sip8961.9-4-2SR4-1",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP84B51708546E",
+    "MGMT_ADDRESS": "10.43.72.26",
+    "PLATFORM": "Cisco IP Phone 8851",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TenGigabitEthernet4/0/42",
+    "NEIGHBOR_DESCRIPTION": "sip88xx.14-1-1-0001-125.loads",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP346288DA8B8A",
+    "MGMT_ADDRESS": "10.43.72.65",
+    "PLATFORM": "Cisco IP Phone 8961",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet4/0/10",
+    "NEIGHBOR_DESCRIPTION": "sip8961.9-4-2SR4-1",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP84B517093A06",
+    "MGMT_ADDRESS": "10.43.73.141",
+    "PLATFORM": "Cisco IP Phone 8851",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TenGigabitEthernet1/0/42",
+    "NEIGHBOR_DESCRIPTION": "sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.1",
+    "PLATFORM": "cisco C9500-32QC",
+    "NEIGHBOR_INTERFACE": "FortyGigabitEthernet2/0/14",
+    "LOCAL_INTERFACE": "FortyGigabitEthernet2/1/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.1",
+    "PLATFORM": "cisco C9500-32QC",
+    "NEIGHBOR_INTERFACE": "FortyGigabitEthernet1/0/14",
+    "LOCAL_INTERFACE": "FortyGigabitEthernet1/1/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP5006AB09FCEC",
+    "MGMT_ADDRESS": "10.43.73.142",
+    "PLATFORM": "Cisco IP Phone 8851",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet2/0/18",
+    "NEIGHBOR_DESCRIPTION": "sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "SEP5486BC7FEEF2",
+    "MGMT_ADDRESS": "10.43.73.31",
+    "PLATFORM": "Cisco IP Phone 8851",
+    "NEIGHBOR_INTERFACE": "Port 1",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet7/0/14",
+    "NEIGHBOR_DESCRIPTION": "sip88xx.12-0-6MPP0001-20241029-17647222e5.loads",
+    "CAPABILITIES": "Host Phone Two-port Mac Relay"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-l2c-facp-swl01.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.26",
+    "PLATFORM": "cisco C9300-48UXM",
+    "NEIGHBOR_INTERFACE": "TenGigabitEthernet2/0/48",
+    "LOCAL_INTERFACE": "TenGigabitEthernet4/0/45",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.6.4, RELEASE SOFTWARE (fc1)",
+    "CAPABILITIES": "Switch IGMP"
+  }
+]

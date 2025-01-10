@@ -1,0 +1,42 @@
+[
+  {
+    "NEIGHBOR_NAME": "Test-AP",
+    "CHASSIS_ID": "4800.20c9.7c2a",
+    "MGMT_ADDRESS": "10.42.42.125",
+    "NEIGHBOR_DESCRIPTION": "ArubaOS (MODEL: 735), Aruba AP, Version:10.7.0.1_91033 SSR, serial:PHSQM520BX",
+    "NEIGHBOR_INTERFACE": "4800.20c9.7c2a",
+    "LOCAL_INTERFACE": "Ethernet41",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "14 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-core-a.columbia.csc",
+    "CHASSIS_ID": "e478.76bd.d305",
+    "MGMT_ADDRESS": "10.42.42.2",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Ethernet46",
+    "LOCAL_INTERFACE": "Ethernet49",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "9 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-core-b.columbia.csc",
+    "CHASSIS_ID": "e478.76bf.7b1d",
+    "MGMT_ADDRESS": "10.42.42.3",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Ethernet46",
+    "LOCAL_INTERFACE": "Ethernet50",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "6 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-swl-02.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.af3b",
+    "MGMT_ADDRESS": "10.42.42.5",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet8",
+    "LOCAL_INTERFACE": "Management1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "14 seconds"
+  }
+]

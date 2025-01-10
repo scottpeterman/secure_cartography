@@ -1,0 +1,38 @@
+[
+  {
+    "NEIGHBOR_NAME": "ush-m1-swl-02.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.22",
+    "PLATFORM": "cisco WS-C3850-48P",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet0/0",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet1/0/19",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 03.03.05SE RELEASE SOFTWARE (fc1)",
+    "CAPABILITIES": "Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "PNM-9322VQP",
+    "MGMT_ADDRESS": "192.168.1.25",
+    "PLATFORM": "Linux",
+    "NEIGHBOR_INTERFACE": "eth0",
+    "LOCAL_INTERFACE": "TwoGigabitEthernet1/0/8",
+    "NEIGHBOR_DESCRIPTION": "HWT_Multidirectional_Camera",
+    "CAPABILITIES": "Router Host"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.1",
+    "PLATFORM": "cisco C9500-32QC",
+    "NEIGHBOR_INTERFACE": "FortyGigabitEthernet2/0/18",
+    "LOCAL_INTERFACE": "FortyGigabitEthernet1/1/2",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.1",
+    "PLATFORM": "cisco C9500-32QC",
+    "NEIGHBOR_INTERFACE": "FortyGigabitEthernet1/0/18",
+    "LOCAL_INTERFACE": "FortyGigabitEthernet1/1/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Router Switch IGMP"
+  }
+]

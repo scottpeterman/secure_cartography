@@ -1,0 +1,72 @@
+{
+  "script": "device_macs.py",
+  "description": "Enhanced MAC Address Table Collection Tool",
+  "argument_groups": {
+    "required": {
+      "title": "Required Arguments",
+      "args": [
+        {
+          "name": "fingerprint",
+          "flag": "--fingerprint",
+          "type": "file",
+          "help": "Path to fingerprint JSON file",
+          "required": true,
+          "file_filter": "JSON Files (*.json);;All Files (*)"
+        },
+        {
+          "name": "username",
+          "flag": "--username",
+          "type": "string",
+          "help": "SSH username",
+          "required": true
+        },
+        {
+          "name": "password",
+          "flag": "--password",
+          "type": "password",
+          "help": "SSH password",
+          "required": true
+        }
+      ]
+    },
+    "optional": {
+      "title": "Optional Arguments",
+      "args": [
+        {
+          "name": "output",
+          "flag": "--output",
+          "type": "file",
+          "help": "Output file path",
+          "default": "mac_table_results.json",
+          "required": false,
+          "file_filter": "JSON Files (*.json);;All Files (*)",
+          "is_output": true
+        },
+        {
+          "name": "max-workers",
+          "flag": "--max-workers",
+          "type": "integer",
+          "help": "Maximum concurrent sessions",
+          "default": 5,
+          "required": false,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "device",
+          "flag": "--device",
+          "type": "string",
+          "help": "Filter to collect from devices matching this name",
+          "required": false
+        },
+        {
+          "name": "verbose",
+          "flag": "-v",
+          "type": "flag",
+          "help": "Enable verbose output",
+          "required": false
+        }
+      ]
+    }
+  }
+}

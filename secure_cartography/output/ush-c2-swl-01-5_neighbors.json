@@ -1,0 +1,205 @@
+{
+  "cdp": {},
+  "lldp": {
+    "ATAA411BB74C534": {
+      "ip": "10.42.12.44",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet2",
+          "a411.bb74.c534"
+        ]
+      ]
+    },
+    "SEP0029C2942A8A": {
+      "ip": "10.42.12.48",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet5",
+          "0029C2942A8A:P1"
+        ]
+      ]
+    },
+    "SEPB07D47D3FB18": {
+      "ip": "fd73:36ce:a209:d249:b27d:47ff:fed3:fb18",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet7",
+          "B07D47D3FB18:P1"
+        ]
+      ]
+    },
+    "SEP84B517097822": {
+      "ip": "fd73:36ce:a209:d249:86b5:17ff:fe09:7822",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet12",
+          "84B517097822:P1"
+        ]
+      ]
+    },
+    "SEP28C7CED6AC42": {
+      "ip": "10.42.12.81",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet16",
+          "28C7CED6AC42:P1"
+        ]
+      ]
+    },
+    "SEP00562BB535BA": {
+      "ip": "10.42.12.70",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet18",
+          "00562BB535BA:P1"
+        ]
+      ]
+    },
+    "SEP84B5170853A4": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet20",
+          "84B5170853A4:P1"
+        ]
+      ]
+    },
+    "SEP203A0723CA76": {
+      "ip": "10.42.12.58",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet25",
+          "203A0723CA76:P1"
+        ]
+      ]
+    },
+    "SEP84B517097E76": {
+      "ip": "fd73:36ce:a209:d249:86b5:17ff:fe09:7e76",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet28",
+          "84B517097E76:P1"
+        ]
+      ]
+    },
+    "ush-c2-ap08": {
+      "ip": "10.42.12.37",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet43",
+          "cc88.c7cb.8cce"
+        ]
+      ]
+    },
+    "ush-c2-ap06": {
+      "ip": "10.42.12.31",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet44",
+          "cc88.c7cb.aec8"
+        ]
+      ]
+    },
+    "ush-c2-ap01": {
+      "ip": "10.42.12.41",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet45",
+          "cc88.c7cb.a020"
+        ]
+      ]
+    },
+    "ush-c2-ap03": {
+      "ip": "10.42.13.3",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet46",
+          "cc88.c7cb.9474"
+        ]
+      ]
+    },
+    "ush-c2-ap10": {
+      "ip": "10.42.12.38",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet47",
+          "cc88.c7cb.b014"
+        ]
+      ]
+    },
+    "ush-c2-ap04": {
+      "ip": "10.42.12.254",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet48",
+          "cc88.c7cb.9aee"
+        ]
+      ]
+    },
+    "ush-c2-sml-01-2": {
+      "ip": "10.42.42.51",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet50",
+          "Ethernet50"
+        ]
+      ]
+    },
+    "ush-cr-core-a": {
+      "ip": "10.42.42.2",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet51",
+          "Ethernet7"
+        ]
+      ]
+    },
+    "ush-c2-swl-01-3": {
+      "ip": "10.42.42.52",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet53/1",
+          "Ethernet49"
+        ]
+      ]
+    },
+    "ush-c2-swl-01-4": {
+      "ip": "10.42.42.53",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet53/2",
+          "Ethernet49"
+        ]
+      ]
+    },
+    "ush-c2-swl-01-5": {
+      "ip": "10.42.42.54",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet53/3",
+          "Ethernet49"
+        ]
+      ]
+    }
+  }
+}

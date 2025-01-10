@@ -567,20 +567,24 @@ class NetworkMapperWidget(QWidget):
             viewer = TopologyViewer(topology_data=topology_data, dark_mode=show_dark_map, parent=self)
 
             # Get the screen geometry
-            screen_geometry = app.primaryScreen().availableGeometry()
+            try:
+                screen_geometry = app.primaryScreen().availableGeometry()
+                # Get the window size (using sizeHint if the window size isn't explicitly set)
+                window_size = viewer.sizeHint()
 
-            # Get the window size (using sizeHint if the window size isn't explicitly set)
-            window_size = viewer.sizeHint()
+                # Calculate the center position
+                x = (screen_geometry.width() - window_size.width()) // 2
+                y = (screen_geometry.height() - window_size.height()) // 2
 
-            # Calculate the center position
-            x = (screen_geometry.width() - window_size.width()) // 2
-            y = (screen_geometry.height() - window_size.height()) // 2
+                # Set the geometry before showing the window
+                viewer.setGeometry(x, y, window_size.width(), window_size.height())
+            except:
+                pass
 
-            # Set the geometry before showing the window
-            viewer.setGeometry(x, y, window_size.width(), window_size.height())
             viewer.show()
 
         except Exception as e:
+            traceback.print_exc()
             QMessageBox.critical(self, "Error", f"Failed to open topology viewer: {str(e)}")
 
     def open_output_folder(self):

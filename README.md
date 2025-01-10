@@ -1,22 +1,34 @@
-# Secure Cartography
 
-Secure Cartography is a secure, Python-based network discovery and mapping tool designed for network engineers and IT professionals. It leverages SSH-based device interrogation to automate network discovery, visualize network topologies, and merge network maps across multi-vendor environments.
 
-![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides.gif)
+# Secure Cartography & Surveyor Suite
 
-## Version 0.8.3 Highlights
+## Overview
+The **Secure Cartography & Surveyor Suite** is a comprehensive, Python-based network discovery, mapping, and management toolkit. Designed for network engineers, IT administrators, and SMBs, it provides robust features for automated device interrogation, network topology visualization, and configuration management, all while maintaining strict security standards.
 
-- **Major Performance Improvements**: 10x faster device discovery and processing
-- **Enhanced Visualization**: New interactive Mermaid-based network topology viewer
-- **Improved Device Support**: Added support for Aruba/HP ProCurve switches (non-CX)
-- **Advanced Logging**: Configurable logging levels with improved output formatting
-- **UI Improvements**: 
+
+![arch](screenshots/poc/slides1.gif)
+
+Key features include:
+- **Automated Discovery:** SSH-based interrogation with platform auto-detection.
+- **Network Mapping:** JSON-based storage with support for CDP/LLDP protocols.
+- **Device Inventory & Configuration:** Inventory parsing and configuration backup for multi-vendor environments.
+- **Extensive GUI Support:** Modern PyQt6-based interface with detailed device dialogs and search functionality.
+
+---
+
+## Version Highlights
+
+### Version 0.8.3 Highlights
+- **Major Performance Improvements:** 10x faster device discovery and processing
+- **Enhanced Visualization:** New interactive Mermaid-based network topology viewer
+- **Improved Device Support:** Added support for Aruba/HP ProCurve switches (non-CX)
+- **Advanced Logging:** Configurable logging levels with improved output formatting
+- **UI Improvements:**
   - Quick-access buttons for browsing output folders and files
   - Modernized topology merge dialog with interactive preview
   - Enhanced dark/light mode support
-- **CLI for automated mapping**:
-  - cli args, yaml conf, and env vars for secrets. ver 0.8.1 addresses a hanging bug
-  - See Appendix
+
+---
 
 ## Quick Start Guide
 
@@ -30,10 +42,9 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
    python -m secure_cartography.merge_dialog
    ```
 
-## Key Features
-- New improved native map viewer
-- Find and Highlight Node on map
-- ![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/viewer_slides.gif)
+---
+
+## Features
 
 ### Network Discovery
 - Multi-threaded SSH-based device discovery with optimized queue management
@@ -62,14 +73,33 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 ### Security
 - Master password-based encryption system
 - Machine-specific keyring integration
- - PBKDF2-based key derivation
+- PBKDF2-based key derivation
 - Encrypted credential storage
+
+### Device Inventory
+- Parses and normalizes inventory using TextFSM templates
+- Vendor-specific command mappings for Arista, Cisco IOS, and NX-OS
+- Multiprocessing support for large-scale operations
+
+### Configuration Management
+- Collects and stores running configurations
+- SQLite database integration for secure storage
+- Handles privilege escalation (e.g., `enable` mode for Cisco)
+
+### GUI
+- PyQt6-based interface
+- Devices tab with column filtering and global search
+- Device Detail Dialog:
+  - Overview, Interfaces, Inventory, and MAC Address tabs
+  - Real-time theme switching (dark/light modes)
 
 ### Map Merging
 - Interactive topology preview
 - Intelligent topology merging with connection deduplication
 - Comprehensive merge logging
 - Multiple file support
+
+---
 
 ## Installation
 
@@ -98,6 +128,8 @@ python -m secure_cartography.scart
 python -m secure_cartography.merge_dialog
 ```
 
+---
+
 ## System Requirements
 - Python 3.9+
 - PyQt6
@@ -108,16 +140,18 @@ python -m secure_cartography.merge_dialog
 - PyYAML
 - Paramiko
 
-## System Compatibility
+### System Compatibility
 
-### Tested Environments
+#### Tested Environments
 - Windows 10 & 11
 - Ubuntu 24.04
 - Mac OSX (latest as of 12-20-24)
 - Python versions 3.9 and 3.12
 
-### Known Issues
+#### Known Issues
 - Python 3.13: Compatibility issues with Napalm library
+
+---
 
 ## External Tool Integration
 
@@ -135,68 +169,7 @@ python -m secure_cartography.merge_dialog
 - Multiple export formats
 - Custom stencils and shapes
 
-## Version History
-
-### 0.7.0 (Current)
-- 10x performance improvement in device discovery
-- Added Aruba/HP ProCurve switch support
-- New interactive Mermaid-based topology viewer
-- Enhanced logging with configurable levels
-- Improved UI with quick-access file management
-- Better error handling and recovery
-
-### 0.2.0
-- Initial ProCurve support
-- Improved device discovery reliability
-- Enhanced neighbor discovery
-- Added debug logging
-- Improved topology mapping
-- Better platform detection
-
-## Technology Stack
-
-### Core Technologies
-- Python 3.9+
-- PyQt6 for GUI
-- NetworkX for graph processing
-- Matplotlib for visualization
-- Cryptography.io for security
-
-### Security Components
-- PBKDF2 key derivation
-- Fernet encryption
-- System keyring integration
-- Platform-specific secure storage
-
-### Network Interaction
-- Paramiko/SSH2 for device communication
-- TextFSM for output parsing
-- Custom platform detection
-- Enhanced interface normalization
-
-### Data Storage
-- JSON for topology data
-- YAML for configuration
-- SVG for visualizations
-- Encrypted credential storage
-
-## Security Architecture
-
-### Credential Protection
-1. **Master Password System**
-   - PBKDF2-derived key generation
-   - Machine-specific salt
-   - Secure system keyring integration
-
-2. **Storage Security**
-   - Fernet encryption for credentials
-   - No plaintext password storage
-   - Platform-specific secure storage locations
-
-3. **Runtime Security**
-   - Memory-safe credential handling
-   - Secure credential cleanup
-   - Protected GUI input fields
+---
 
 ## Appendix A: CLI Usage
 
@@ -286,3 +259,46 @@ export SC_USERNAME=admin
 export SC_PASSWORD=secret
 sc --yaml config.yaml
 ```
+
+---
+
+## Appendix B: Surveyor GUI Features
+
+Surveyor extends the capabilities of Secure Cartography with an intuitive GUI for advanced network management tasks:
+
+### Key Features
+
+- **Job Management:**
+  - Define, edit, and schedule jobs for tasks like device fingerprinting, configuration backup, SNMP collection, and more.
+  - Visualize job statuses in real-time with logs and last run details.
+
+- **Interactive Interface:**
+  - Dark/light mode support.
+  - Detailed job configuration dialogs with support for required and optional arguments.
+
+- **Live Log Monitoring:**
+  - View real-time logs during job execution.
+
+- **Screenshots**
+
+#### Job Dashboard
+![Job Dashboard](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/collector1.png)
+
+#### Job Configuration
+![Job Configuration](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/job_edit2.png)
+
+---
+
+## Licensing
+This project is licensed under the GNU General Public License v3.0 (GPLv3).
+
+---
+
+## Contributions
+Contributions are welcome! Please submit pull requests to the main repository or reach out via the issues page.
+
+---
+
+## Support
+For support or inquiries, please contact [support@example.com](mailto:support@example.com).
+

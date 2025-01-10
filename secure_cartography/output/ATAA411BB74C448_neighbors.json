@@ -1,0 +1,85 @@
+{
+  "cdp": {
+    "SEP5006AB08F408": {
+      "ip": "10.43.66.22",
+      "platform": "ios",
+      "connections": [
+        [
+          "TenGigabitEthernet2/0/38",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP84B517081758": {
+      "ip": "10.43.67.7",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet2/0/36",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP7018A716D4B0": {
+      "ip": "10.43.67.8",
+      "platform": "ios",
+      "connections": [
+        [
+          "TenGigabitEthernet2/0/40",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP84B517094484": {
+      "ip": "10.43.67.6",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet3/0/11",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEPC4B36A34731E": {
+      "ip": "10.43.66.21",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet3/0/9",
+          "Port 1"
+        ]
+      ]
+    },
+    "SEP501CB03AAEC0": {
+      "ip": "10.43.66.23",
+      "platform": "ios",
+      "connections": [
+        [
+          "TwoGigabitEthernet1/0/1",
+          "Port 1"
+        ]
+      ]
+    },
+    "ush-m1-core": {
+      "ip": "10.42.79.1",
+      "platform": "ios",
+      "connections": [
+        [
+          "FortyGigabitEthernet1/1/1",
+          "FortyGigabitEthernet1/0/6"
+        ]
+      ]
+    },
+    "ATAA411BB74C448": {
+      "ip": "10.43.67.38",
+      "platform": "ios",
+      "connections": [
+        [
+          "TenGigabitEthernet3/0/43",
+          "Port 1"
+        ]
+      ]
+    }
+  },
+  "lldp": {}
+}

@@ -1,0 +1,853 @@
+{
+  "successful": {
+    "usa1-core-02": {
+      "name": "usa1-core-02",
+      "ip": "172.16.101.2",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "103",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.2": {
+            "ip_address": "172.16.101.2",
+            "mac_address": "0c:4f:63:92:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.4": {
+            "ip_address": "172.16.101.4",
+            "mac_address": "0c:59:b7:69:80:01",
+            "age": "113",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.21": {
+            "ip_address": "172.16.101.21",
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "age": "236",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "177",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:52.500359",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.101.1          103   0cab.0018.8001  ARPA   Vlan1\r\nInternet  172.16.101.2            -   0c4f.6392.8001  ARPA   Vlan1\r\nInternet  172.16.101.4          113   0c59.b769.8001  ARPA   Vlan1\r\nInternet  172.16.101.21         236   0c96.dc37.c1c3  ARPA   Vlan1\r\nInternet  172.16.101.100        177   ca01.8e69.0038  ARPA   Vlan1\r\nusa1-core-02#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "usa2-rtr-1": {
+      "name": "usa2-rtr-1",
+      "ip": "172.16.128.2",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.1.1": {
+            "ip_address": "172.16.1.1",
+            "mac_address": "1e:0e:d7:86:d8:3e",
+            "age": "0",
+            "interface": "Ethernet1/1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.1.101": {
+            "ip_address": "172.16.1.101",
+            "mac_address": "ca:01:8e:69:00:1d",
+            "age": "32",
+            "interface": "Ethernet1/1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.1.102": {
+            "ip_address": "172.16.1.102",
+            "mac_address": "ca:02:8e:a7:00:1d",
+            "age": "permanent",
+            "interface": "Ethernet1/1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.128.1": {
+            "ip_address": "172.16.128.1",
+            "mac_address": "ca:01:8e:69:00:1c",
+            "age": "66",
+            "interface": "Ethernet1/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.128.2": {
+            "ip_address": "172.16.128.2",
+            "mac_address": "ca:02:8e:a7:00:1c",
+            "age": "permanent",
+            "interface": "Ethernet1/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.1": {
+            "ip_address": "172.16.201.1",
+            "mac_address": "0c:21:c5:41:80:01",
+            "age": "58",
+            "interface": "Ethernet1/2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.2": {
+            "ip_address": "172.16.201.2",
+            "mac_address": "0c:4e:da:f9:80:01",
+            "age": "47",
+            "interface": "Ethernet1/2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.3": {
+            "ip_address": "172.16.201.3",
+            "mac_address": "0c:45:ab:92:80:01",
+            "age": "55",
+            "interface": "Ethernet1/2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.4": {
+            "ip_address": "172.16.201.4",
+            "mac_address": "0c:ff:d3:76:80:01",
+            "age": "65",
+            "interface": "Ethernet1/2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.100": {
+            "ip_address": "172.16.201.100",
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "age": "permanent",
+            "interface": "Ethernet1/2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.202.100": {
+            "ip_address": "172.16.202.100",
+            "mac_address": "ca:02:8e:a7:00:38",
+            "age": "permanent",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:52.500359",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.1.1              0   1e0e.d786.d83e  ARPA   Ethernet1/1\r\nInternet  172.16.1.101           32   ca01.8e69.001d  ARPA   Ethernet1/1\r\nInternet  172.16.1.102            -   ca02.8ea7.001d  ARPA   Ethernet1/1\r\nInternet  172.16.128.1           66   ca01.8e69.001c  ARPA   Ethernet1/0\r\nInternet  172.16.128.2            -   ca02.8ea7.001c  ARPA   Ethernet1/0\r\nInternet  172.16.201.1           58   0c21.c541.8001  ARPA   Ethernet1/2\r\nInternet  172.16.201.2           47   0c4e.daf9.8001  ARPA   Ethernet1/2\r\nInternet  172.16.201.3           55   0c45.ab92.8001  ARPA   Ethernet1/2\r\nInternet  172.16.201.4           65   0cff.d376.8001  ARPA   Ethernet1/2\r\nInternet  172.16.201.100          -   ca02.8ea7.001e  ARPA   Ethernet1/2\r\nInternet  172.16.202.100          -   ca02.8ea7.0038  ARPA   Ethernet2/0\r\nusa2-rtr-1#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "usa1-core-01": {
+      "name": "usa1-core-01",
+      "ip": "172.16.101.1",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.2": {
+            "ip_address": "172.16.101.2",
+            "mac_address": "0c:4f:63:92:80:01",
+            "age": "103",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.4": {
+            "ip_address": "172.16.101.4",
+            "mac_address": "0c:59:b7:69:80:01",
+            "age": "185",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.21": {
+            "ip_address": "172.16.101.21",
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "age": "6",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.22": {
+            "ip_address": "172.16.101.22",
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "age": "230",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.23": {
+            "ip_address": "172.16.101.23",
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "age": "9",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "163",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:52.501392",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.101.1            -   0cab.0018.8001  ARPA   Vlan1\r\nInternet  172.16.101.2          103   0c4f.6392.8001  ARPA   Vlan1\r\nInternet  172.16.101.4          185   0c59.b769.8001  ARPA   Vlan1\r\nInternet  172.16.101.21           6   0c96.dc37.c1c3  ARPA   Vlan1\r\nInternet  172.16.101.22         230   0c18.3d17.cbe7  ARPA   Vlan1\r\nInternet  172.16.101.23           9   0c3d.dbc0.d81f  ARPA   Vlan1\r\nInternet  172.16.101.100        163   ca01.8e69.0038  ARPA   Vlan1\r\nusa1-core-01#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "usa1-rtr-1": {
+      "name": "usa1-rtr-1",
+      "ip": "172.16.101.100",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.1.1": {
+            "ip_address": "172.16.1.1",
+            "mac_address": "1e:0e:d7:86:d8:3e",
+            "age": "0",
+            "interface": "Ethernet1/1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.1.101": {
+            "ip_address": "172.16.1.101",
+            "mac_address": "ca:01:8e:69:00:1d",
+            "age": "permanent",
+            "interface": "Ethernet1/1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.1.102": {
+            "ip_address": "172.16.1.102",
+            "mac_address": "ca:02:8e:a7:00:1d",
+            "age": "51",
+            "interface": "Ethernet1/1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "163",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.2": {
+            "ip_address": "172.16.101.2",
+            "mac_address": "0c:4f:63:92:80:01",
+            "age": "177",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.4": {
+            "ip_address": "172.16.101.4",
+            "mac_address": "0c:59:b7:69:80:01",
+            "age": "136",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.21": {
+            "ip_address": "172.16.101.21",
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "age": "198",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.22": {
+            "ip_address": "172.16.101.22",
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "age": "197",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.23": {
+            "ip_address": "172.16.101.23",
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "age": "196",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "permanent",
+            "interface": "Ethernet2/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.128.1": {
+            "ip_address": "172.16.128.1",
+            "mac_address": "ca:01:8e:69:00:1c",
+            "age": "permanent",
+            "interface": "Ethernet1/0",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.128.2": {
+            "ip_address": "172.16.128.2",
+            "mac_address": "ca:02:8e:a7:00:1c",
+            "age": "111",
+            "interface": "Ethernet1/0",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:52.501392",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.1.1              0   1e0e.d786.d83e  ARPA   Ethernet1/1\r\nInternet  172.16.1.101            -   ca01.8e69.001d  ARPA   Ethernet1/1\r\nInternet  172.16.1.102           51   ca02.8ea7.001d  ARPA   Ethernet1/1\r\nInternet  172.16.101.1          163   0cab.0018.8001  ARPA   Ethernet2/0\r\nInternet  172.16.101.2          177   0c4f.6392.8001  ARPA   Ethernet2/0\r\nInternet  172.16.101.4          136   0c59.b769.8001  ARPA   Ethernet2/0\r\nInternet  172.16.101.21         198   0c96.dc37.c1c3  ARPA   Ethernet2/0\r\nInternet  172.16.101.22         197   0c18.3d17.cbe7  ARPA   Ethernet2/0\r\nInternet  172.16.101.23         196   0c3d.dbc0.d81f  ARPA   Ethernet2/0\r\nInternet  172.16.101.100          -   ca01.8e69.0038  ARPA   Ethernet2/0\r\nInternet  172.16.128.1            -   ca01.8e69.001c  ARPA   Ethernet1/0\r\nInternet  172.16.128.2          111   ca02.8ea7.001c  ARPA   Ethernet1/0\r\nusa1-rtr-1#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "arista-1": {
+      "name": "arista-1",
+      "ip": "172.16.101.21",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.2": {
+            "ip_address": "172.16.101.2",
+            "mac_address": "0c:4f:63:92:80:01",
+            "age": "N/A",
+            "interface": "Vlan1, not learned",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.4": {
+            "ip_address": "172.16.101.4",
+            "mac_address": "0c:59:b7:69:80:01",
+            "age": "N/A",
+            "interface": "Vlan1, not learned",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.22": {
+            "ip_address": "172.16.101.22",
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet3",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.23": {
+            "ip_address": "172.16.101.23",
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:52.501392",
+          "source_template": "arista_eos_show_ip_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nAddress         Age (min)  Hardware Addr   Interface\r\n172.16.101.1          N/A  0cab.0018.8001  Vlan1, Ethernet1\r\n172.16.101.2          N/A  0c4f.6392.8001  Vlan1, not learned\r\n172.16.101.4          N/A  0c59.b769.8001  Vlan1, not learned\r\n172.16.101.22         N/A  0c18.3d17.cbe7  Vlan1, Ethernet3\r\n172.16.101.23         N/A  0c3d.dbc0.d81f  Vlan1, Ethernet2\r\n172.16.101.100        N/A  ca01.8e69.0038  Vlan1, Ethernet1\r\narista-1>"
+        }
+      },
+      "template": "arista_eos_show_ip_arp"
+    },
+    "usa1-access-02": {
+      "name": "usa1-access-02",
+      "ip": "172.16.101.4",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "185",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.2": {
+            "ip_address": "172.16.101.2",
+            "mac_address": "0c:4f:63:92:80:01",
+            "age": "113",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.4": {
+            "ip_address": "172.16.101.4",
+            "mac_address": "0c:59:b7:69:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.21": {
+            "ip_address": "172.16.101.21",
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "age": "30",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "136",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:53.781936",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.101.1          185   0cab.0018.8001  ARPA   Vlan1\r\nInternet  172.16.101.2          113   0c4f.6392.8001  ARPA   Vlan1\r\nInternet  172.16.101.4            -   0c59.b769.8001  ARPA   Vlan1\r\nInternet  172.16.101.21          30   0c96.dc37.c1c3  ARPA   Vlan1\r\nInternet  172.16.101.100        136   ca01.8e69.0038  ARPA   Vlan1\r\nusa1-access-02#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "usa2-core-01": {
+      "name": "usa2-core-01",
+      "ip": "172.16.201.1",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.201.1": {
+            "ip_address": "172.16.201.1",
+            "mac_address": "0c:21:c5:41:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.2": {
+            "ip_address": "172.16.201.2",
+            "mac_address": "0c:4e:da:f9:80:01",
+            "age": "123",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.3": {
+            "ip_address": "172.16.201.3",
+            "mac_address": "0c:45:ab:92:80:01",
+            "age": "137",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.4": {
+            "ip_address": "172.16.201.4",
+            "mac_address": "0c:ff:d3:76:80:01",
+            "age": "132",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.31": {
+            "ip_address": "172.16.201.31",
+            "mac_address": "0c:a7:3d:ac:00:02",
+            "age": "18",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.100": {
+            "ip_address": "172.16.201.100",
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "age": "97",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:53.813680",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.201.1            -   0c21.c541.8001  ARPA   Vlan1\r\nInternet  172.16.201.2          123   0c4e.daf9.8001  ARPA   Vlan1\r\nInternet  172.16.201.3          137   0c45.ab92.8001  ARPA   Vlan1\r\nInternet  172.16.201.4          132   0cff.d376.8001  ARPA   Vlan1\r\nInternet  172.16.201.31          18   0ca7.3dac.0002  ARPA   Vlan1\r\nInternet  172.16.201.100         97   ca02.8ea7.001e  ARPA   Vlan1\r\nusa2-core-01#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "usa2-core-02": {
+      "name": "usa2-core-02",
+      "ip": "172.16.201.2",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.201.1": {
+            "ip_address": "172.16.201.1",
+            "mac_address": "0c:21:c5:41:80:01",
+            "age": "123",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.2": {
+            "ip_address": "172.16.201.2",
+            "mac_address": "0c:4e:da:f9:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.3": {
+            "ip_address": "172.16.201.3",
+            "mac_address": "0c:45:ab:92:80:01",
+            "age": "128",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.4": {
+            "ip_address": "172.16.201.4",
+            "mac_address": "0c:ff:d3:76:80:01",
+            "age": "218",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.31": {
+            "ip_address": "172.16.201.31",
+            "mac_address": "0c:a7:3d:ac:00:02",
+            "age": "18",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.100": {
+            "ip_address": "172.16.201.100",
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "age": "78",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:53.813680",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.201.1          123   0c21.c541.8001  ARPA   Vlan1\r\nInternet  172.16.201.2            -   0c4e.daf9.8001  ARPA   Vlan1\r\nInternet  172.16.201.3          128   0c45.ab92.8001  ARPA   Vlan1\r\nInternet  172.16.201.4          218   0cff.d376.8001  ARPA   Vlan1\r\nInternet  172.16.201.31          18   0ca7.3dac.0002  ARPA   Vlan1\r\nInternet  172.16.201.100         78   ca02.8ea7.001e  ARPA   Vlan1\r\nusa2-core-02#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "arista-3": {
+      "name": "arista-3",
+      "ip": "172.16.21.2",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.21.1": {
+            "ip_address": "172.16.21.1",
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "age": "N/A",
+            "interface": "Ethernet2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.22.1": {
+            "ip_address": "172.16.22.1",
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "age": "N/A",
+            "interface": "Ethernet3",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "N/A",
+            "interface": "Vlan1, not learned",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.21": {
+            "ip_address": "172.16.101.21",
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.22": {
+            "ip_address": "172.16.101.22",
+            "mac_address": "0c:18:3d:17:cb:e7",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:54.090390",
+          "source_template": "arista_eos_show_ip_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nAddress         Age (min)  Hardware Addr   Interface\r\n172.16.21.1           N/A  0c18.3d17.cbe7  Ethernet2\r\n172.16.22.1           N/A  0c18.3d17.cbe7  Ethernet3\r\n172.16.101.1          N/A  0cab.0018.8001  Vlan1, not learned\r\n172.16.101.21         N/A  0c96.dc37.c1c3  Vlan1, Ethernet1\r\n172.16.101.22         N/A  0c18.3d17.cbe7  Vlan1, Ethernet1\r\n172.16.101.100        N/A  ca01.8e69.0038  Vlan1, Ethernet1\r\narista-3>"
+        }
+      },
+      "template": "arista_eos_show_ip_arp"
+    },
+    "arista-2": {
+      "name": "arista-2",
+      "ip": "172.16.21.1",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.21.2": {
+            "ip_address": "172.16.21.2",
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "age": "N/A",
+            "interface": "Ethernet2",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.22.2": {
+            "ip_address": "172.16.22.2",
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "age": "N/A",
+            "interface": "Ethernet3",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.1": {
+            "ip_address": "172.16.101.1",
+            "mac_address": "0c:ab:00:18:80:01",
+            "age": "N/A",
+            "interface": "Vlan1, not learned",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.21": {
+            "ip_address": "172.16.101.21",
+            "mac_address": "0c:96:dc:37:c1:c3",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.23": {
+            "ip_address": "172.16.101.23",
+            "mac_address": "0c:3d:db:c0:d8:1f",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.101.100": {
+            "ip_address": "172.16.101.100",
+            "mac_address": "ca:01:8e:69:00:38",
+            "age": "N/A",
+            "interface": "Vlan1, Ethernet1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:54.158470",
+          "source_template": "arista_eos_show_ip_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nAddress         Age (min)  Hardware Addr   Interface\r\n172.16.21.2           N/A  0c3d.dbc0.d81f  Ethernet2\r\n172.16.22.2           N/A  0c3d.dbc0.d81f  Ethernet3\r\n172.16.101.1          N/A  0cab.0018.8001  Vlan1, not learned\r\n172.16.101.21         N/A  0c96.dc37.c1c3  Vlan1, Ethernet1\r\n172.16.101.23         N/A  0c3d.dbc0.d81f  Vlan1, Ethernet1\r\n172.16.101.100        N/A  ca01.8e69.0038  Vlan1, Ethernet1\r\narista-2>"
+        }
+      },
+      "template": "arista_eos_show_ip_arp"
+    },
+    "usa2-access-02": {
+      "name": "usa2-access-02",
+      "ip": "172.16.201.4",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.201.1": {
+            "ip_address": "172.16.201.1",
+            "mac_address": "0c:21:c5:41:80:01",
+            "age": "132",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.2": {
+            "ip_address": "172.16.201.2",
+            "mac_address": "0c:4e:da:f9:80:01",
+            "age": "218",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.3": {
+            "ip_address": "172.16.201.3",
+            "mac_address": "0c:45:ab:92:80:01",
+            "age": "141",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.4": {
+            "ip_address": "172.16.201.4",
+            "mac_address": "0c:ff:d3:76:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.31": {
+            "ip_address": "172.16.201.31",
+            "mac_address": "0c:a7:3d:ac:00:02",
+            "age": "18",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.100": {
+            "ip_address": "172.16.201.100",
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "age": "110",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:55.416459",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.201.1          132   0c21.c541.8001  ARPA   Vlan1\r\nInternet  172.16.201.2          218   0c4e.daf9.8001  ARPA   Vlan1\r\nInternet  172.16.201.3          141   0c45.ab92.8001  ARPA   Vlan1\r\nInternet  172.16.201.4            -   0cff.d376.8001  ARPA   Vlan1\r\nInternet  172.16.201.31          18   0ca7.3dac.0002  ARPA   Vlan1\r\nInternet  172.16.201.100        110   ca02.8ea7.001e  ARPA   Vlan1\r\nusa2-access-02#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    },
+    "usa2-access-01": {
+      "name": "usa2-access-01",
+      "ip": "172.16.201.3",
+      "success": true,
+      "arp_table": {
+        "arp_table": {
+          "172.16.201.1": {
+            "ip_address": "172.16.201.1",
+            "mac_address": "0c:21:c5:41:80:01",
+            "age": "137",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.2": {
+            "ip_address": "172.16.201.2",
+            "mac_address": "0c:4e:da:f9:80:01",
+            "age": "128",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.3": {
+            "ip_address": "172.16.201.3",
+            "mac_address": "0c:45:ab:92:80:01",
+            "age": "permanent",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.4": {
+            "ip_address": "172.16.201.4",
+            "mac_address": "0c:ff:d3:76:80:01",
+            "age": "141",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.31": {
+            "ip_address": "172.16.201.31",
+            "mac_address": "0c:a7:3d:ac:00:02",
+            "age": "18",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          },
+          "172.16.201.100": {
+            "ip_address": "172.16.201.100",
+            "mac_address": "ca:02:8e:a7:00:1e",
+            "age": "93",
+            "interface": "Vlan1",
+            "type": "ARPA",
+            "vrf": "default"
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-10T10:34:55.431858",
+          "source_template": "cisco_ios_show_arp",
+          "schema_version": "1.0",
+          "raw_data": "show ip arp\r\nProtocol  Address          Age (min)  Hardware Addr   Type   Interface\r\nInternet  172.16.201.1          137   0c21.c541.8001  ARPA   Vlan1\r\nInternet  172.16.201.2          128   0c4e.daf9.8001  ARPA   Vlan1\r\nInternet  172.16.201.3            -   0c45.ab92.8001  ARPA   Vlan1\r\nInternet  172.16.201.4          141   0cff.d376.8001  ARPA   Vlan1\r\nInternet  172.16.201.31          18   0ca7.3dac.0002  ARPA   Vlan1\r\nInternet  172.16.201.100         93   ca02.8ea7.001e  ARPA   Vlan1\r\nusa2-access-01#"
+        }
+      },
+      "template": "cisco_ios_show_arp"
+    }
+  },
+  "failed": {}
+}

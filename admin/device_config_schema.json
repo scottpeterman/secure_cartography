@@ -1,0 +1,63 @@
+{
+  "script": "device_config.py",
+  "description": "Network Configuration Backup Tool",
+  "argument_groups": {
+    "required": {
+      "title": "Required Arguments",
+      "args": [
+        {
+          "name": "db",
+          "flag": "--db",
+          "type": "file",
+          "help": "Path to the SQLite database",
+          "required": true,
+          "file_filter": "SQLite Database (*.db);;All Files (*)"
+        },
+        {
+          "name": "fingerprint",
+          "flag": "--fingerprint",
+          "type": "file",
+          "help": "Path to fingerprint JSON file",
+          "required": true,
+          "file_filter": "JSON Files (*.json);;All Files (*)"
+        },
+        {
+          "name": "username",
+          "flag": "--username",
+          "type": "string",
+          "help": "SSH username",
+          "required": true
+        },
+        {
+          "name": "password",
+          "flag": "--password",
+          "type": "password",
+          "help": "SSH password",
+          "required": true
+        }
+      ]
+    },
+    "optional": {
+      "title": "Optional Arguments",
+      "args": [
+        {
+          "name": "max-workers",
+          "flag": "--max-workers",
+          "type": "integer",
+          "help": "Maximum concurrent sessions",
+          "default": 5,
+          "required": false,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "verbose",
+          "flag": "-v",
+          "type": "flag",
+          "help": "Enable verbose output",
+          "required": false
+        }
+      ]
+    }
+  }
+}

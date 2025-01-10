@@ -1,0 +1,85 @@
+{
+  "cdp": {},
+  "lldp": {
+    "usp-fcsw0": {
+      "ip": "10.45.140.10",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet4",
+          "mgmt0"
+        ]
+      ]
+    },
+    "usp-pure-san-01-ct0": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet6",
+          "ea91.a1ca.f0fc"
+        ]
+      ]
+    },
+    "DJ3Q5S3": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet35",
+          "gbe1"
+        ]
+      ]
+    },
+    "usp-leaf-4a": {
+      "ip": "10.45.7.18",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet45",
+          "Management1"
+        ]
+      ]
+    },
+    "usp-leaf-3a": {
+      "ip": "10.45.7.16",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet49",
+          "Ethernet47"
+        ]
+      ]
+    },
+    "usp-leaf-6a": {
+      "ip": "10.45.7.22",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet47",
+          "Management1"
+        ]
+      ]
+    },
+    "usp-leaf-5a": {
+      "ip": "10.45.7.20",
+      "platform": "eos",
+      "connections": [
+        [
+          "Management1",
+          "Ethernet48"
+        ]
+      ]
+    },
+    "usp-leaf-3b": {
+      "ip": "10.45.7.17",
+      "platform": "eos",
+      "connections": [
+        [
+          "Ethernet50",
+          "Ethernet47"
+        ]
+      ]
+    }
+  }
+}

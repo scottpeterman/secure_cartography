@@ -1,0 +1,38 @@
+[
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.1",
+    "PLATFORM": "cisco C9500-32QC",
+    "NEIGHBOR_INTERFACE": "FortyGigabitEthernet2/0/20",
+    "LOCAL_INTERFACE": "TenGigabitEthernet2/1/8",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.1",
+    "PLATFORM": "cisco C9500-32QC",
+    "NEIGHBOR_INTERFACE": "FortyGigabitEthernet1/0/20",
+    "LOCAL_INTERFACE": "TenGigabitEthernet1/1/8",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1b-swl-02.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.21",
+    "PLATFORM": "cisco WS-C3850-12X48U",
+    "NEIGHBOR_INTERFACE": "TenGigabitEthernet2/1/2",
+    "LOCAL_INTERFACE": "TenGigabitEthernet2/1/2",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.10a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1b-swl-02.columbia.csc",
+    "MGMT_ADDRESS": "10.42.79.21",
+    "PLATFORM": "cisco WS-C3850-12X48U",
+    "NEIGHBOR_INTERFACE": "TenGigabitEthernet1/1/1",
+    "LOCAL_INTERFACE": "TenGigabitEthernet1/1/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.10a, RELEASE SOFTWARE (fc3)",
+    "CAPABILITIES": "Switch IGMP"
+  }
+]

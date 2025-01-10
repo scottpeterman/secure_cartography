@@ -1,0 +1,65 @@
+{
+  "script": "device_fingerprint.py",
+  "description": "Enhanced Network Device Fingerprinting Tool",
+  "argument_groups": {
+    "required": {
+      "title": "Required Arguments",
+      "args": [
+        {
+          "name": "topology",
+          "flag": "--topology",
+          "type": "file",
+          "help": "Path to topology JSON file",
+          "required": true,
+          "file_filter": "JSON Files (*.json);;All Files (*)"
+        },
+        {
+          "name": "username",
+          "flag": "--username",
+          "type": "string",
+          "help": "SSH username",
+          "required": true
+        },
+        {
+          "name": "password",
+          "flag": "--password",
+          "type": "password",
+          "help": "SSH password",
+          "required": true
+        }
+      ]
+    },
+    "optional": {
+      "title": "Optional Arguments",
+      "args": [
+        {
+          "name": "output",
+          "flag": "--output",
+          "type": "file",
+          "help": "Output file path",
+          "default": "fingerprint_results.json",
+          "required": false,
+          "file_filter": "JSON Files (*.json);;All Files (*)",
+          "is_output": true
+        },
+        {
+          "name": "max-workers",
+          "flag": "--max-workers",
+          "type": "integer",
+          "help": "Maximum concurrent sessions",
+          "default": 10,
+          "required": false,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "verbose",
+          "flag": "-v",
+          "type": "flag",
+          "help": "Enable verbose output",
+          "required": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "cdp": {
+    "use-lan-sw-08": {
+      "ip": "10.35.0.202",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/32",
+          "Ethernet1/32"
+        ]
+      ]
+    },
+    "use-core-a": {
+      "ip": "10.35.190.26",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet107/1/37",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-core-b": {
+      "ip": "10.35.190.27",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet108/1/37",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-p-ucs1-A": {
+      "ip": "10.35.191.43",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/3",
+          "Ethernet1/17"
+        ]
+      ]
+    },
+    "use-p-ucs1-B": {
+      "ip": "10.35.191.44",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/4",
+          "Ethernet1/17"
+        ]
+      ]
+    },
+    "use-d-ucs1-A": {
+      "ip": "10.35.191.61",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/15",
+          "Ethernet1/19"
+        ]
+      ]
+    },
+    "use-d-ucs1-B": {
+      "ip": "10.35.191.62",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/16",
+          "Ethernet1/19"
+        ]
+      ]
+    },
+    "use-mds-fcs-01": {
+      "ip": "10.35.190.54",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet107/1/16",
+          "mgmt0"
+        ]
+      ]
+    },
+    "Dell EMC PowerStore": {
+      "ip": "10.35.190.21",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet108/1/31",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-admin-a": {
+      "ip": "10.35.190.24",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet107/1/35",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-mds-fcs-02": {
+      "ip": "10.35.190.55",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet108/1/16",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-fcsw0": {
+      "ip": "10.35.190.20",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet108/1/32",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-admin-b": {
+      "ip": "10.35.190.25",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet108/1/35",
+          "mgmt0"
+        ]
+      ]
+    }
+  },
+  "lldp": {
+    "use-lan-sw-08": {
+      "ip": "10.35.0.202",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth1/32",
+          "Eth1/32"
+        ]
+      ]
+    },
+    "use-core-a": {
+      "ip": "10.35.190.26",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth107/1/37",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-core-b": {
+      "ip": "10.35.190.27",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth108/1/37",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-p-ucs1-A": {
+      "ip": "10.35.191.43",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth1/3",
+          "Eth1/17"
+        ]
+      ]
+    },
+    "use-p-ucs1-B": {
+      "ip": "10.35.191.44",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth1/4",
+          "Eth1/17"
+        ]
+      ]
+    },
+    "use-d-ucs1-A": {
+      "ip": "10.35.191.61",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth1/15",
+          "Eth1/19"
+        ]
+      ]
+    },
+    "use-d-ucs1-B": {
+      "ip": "10.35.191.62",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth1/16",
+          "Eth1/19"
+        ]
+      ]
+    },
+    "8J3Q5S3": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth107/1/5",
+          "gbe1"
+        ]
+      ]
+    },
+    "usep-netutil02": {
+      "ip": "10.35.254.53",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth107/1/6",
+          "c84b.d687.cc04"
+        ]
+      ]
+    },
+    "Use-dd-vtl1": {
+      "ip": "10.35.190.60",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth107/1/8",
+          "ethMa"
+        ]
+      ]
+    },
+    "use-pure-san-01-ct0": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth107/1/28",
+          "aaa9.7a23.e90c"
+        ]
+      ]
+    },
+    "2K3Q5S3": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth108/1/5",
+          "gbe3"
+        ]
+      ]
+    },
+    "use-pure-san-01-ct1": {
+      "ip": "",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth108/1/12",
+          "66e7.9cb5.3572"
+        ]
+      ]
+    },
+    "use-fcsw1": {
+      "ip": "10.35.190.21",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth108/1/31",
+          "mgmt0"
+        ]
+      ]
+    },
+    "use-fcsw0": {
+      "ip": "10.35.190.20",
+      "platform": "ios",
+      "connections": [
+        [
+          "Eth108/1/32",
+          "mgmt0"
+        ]
+      ]
+    }
+  }
+}

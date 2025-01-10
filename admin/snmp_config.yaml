@@ -1,0 +1,17 @@
+# SNMP Configuration
+---
+# SNMPv2c communities to try
+communities:
+  - write
+
+# SNMPv3 credentials
+snmpv3:
+  - username: cisco
+    auth_protocol: sha
+    auth_key: badkey
+    priv_protocol: aes128
+    priv_key: badkey
+# General settings
+timeout: 2  # seconds
+retries: 1
+max_threads: 5  # maximum number of concurrent credential tests

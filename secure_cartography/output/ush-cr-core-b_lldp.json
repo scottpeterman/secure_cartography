@@ -1,0 +1,202 @@
+[
+  {
+    "NEIGHBOR_NAME": "ush-a1-sml-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b79.465f",
+    "MGMT_ADDRESS": "10.42.42.44",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "3 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-a2-sml-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.cc4b",
+    "MGMT_ADDRESS": "10.42.42.34",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet2",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "3 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-b1-sml-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b7b.1249",
+    "MGMT_ADDRESS": "10.42.42.18",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet3",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "16 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-b2-sml-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b78.ce7d",
+    "MGMT_ADDRESS": "10.42.42.22",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet4",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "2 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-b1-hr-swl-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.dfab",
+    "MGMT_ADDRESS": "10.42.42.16",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet5",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "23 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-c1-sml-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b79.c9e1",
+    "MGMT_ADDRESS": "10.42.42.26",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet6",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "21 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-c2-sml-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.9e09",
+    "MGMT_ADDRESS": "10.42.42.50",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet7",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "26 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-c3-sml-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b78.e40b",
+    "MGMT_ADDRESS": "10.42.42.38",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet8",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "9 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-e1-swl-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b7b.25a9",
+    "MGMT_ADDRESS": "10.42.42.12",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet9",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "10 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-g1-sml-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.8fbf",
+    "MGMT_ADDRESS": "10.42.42.55",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet10",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "4 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-h1b-sml-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b79.fc41",
+    "MGMT_ADDRESS": "10.42.42.59",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet11",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "9 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-e2-swl-01-1.columbia.csc",
+    "CHASSIS_ID": "606b.5b79.ad8b",
+    "MGMT_ADDRESS": "10.42.42.15",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet12",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "13 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-d1-sml-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b78.d0ab",
+    "MGMT_ADDRESS": "10.42.42.10",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet51",
+    "LOCAL_INTERFACE": "Ethernet14",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "2 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "usp-edge-1a",
+    "CHASSIS_ID": "fc59.c045.2381",
+    "MGMT_ADDRESS": "10.45.7.24",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.4M running on an Arista Networks DCS-7280SR3K-48YC8A",
+    "NEIGHBOR_INTERFACE": "Ethernet11",
+    "LOCAL_INTERFACE": "Ethernet38",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "3 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-m1-core.columbia.csc",
+    "CHASSIS_ID": "34ed.1b51.f4e0",
+    "MGMT_ADDRESS": "10.42.252.242",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)\\x0aTechnical Support: http://www.cisco.com/techsupport\\x0aCopyright (c) 1986-2023 by Cisco Systems, Inc.\\x0aCompiled Fri 20-Oct-23 10:44 by mcpre",
+    "NEIGHBOR_INTERFACE": "Fo1/0/1",
+    "LOCAL_INTERFACE": "Ethernet39",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "19 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-lab-swl-01.columbia.csc",
+    "CHASSIS_ID": "a43f.68b7.f58d",
+    "MGMT_ADDRESS": "10.42.42.99",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet49",
+    "LOCAL_INTERFACE": "Ethernet46",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "17 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-swl-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b79.e99b",
+    "MGMT_ADDRESS": "10.42.42.4",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet52",
+    "LOCAL_INTERFACE": "Ethernet47",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "2 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-swl-02.columbia.csc",
+    "CHASSIS_ID": "606b.5b7a.af3b",
+    "MGMT_ADDRESS": "10.42.42.5",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet52",
+    "LOCAL_INTERFACE": "Ethernet48",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "2 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-core-b.columbia.csc",
+    "CHASSIS_ID": "e478.76bf.7b1d",
+    "MGMT_ADDRESS": "10.42.42.3",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Ethernet49/1",
+    "LOCAL_INTERFACE": "Ethernet49/1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "0 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-cr-core-b.columbia.csc",
+    "CHASSIS_ID": "e478.76bf.7b1d",
+    "MGMT_ADDRESS": "10.42.42.3",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks DCS-7050SX3-48YC8",
+    "NEIGHBOR_INTERFACE": "Ethernet55/1",
+    "LOCAL_INTERFACE": "Ethernet55/1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "0 seconds"
+  }
+]

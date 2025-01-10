@@ -1,0 +1,42 @@
+[
+  {
+    "NEIGHBOR_NAME": "ush-b1-ap07",
+    "CHASSIS_ID": "209c.b4c7.8388",
+    "MGMT_ADDRESS": "10.42.4.41",
+    "NEIGHBOR_DESCRIPTION": "ArubaOS (MODEL: 535), Version Aruba AP",
+    "NEIGHBOR_INTERFACE": "209c.b4c7.8388",
+    "LOCAL_INTERFACE": "Ethernet45",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "2 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-b1-ap08",
+    "CHASSIS_ID": "209c.b4c7.855e",
+    "MGMT_ADDRESS": "10.42.4.40",
+    "NEIGHBOR_DESCRIPTION": "ArubaOS (MODEL: 535), Version Aruba AP",
+    "NEIGHBOR_INTERFACE": "209c.b4c7.855e",
+    "LOCAL_INTERFACE": "Ethernet47",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "16 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-b1-sml-01.columbia.csc",
+    "CHASSIS_ID": "606b.5b7b.1249",
+    "MGMT_ADDRESS": "10.42.42.18",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet53/1",
+    "LOCAL_INTERFACE": "Ethernet49",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "4 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "ush-b1-sml-02.columbia.csc",
+    "CHASSIS_ID": "606b.5b79.b9e5",
+    "MGMT_ADDRESS": "10.42.42.21",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.31.5M running on an Arista Networks CCS-720XP-48ZC2",
+    "NEIGHBOR_INTERFACE": "Ethernet53/2",
+    "LOCAL_INTERFACE": "Ethernet50",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "5 seconds"
+  }
+]
