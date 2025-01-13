@@ -132,7 +132,7 @@ def main():
             if not site_dir.is_dir():
                 print(f"Site directory not found: {site_dir}")
                 return
-            inventory_file = site_dir / f"{args.site}_inventory.json"
+            inventory_file = site_dir / f"device_inventory.json"
             if inventory_file.exists():
                 result = loader.process_inventory_file(inventory_file)
                 print(result)

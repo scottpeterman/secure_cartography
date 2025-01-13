@@ -116,7 +116,7 @@ def main():
 
     loader = ArpLoader(args.db, args.verbose)
     try:
-        arp_file = base_path / f"{base_path.name}_arp.json"
+        arp_file = base_path / f"device_arp.json"
         if arp_file.exists():
             result = loader.process_arp_file(arp_file)
             print(result)

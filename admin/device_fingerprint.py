@@ -129,13 +129,16 @@ class EnhancedFingerprinter:
                         )
                 except ConnectionError as e:
                     print(e, "Connection failed")
+                    traceback.print_exc()
                     return {"error": f"Connection failed: {str(e)}"}
                 except ValueError as e:
+                    traceback.print_exc()
                     print(e, "Unexpected SSH error")
                     return {"error": str(e)}
                 except Exception as e:
                     print(f"\nError processing chunk {chunk_count}: {str(e)}")
                     # Add all devices in this chunk to failed results
+                    traceback.print_exc()
                     for device in chunk:
                         final_results['failed'][device['name']] = {
                             'name': device['name'],

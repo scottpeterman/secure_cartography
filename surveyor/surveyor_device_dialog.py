@@ -1,9 +1,10 @@
 from PyQt6.QtWidgets import (QDialog, QTabWidget, QVBoxLayout, QWidget,
                              QLabel, QGridLayout, QTableView, QHeaderView,
-                             QStyledItemDelegate, QGroupBox, QScrollArea)
+                             QStyledItemDelegate, QGroupBox, QScrollArea, QTextEdit, QPushButton, QInputDialog,
+                             QHBoxLayout)
 from PyQt6.QtCore import Qt
 from PyQt6.QtSql import QSqlQuery, QSqlTableModel
-from PyQt6.QtGui import QColor
+from PyQt6.QtGui import QColor, QTextCursor, QTextCharFormat
 
 
 class InterfaceDelegate(QStyledItemDelegate):
@@ -28,7 +29,7 @@ class DeviceDetailDialog(QDialog):
 
     def setup_ui(self):
         self.setWindowTitle("Device Details")
-        self.resize(1000, 600)
+        self.resize(800, 400)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -41,12 +42,14 @@ class DeviceDetailDialog(QDialog):
 
         # Create and add tabs
         self.overview_tab = QWidget()
+        self.config_tab = QWidget()
         self.interfaces_tab = QWidget()
         self.inventory_tab = QWidget()
         # self.system_info_tab = QWidget()
         self.mac_addresses_tab = QWidget()
 
         self.tabs.addTab(self.overview_tab, "Overview")
+        self.tabs.addTab(self.config_tab, "Configuration")
         self.tabs.addTab(self.interfaces_tab, "Interfaces")
         self.tabs.addTab(self.inventory_tab, "Inventory")
         # self.tabs.addTab(self.system_info_tab, "System Info")
@@ -54,9 +57,74 @@ class DeviceDetailDialog(QDialog):
 
         # Setup layouts for each tab
         self.setup_overview_tab()
+        self.setup_config_tab()
         self.setup_interfaces_tab()
         self.setup_inventory_tab()
         self.setup_mac_addresses_tab()
+
+    def setup_config_tab(self):
+        layout = QVBoxLayout(self.config_tab)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        # Add button bar at the top
+        button_layout = QHBoxLayout()
+        button_layout.setContentsMargins(5, 5, 5, 5)
+
+        self.search_button = QPushButton("Search Configuration")
+        self.search_button.clicked.connect(self.search_config)
+        self.search_button.setMinimumWidth(150)
+        button_layout.addWidget(self.search_button)
+        button_layout.addStretch()
+
+        layout.addLayout(button_layout)
+
+        self.config_text = QTextEdit()
+        self.config_text.setReadOnly(True)
+
+        # Set monospace font
+        font = self.config_text.font()
+        font.setFamily("Courier")
+        font.setStyleHint(font.StyleHint.Monospace)
+        self.config_text.setFont(font)
+
+        layout.addWidget(self.config_text)
+
+    def search_config(self):
+        # Clear any existing highlighting
+        cursor = self.config_text.textCursor()
+        cursor.select(QTextCursor.SelectionType.Document)
+        cursor.setCharFormat(QTextCharFormat())
+        cursor.clearSelection()
+
+        # Prompt for search string
+        text, ok = QInputDialog.getText(self, 'Search Configuration',
+                                        'Enter search string:')
+        if ok and text:
+            # Create highlight format
+            highlight_format = QTextCharFormat()
+            highlight_format.setBackground(QColor('yellow'))
+            highlight_format.setForeground(QColor('black'))
+
+            # Find and highlight all matches
+            cursor = self.config_text.textCursor()
+            cursor.movePosition(QTextCursor.MoveOperation.Start)
+
+            first_match = None
+            while True:
+                cursor = self.config_text.document().find(text, cursor)
+                if cursor.isNull():
+                    break
+
+                # Store the position of the first match
+                if first_match is None:
+                    first_match = QTextCursor(cursor)
+
+                cursor.mergeCharFormat(highlight_format)
+
+            # Scroll to the first match if found
+            if first_match:
+                self.config_text.setTextCursor(first_match)
+                self.config_text.ensureCursorVisible()
 
     def setup_overview_tab(self):
         layout = QVBoxLayout(self.overview_tab)
@@ -289,6 +357,24 @@ class DeviceDetailDialog(QDialog):
                 else:
                     label.setText(str(value) if value else "")
 
+        config_query = QSqlQuery()
+        config_query.prepare("""
+                SELECT config
+                FROM device_configs
+                WHERE device_id = ?
+                ORDER BY collected_at DESC
+                LIMIT 1
+            """)
+        config_query.addBindValue(self.device_id)
+        config_query.exec()
+
+        if config_query.next():
+            config_text = config_query.value(0)
+            self.config_text.setText(config_text if config_text else "No configuration available")
+        else:
+            self.config_text.setText("No configuration available")
+
+
     def update_theme(self, dark_mode: bool) -> None:
         colors = {
             'bg': '#1A1A1A' if dark_mode else '#FFFFFF',
@@ -305,7 +391,9 @@ class DeviceDetailDialog(QDialog):
             'table_bg': '#1A1A1A' if dark_mode else '#FFFFFF',
             'table_alt_bg': '#2D2D2D' if dark_mode else '#F5F5F5',
             'status_up': '#4CAF50',
-            'status_down': '#F44336'
+            'status_down': '#F44336',
+            'config_bg': '#262626' if dark_mode else '#F8F8F8',
+            'config_text': '#E0E0E0' if dark_mode else '#000000',
         }
 
         self.setStyleSheet(f"""
@@ -368,6 +456,15 @@ class DeviceDetailDialog(QDialog):
                 padding: 5px;
                 border: none;
                 border-bottom: 2px solid {colors['accent']};
+            }}
+            QTextEdit {{
+                background-color: {colors['config_bg']};
+                color: {colors['config_text']};
+                font-family: Courier;
+                border: 1px solid {colors['border']};
+                padding: 10px;
+                selection-background-color: {colors['accent']};
+                selection-color: {colors['bg']};
             }}
         """)
 

@@ -117,7 +117,7 @@ def main():
 
     loader = MacTableLoader(args.db, args.verbose)
     try:
-        mac_file = base_path / f"{base_path.name}_macs.json"
+        mac_file = base_path / f"device_mac.json"
         if mac_file.exists():
             result = loader.process_mac_file(mac_file)
             print(result)

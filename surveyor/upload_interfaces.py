@@ -120,7 +120,7 @@ def main():
     args = parser.parse_args()
     base_path = Path(args.base_path)
     loader = InterfaceLoader(args.db, args.verbose)
-
+    print(f"upload_interfaces.py args: {args}")
     try:
         if args.site:
             # Process single site
@@ -128,7 +128,7 @@ def main():
             if not site_dir.is_dir():
                 print(f"Site directory not found: {site_dir}")
                 return
-            interface_file = site_dir / f"{args.site}_interfaces.json"
+            interface_file = site_dir / f"device_interfaces.json"
             if interface_file.exists():
                 result = loader.process_interface_file(interface_file)
                 print(result)

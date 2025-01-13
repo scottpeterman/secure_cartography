@@ -6,7 +6,7 @@
     "CAPABILITIES": "",
     "LOCAL_INTERFACE": "GigabitEthernet0/0",
     "PORT_ID": "GigabitEthernet0/2",
-    "HOLDTIME": "130"
+    "HOLDTIME": "136"
   },
   {
     "DEVICE_ID": "usa1-core-01.home.com",
@@ -15,7 +15,7 @@
     "CAPABILITIES": "",
     "LOCAL_INTERFACE": "GigabitEthernet0/2",
     "PORT_ID": "GigabitEthernet0/3",
-    "HOLDTIME": "162"
+    "HOLDTIME": "163"
   },
   {
     "DEVICE_ID": "",

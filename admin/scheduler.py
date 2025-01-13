@@ -1,6 +1,8 @@
+import re
 import sys
 import os
 import traceback
+from pathlib import Path
 
 import yaml
 import time
@@ -9,7 +11,7 @@ from typing import List, Dict, Optional
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QTextEdit, QLabel, QListWidget,
-    QMessageBox, QGroupBox, QGridLayout, QLineEdit, QFileDialog
+    QMessageBox, QGroupBox, QGridLayout, QLineEdit, QFileDialog, QInputDialog
 )
 from PyQt6.QtCore import QProcess, QTimer, Qt
 from admin.job_editor import SchemaBasedJobDialog
@@ -136,20 +138,37 @@ class SchedulerWidget(QWidget):
         self.job_list.itemDoubleClicked.connect(self.edit_job)
         left_layout.addWidget(self.job_list)
 
-        # Job file management buttons
-        button_layout = QHBoxLayout()
+        # Job file management buttons - organized in three rows
+        button_layout = QVBoxLayout()
 
+        # First row - Reload and Load Jobs
+        first_row = QHBoxLayout()
         reload_btn = QPushButton("Reload")
         reload_btn.clicked.connect(self.reload_jobs)
-        button_layout.addWidget(reload_btn)
+        first_row.addWidget(reload_btn)
 
         load_btn = QPushButton("Load Jobs")
         load_btn.clicked.connect(self.load_different_jobs)
-        button_layout.addWidget(load_btn)
+        first_row.addWidget(load_btn)
+        button_layout.addLayout(first_row)
 
+        # Second row - Save As and New Site
+        second_row = QHBoxLayout()
         save_as_btn = QPushButton("Save As")
         save_as_btn.clicked.connect(self.save_jobs_as)
-        button_layout.addWidget(save_as_btn)
+        second_row.addWidget(save_as_btn)
+
+        new_site_btn = QPushButton("New Site")
+        new_site_btn.clicked.connect(self.create_new_site)
+        second_row.addWidget(new_site_btn)
+        button_layout.addLayout(second_row)
+
+        # Third row - Upload Data
+        third_row = QHBoxLayout()
+        self.upload_btn = QPushButton("Upload Data")
+        self.upload_btn.clicked.connect(self.run_upload_data)
+        third_row.addWidget(self.upload_btn)
+        button_layout.addLayout(third_row)
 
         left_layout.addLayout(button_layout)
 
@@ -206,14 +225,9 @@ class SchedulerWidget(QWidget):
         self.stop_btn.setMinimumWidth(min_button_width)
         self.stop_btn.clicked.connect(self.stop_selected_job)
 
-        self.upload_btn = QPushButton("Upload Data")
-        self.upload_btn.setMinimumWidth(min_button_width)
-        self.upload_btn.clicked.connect(self.run_upload_data)
-
         # Add buttons to layout with equal spacing
         control_button_layout.addWidget(self.run_btn)
         control_button_layout.addWidget(self.stop_btn)
-        control_button_layout.addWidget(self.upload_btn)
 
         # Add stretches to ensure proper spacing
         control_button_layout.addStretch()
@@ -236,6 +250,7 @@ class SchedulerWidget(QWidget):
         self.output_display.setMinimumHeight(300)
         self.output_display.setMaximumWidth(800)
         main_layout.addWidget(self.output_display)
+
     def run_upload_data(self) -> None:
         """Run the upload wrapper to process all data files."""
         if not self.jobs_file:
@@ -292,7 +307,7 @@ class SchedulerWidget(QWidget):
 
     def load_different_jobs(self):
         """Open file dialog to load a different jobs file."""
-        jobs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'jobs')
+        jobs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'sites')
         os.makedirs(jobs_dir, exist_ok=True)
 
         filename, _ = QFileDialog.getOpenFileName(
@@ -335,6 +350,9 @@ class SchedulerWidget(QWidget):
                 # Get base script name without path
                 script_basename = os.path.basename(job.script)
                 schema_name = f"{os.path.splitext(script_basename)[0]}_schema.json"
+                if "fingerprint" in script_basename:
+                    schema_name = "device_fingerprint_schema.json"
+                    job.script = "device_fingerprint.py"
 
                 # Get project root directory (where main_ui.py is)
                 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -619,12 +637,209 @@ class SchedulerWidget(QWidget):
 
         event.accept()
 
+    def create_new_site(self):
+        """Handle creation of a new site."""
+        site_name, ok = QInputDialog.getText(
+            self,
+            "New Site",
+            "Enter site name (alphanumeric only):"
+        )
+
+        if ok and site_name:
+            # Clean the site name (only alphanumeric chars)
+            clean_name = re.sub(r'[^a-zA-Z0-9]', '', site_name)
+
+            if not clean_name:
+                QMessageBox.warning(self, "Error", "Site name must contain alphanumeric characters")
+                return
+
+            try:
+                # Create sites directory if it doesn't exist
+                sites_dir = Path("./sites")
+                sites_dir.mkdir(exist_ok=True)
+
+                # Create site directory
+                site_dir = sites_dir / clean_name
+                if site_dir.exists():
+                    QMessageBox.warning(self, "Error", f"Site {clean_name} already exists")
+                    return
+
+                site_dir.mkdir()
+
+                # Create YAML configuration
+                yaml_content = self.generate_site_yaml(clean_name)
+                yaml_path = site_dir / f"{clean_name}.yaml"
+
+                with open(yaml_path, 'w') as f:
+                    yaml.dump(yaml_content, f, default_flow_style=False)
+
+                self.output_display.append(f"Created new site: {clean_name}")
+                QMessageBox.information(
+                    self,
+                    "Success",
+                    f"Created site {clean_name} with default configuration"
+                )
+
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to create site: {str(e)}")
+
+    def generate_site_yaml(self, site_name: str) -> dict:
+        """Generate YAML configuration for a new site."""
+        # Get absolute path to project root
+        project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        site_path = os.path.join(project_root, 'sites', site_name)
+
+        # Template for jobs configuration
+        return {
+            'jobs': [
+                {
+                    'name': 'Device Fingerprint',
+                    'script': 'device_fingerprint.py',
+                    'args': [
+                        '--topology',
+                        os.path.join(site_path, f'{site_name}.json'),
+                        '--username',
+                        'cisco',
+                        '--password',
+                        'cisco',
+                        '--output',
+                        os.path.join(site_path, 'device_fingerprint.json'),
+                        '--max-workers',
+                        '10'
+                    ],
+                    'schedule': 'cron: 0 */6 * * *',
+                    'log_file': 'logs/fingerprint.log'
+                },
+                {
+                    'name': 'CMDB Loader',
+                    'script': 'cmdb_load.py',
+                    'args': [
+                        '--db',
+                        os.path.join(project_root, 'surveyor', 'cmdb.db'),
+                        '--fingerprint',
+                        os.path.join(site_path, 'device_fingerprint.json')
+                    ],
+                    'schedule': 'cron: 15 */6 * * *',
+                    'log_file': 'logs/cmdb_load.log'
+                },
+                {
+                    'name': 'Device Interfaces',
+                    'script': 'device_interfaces.py',
+                    'args': [
+                        '--fingerprint',
+                        os.path.join(site_path, 'device_fingerprint.json'),
+                        '--username',
+                        'cisco',
+                        '--password',
+                        'cisco',
+                        '--output',
+                        os.path.join(site_path, 'device_interfaces.json'),
+                        '--max-workers',
+                        '5'
+                    ],
+                    'schedule': 'manual',
+                    'log_file': 'logs/interfaces.log'
+                },
+                # Add remaining jobs following the same pattern...
+                {
+                    'name': 'Device Config Backup',
+                    'script': 'device_config.py',
+                    'args': [
+                        '--db',
+                        os.path.join(project_root, 'surveyor', 'cmdb.db'),
+                        '--fingerprint',
+                        os.path.join(site_path, 'device_fingerprint.json'),
+                        '--username',
+                        'cisco',
+                        '--password',
+                        'cisco',
+                        '--max-workers',
+                        '5'
+                    ],
+                    'schedule': 'cron: 0 0 * * *',
+                    'log_file': 'logs/config_backup.log'
+                },
+                {
+                    'name': 'Device SNMP Collection',
+                    'script': 'device_snmp.py',
+                    'args': [
+                        '--topology',
+                        os.path.join(site_path, f'{site_name}.json'),
+                        '--config',
+                        os.path.join(project_root, 'admin', 'snmp_config.yaml'),
+                        '--collect-only',
+                        '--db',
+                        os.path.join(project_root, 'surveyor', 'cmdb.db'),
+                        '--output',
+                        os.path.join(site_path, 'device_snmp.json'),
+                        '-v'
+                    ],
+                    'schedule': 'cron: 0 */12 * * *',
+                    'log_file': 'logs/snmp.log'
+                },
+                {
+                    'name': 'Device ARP Collection',
+                    'script': 'device_arp.py',
+                    'args': [
+                        '--fingerprint',
+                        os.path.join(site_path, 'device_fingerprint.json'),
+                        '--username',
+                        'cisco',
+                        '--password',
+                        'cisco',
+                        '--output',
+                        os.path.join(site_path, 'device_arp.json'),
+                        '--max-workers',
+                        '5'
+                    ],
+                    'schedule': 'cron: 0 */4 * * *',
+                    'log_file': 'logs/arp.log'
+                },
+                {
+                    'name': 'Device MAC Collection',
+                    'script': 'device_macs.py',
+                    'args': [
+                        '--fingerprint',
+                        os.path.join(site_path, 'device_fingerprint.json'),
+                        '--username',
+                        'cisco',
+                        '--password',
+                        'cisco',
+                        '--output',
+                        os.path.join(site_path, 'device_mac.json'),
+                        '--max-workers',
+                        '5'
+                    ],
+                    'schedule': 'cron: 30 */4 * * *',
+                    'log_file': 'logs/macs.log'
+                },
+                {
+                    'name': 'Device Inventory',
+                    'script': 'device_inventory.py',
+                    'args': [
+                        '--fingerprint',
+                        os.path.join(site_path, 'device_fingerprint.json'),
+                        '--username',
+                        'cisco',
+                        '--password',
+                        'cisco',
+                        '--output',
+                        os.path.join(site_path, 'device_inventory.json'),
+                        '--max-workers',
+                        '5'
+                    ],
+                    'schedule': 'manual',
+                    'log_file': 'logs/inventory.log'
+                }
+            ]
+        }
+
 
 def main():
     app = QApplication(sys.argv)
 
     # Parse command line arguments
-    jobs_file = "jobs.yaml"
+    jobs_file = ""
     if len(sys.argv) > 1:
         jobs_file = sys.argv[1]
 
