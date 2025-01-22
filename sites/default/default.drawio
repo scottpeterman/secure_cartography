@@ -1,0 +1,167 @@
+<?xml version="1.0" ?>
+<mxfile host="app.diagrams.net" modified="2024-01-18T12:00:00.000Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) draw.io/21.2.1 Chrome/112.0.5615.87 Electron/24.1.2 Safari/537.36" version="21.2.1" type="device">
+  <diagram id="network_topology" name="Network Topology">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="root_1" parent="0"/>
+        <mxCell id="node_2" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa1-core-01
+172.16.101.1
+IOSv">
+          <mxGeometry x="1000" y="350" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_3" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.layer_3_switch;sketch=0" value="arista-1
+172.16.101.21
+vEOS">
+          <mxGeometry x="640" y="500" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_4" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa1-access-02
+172.16.101.4
+IOSv">
+          <mxGeometry x="880" y="500" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_5" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa1-core-02
+172.16.101.2
+IOSv">
+          <mxGeometry x="1120" y="500" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_6" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.routers.router;sketch=0" value="usa1-rtr-1
+172.16.101.100
+7206VXR">
+          <mxGeometry x="1360" y="500" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_7" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.layer_3_switch;sketch=0" value="arista-2
+172.16.21.1
+vEOS">
+          <mxGeometry x="700" y="650" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_8" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.layer_3_switch;sketch=0" value="arista-3
+172.16.21.2
+vEOS">
+          <mxGeometry x="1000" y="650" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_9" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.routers.router;sketch=0" value="usa2-rtr-1
+172.16.128.2
+7206VXR">
+          <mxGeometry x="1300" y="650" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_10" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa2-core-01
+172.16.201.1
+IOSv">
+          <mxGeometry x="1000" y="800" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_11" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa2-access-01
+172.16.201.3
+IOSv">
+          <mxGeometry x="600" y="950" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_12" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa2-access-02
+172.16.201.4
+IOSv">
+          <mxGeometry x="1000" y="950" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="node_13" vertex="1" parent="root_1" style="fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.cisco.switches.workgroup_switch;sketch=0" value="usa2-core-02
+172.16.201.2
+IOSv">
+          <mxGeometry x="1400" y="950" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_14" parent="root_1" source="node_2" target="node_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/1 -&gt; Gi0/1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_15" parent="root_1" source="node_2" target="node_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/3 -&gt; Gi0/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_16" parent="root_1" source="node_2" target="node_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/0 -&gt; Eth2/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_17" parent="root_1" source="node_2" target="node_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/2 -&gt; Eth1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_18" parent="root_1" source="node_5" target="node_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/1 -&gt; Gi0/1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_19" parent="root_1" source="node_5" target="node_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/2 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_20" parent="root_1" source="node_5" target="node_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/0 -&gt; Eth1/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_21" parent="root_1" source="node_6" target="node_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1/2 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_22" parent="root_1" source="node_6" target="node_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth2/0 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_23" parent="root_1" source="node_6" target="node_9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1/0 -&gt; Eth1/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_24" parent="root_1" source="node_3" target="node_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1 -&gt; Gi0/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_25" parent="root_1" source="node_3" target="node_8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth2 -&gt; Eth1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_26" parent="root_1" source="node_3" target="node_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth3 -&gt; Eth1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_27" parent="root_1" source="node_9" target="node_10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1/2 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_28" parent="root_1" source="node_9" target="node_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1/0 -&gt; Eth1/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_29" parent="root_1" source="node_8" target="node_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1 -&gt; Eth2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_30" parent="root_1" source="node_8" target="node_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth3 -&gt; Eth3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_31" parent="root_1" source="node_7" target="node_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth1 -&gt; Eth3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_32" parent="root_1" source="node_7" target="node_8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Eth3 -&gt; Eth3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_33" parent="root_1" source="node_10" target="node_13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/1 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_34" parent="root_1" source="node_10" target="node_12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/3 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_35" parent="root_1" source="node_10" target="node_11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/2 -&gt; Gi0/0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_36" parent="root_1" source="node_10" target="node_9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/0 -&gt; Eth1/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_37" parent="root_1" source="node_13" target="node_10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/0 -&gt; Gi0/1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_38" parent="root_1" source="node_13" target="node_12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/2 -&gt; Gi0/1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_39" parent="root_1" source="node_13" target="node_11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/1 -&gt; Gi0/1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_40" parent="root_1" source="node_12" target="node_10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/0 -&gt; Gi0/3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_41" parent="root_1" source="node_12" target="node_13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/1 -&gt; Gi0/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_42" parent="root_1" source="node_12" target="node_11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/2 -&gt; Gi0/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_43" parent="root_1" source="node_11" target="node_10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/0 -&gt; Gi0/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_44" parent="root_1" source="node_11" target="node_13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/1 -&gt; Gi0/1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_45" parent="root_1" source="node_11" target="node_12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;noEdgeStyle=1" noEdgeStyle="1" edge="1" value="Gi0/2 -&gt; Gi0/2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

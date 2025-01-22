@@ -1,0 +1,34 @@
+{
+  "platform_patterns": {
+    "C9200": "workgroup_switch.b64.txt",
+    "C9300": "layer_3_switch.b64.txt",
+    "C9400": "layer_3_switch.b64.txt",
+    "C9500": "mulitswitch_device.b64.txt",
+    "WS-C2960": "workgroup_switch.b64.txt",
+    "WS-C3560": "layer_3_switch.b64.txt",
+    "WS-C3850": "layer_3_switch.b64.txt",
+    "Nexus7000": "Nexus_7000.b64.txt",
+    "Nexus9000": "Nexus_7000.b64.txt",
+    "ISR4": "router.b64.txt",
+    "CISCO2921": "router.b64.txt",
+    "CISCO2951": "router.b64.txt",
+    "7206VXR": "7500ars_(7513).b64.txt",
+    "DCS-7010": "layer_3_switch.b64.txt",
+    "DCS-7020": "layer_3_switch.b64.txt",
+    "DCS-7050": "layer_3_switch.b64.txt",
+    "DCS-7280": "mulitswitch_device.b64.txt",
+    "IOSv": "router.b64.txt",
+    "vEOS": "layer_3_switch.b64.txt",
+    "CCS-720": "workgroup_switch.b64.txt",
+    "VG202": "voice_router.b64.txt"
+  },
+  "defaults": {
+    "default_switch": "layer_3_switch.b64.txt",
+    "default_router": "router.b64.txt",
+    "default_firewall": "firewall.b64.txt",
+    "default_endpoint": "pc.b64.txt",
+    "default_wireless": "wireless.b64.txt",
+    "default_unknown": "generic_processor.b64.txt"
+  },
+  "base_path": "icons_lib/base64"
+}

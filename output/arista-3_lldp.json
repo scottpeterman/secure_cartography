@@ -7,7 +7,7 @@
     "NEIGHBOR_INTERFACE": "Ethernet3",
     "LOCAL_INTERFACE": "Ethernet1",
     "NEIGHBOR_COUNT": "1",
-    "AGE": "28 seconds"
+    "AGE": "10 seconds"
   },
   {
     "NEIGHBOR_NAME": "arista-3",
@@ -17,7 +17,7 @@
     "NEIGHBOR_INTERFACE": "Ethernet2",
     "LOCAL_INTERFACE": "Ethernet2",
     "NEIGHBOR_COUNT": "1",
-    "AGE": "11 seconds"
+    "AGE": "21 seconds"
   },
   {
     "NEIGHBOR_NAME": "arista-3",
@@ -27,6 +27,6 @@
     "NEIGHBOR_INTERFACE": "Ethernet3",
     "LOCAL_INTERFACE": "Ethernet3",
     "NEIGHBOR_COUNT": "1",
-    "AGE": "11 seconds"
+    "AGE": "21 seconds"
   }
 ]

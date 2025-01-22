@@ -1,22 +1,42 @@
 {
   "cdp": {
-    "usa1-core-01": {
-      "ip": "172.16.101.1",
+    "usa2-core-02": {
+      "ip": "172.16.201.2",
       "platform": "ios",
       "connections": [
         [
-          "Ethernet2/0",
+          "GigabitEthernet0/1",
+          "GigabitEthernet0/0"
+        ]
+      ]
+    },
+    "usa2-access-02": {
+      "ip": "172.16.201.4",
+      "platform": "ios",
+      "connections": [
+        [
+          "GigabitEthernet0/3",
+          "GigabitEthernet0/0"
+        ]
+      ]
+    },
+    "usa2-access-01": {
+      "ip": "172.16.201.3",
+      "platform": "ios",
+      "connections": [
+        [
+          "GigabitEthernet0/2",
           "GigabitEthernet0/0"
         ]
       ]
     },
     "usa2-rtr-1": {
-      "ip": "172.16.128.2",
+      "ip": "172.16.201.100",
       "platform": "ios",
       "connections": [
         [
-          "Ethernet1/0",
-          "Ethernet1/0"
+          "GigabitEthernet0/0",
+          "Ethernet1/2"
         ]
       ]
     }

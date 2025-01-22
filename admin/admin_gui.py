@@ -11,8 +11,10 @@ from pathlib import Path
 
 from admin.bling_home import MarketingHomeWidget
 from admin.hud_icons import get_router_svg, get_switch_svg, get_firewall_svg
+from admin.map_tools_widget import MapToolsWidget
 from admin.mdi_data_gui import MDIWorkspace
-from admin.nav_icons import get_home_svg, get_cartography_svg, get_surveyor_svg, get_jobs_svg, get_settings_svg
+from admin.nav_icons import get_home_svg, get_cartography_svg, get_surveyor_svg, get_jobs_svg, get_settings_svg, \
+    get_map_tools_svg
 from admin.reporting import NetworkReport
 from admin.scheduler import SchedulerWidget
 
@@ -207,6 +209,7 @@ class AdminShell(QMainWindow):
             "Home": get_home_svg(),
             "Cartography": get_cartography_svg(),
             "Surveyor": get_surveyor_svg(),
+            "Map Tools": get_map_tools_svg(),
             "Jobs": get_jobs_svg(),
             "DB": get_settings_svg()
         }
@@ -290,47 +293,13 @@ class AdminShell(QMainWindow):
             elif text == "DB":
                 # Create the MDI workspace for database
                 db_widget = MDIWorkspace("surveyor/cmdb.db")
-                # db_widget.setStyleSheet("""
-                #                 QWidget {
-                #                     background-color: #1e1e1e;
-                #                 }
-                #                 QToolBar {
-                #                     background-color: #2d2d2d;
-                #                     border: none;
-                #                     spacing: 5px;
-                #                     padding: 5px;
-                #                 }
-                #                 QPushButton {
-                #                     background-color: #3d3d3d;
-                #                     color: white;
-                #                     border: none;
-                #                     padding: 5px 10px;
-                #                     border-radius: 3px;
-                #                 }
-                #                 QPushButton:hover {
-                #                     background-color: #4d4d4d;
-                #                 }
-                #                 QComboBox {
-                #                     background-color: #3d3d3d;
-                #                     color: white;
-                #                     border: none;
-                #                     padding: 5px;
-                #                     border-radius: 3px;
-                #                     min-width: 200px;
-                #                 }
-                #                 QComboBox::drop-down {
-                #                     border: none;
-                #                 }
-                #                 QComboBox::down-arrow {
-                #                     border: none;
-                #                     background: #4d4d4d;
-                #                 }
-                #                 QMdiArea {
-                #                     background-color: #1e1e1e;
-                #                 }
-                #             """)
                 self.pages[text] = db_widget
                 self.stack.addWidget(db_widget)
+
+            elif text == "Map Tools":
+                map_tools_widget = MapToolsWidget()
+                self.pages[text] = map_tools_widget
+                self.stack.addWidget(map_tools_widget)
             else:
                 if text not in self.pages:
                     page = QWidget()

@@ -1,0 +1,47 @@
+{
+    "platform_patterns": {
+        "IOSv": "shape=mxgraph.cisco.switches.layer_2_switch",
+        "7206VXR": "shape=mxgraph.cisco.routers.router",
+        "vEOS": "shape=mxgraph.cisco.switches.multilayer_switch",
+        "n9000": "shape=mxgraph.cisco.switches.nexus_7000",
+        "WS-C": "shape=mxgraph.cisco.switches.layer_3_switch",
+        "C9300": "shape=mxgraph.cisco.switches.layer_3_switch"
+    },
+    "name_based_overrides": {
+        "core": "shape=mxgraph.cisco.switches.layer_3_switch",
+        "access": "shape=mxgraph.cisco.switches.layer_2_switch"
+    },
+    "defaults": {
+        "router": "shape=mxgraph.cisco.routers.router",
+        "switch": "shape=mxgraph.cisco.switches.layer_3_switch",
+        "firewall": "shape=mxgraph.cisco.security.firewall",
+        "load_balancer": "shape=mxgraph.cisco.misc.load_balancer",
+        "unknown": "shape=mxgraph.cisco.misc.generic_building"
+    },
+    "fallback_patterns": {
+        "router": {
+            "platform_patterns": ["rtr", "router", "7200", "asr"],
+            "name_patterns": ["rtr", "router"],
+            "shape": "shape=mxgraph.cisco.routers.router"
+        },
+        "l3_switch": {
+            "platform_patterns": ["sw", "switch", "nexus"],
+            "name_patterns": ["core"],
+            "shape": "shape=mxgraph.cisco.switches.layer_3_switch"
+        },
+        "l2_switch": {
+            "platform_patterns": ["sw", "switch"],
+            "name_patterns": ["access"],
+            "shape": "shape=mxgraph.cisco.switches.layer_2_switch"
+        }
+    },
+    "style_defaults": {
+        "fillColor": "#036897",
+        "strokeColor": "#ffffff",
+        "strokeWidth": "2",
+        "html": "1",
+        "verticalLabelPosition": "bottom",
+        "verticalAlign": "top",
+        "align": "center"
+    }
+}

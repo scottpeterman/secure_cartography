@@ -1,0 +1,5515 @@
+{
+  "successful": {
+    "usa1-access-02": {
+      "name": "usa1-access-02",
+      "ip": "172.16.101.4",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c59.b769.0000",
+              "bia": "0c59.b769.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 25602,
+              "output_packets": 324982,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c59.b769.0001",
+              "bia": "0c59.b769.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 3,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c59.b769.0002",
+              "bia": "0c59.b769.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "to switch 1 e3(g0/3)",
+            "ip": "",
+            "counters": {
+              "input_packets": 326487,
+              "output_packets": 39282,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c59.b769.0003",
+              "bia": "0c59.b769.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 3,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0c59.b769.8001",
+              "bia": "0c59.b769.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.101.4/24",
+            "counters": {
+              "input_packets": 130876,
+              "output_packets": 3672,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:25.669044",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c59.b769.0000",
+              "BIA": "0c59.b769.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:01",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "25602",
+              "OUTPUT_PACKETS": "324982",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c59.b769.0001",
+              "BIA": "0c59.b769.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "3d11h",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "3",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c59.b769.0002",
+              "BIA": "0c59.b769.0002",
+              "DESCRIPTION": "to switch 1 e3(g0/3)",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "326487",
+              "OUTPUT_PACKETS": "39282",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c59.b769.0003",
+              "BIA": "0c59.b769.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "3d11h",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "3",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0c59.b769.8001",
+              "BIA": "0c59.b769.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.101.4",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "130876",
+              "OUTPUT_PACKETS": "3672",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa1-core-01": {
+      "name": "usa1-core-01",
+      "ip": "172.16.101.1",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cab.0018.0000",
+              "bia": "0cab.0018.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "to router 1",
+            "ip": "",
+            "counters": {
+              "input_packets": 66587,
+              "output_packets": 325227,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cab.0018.0001",
+              "bia": "0cab.0018.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "to switch2 e1(g0/1)",
+            "ip": "",
+            "counters": {
+              "input_packets": 29577,
+              "output_packets": 336184,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cab.0018.0002",
+              "bia": "0cab.0018.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "to switch3 e0(g0/0)",
+            "ip": "",
+            "counters": {
+              "input_packets": 257025,
+              "output_packets": 107506,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cab.0018.0003",
+              "bia": "0cab.0018.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "to switch 4 e2(g0/2)",
+            "ip": "",
+            "counters": {
+              "input_packets": 39282,
+              "output_packets": 326490,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0cab.0018.8001",
+              "bia": "0cab.0018.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.101.1/24",
+            "counters": {
+              "input_packets": 134020,
+              "output_packets": 5277,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:25.679046",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cab.0018.0000",
+              "BIA": "0cab.0018.0000",
+              "DESCRIPTION": "to router 1",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "66587",
+              "OUTPUT_PACKETS": "325227",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cab.0018.0001",
+              "BIA": "0cab.0018.0001",
+              "DESCRIPTION": "to switch2 e1(g0/1)",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "29577",
+              "OUTPUT_PACKETS": "336184",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cab.0018.0002",
+              "BIA": "0cab.0018.0002",
+              "DESCRIPTION": "to switch3 e0(g0/0)",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:01",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "257025",
+              "OUTPUT_PACKETS": "107506",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cab.0018.0003",
+              "BIA": "0cab.0018.0003",
+              "DESCRIPTION": "to switch 4 e2(g0/2)",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "39282",
+              "OUTPUT_PACKETS": "326490",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0cab.0018.8001",
+              "BIA": "0cab.0018.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.101.1",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "134020",
+              "OUTPUT_PACKETS": "5277",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa1-core-02": {
+      "name": "usa1-core-02",
+      "ip": "172.16.101.2",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4f.6392.0000",
+              "bia": "0c4f.6392.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 20603,
+              "output_packets": 314686,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4f.6392.0001",
+              "bia": "0c4f.6392.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 336180,
+              "output_packets": 29593,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4f.6392.0002",
+              "bia": "0c4f.6392.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 294988,
+              "output_packets": 25605,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4f.6392.0003",
+              "bia": "0c4f.6392.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 2,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0c4f.6392.8001",
+              "bia": "0c4f.6392.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.101.2/24",
+            "counters": {
+              "input_packets": 130862,
+              "output_packets": 3740,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:25.679994",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4f.6392.0000",
+              "BIA": "0c4f.6392.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "20603",
+              "OUTPUT_PACKETS": "314686",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4f.6392.0001",
+              "BIA": "0c4f.6392.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "336180",
+              "OUTPUT_PACKETS": "29593",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4f.6392.0002",
+              "BIA": "0c4f.6392.0002",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "294988",
+              "OUTPUT_PACKETS": "25605",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4f.6392.0003",
+              "BIA": "0c4f.6392.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "3d11h",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "2",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0c4f.6392.8001",
+              "BIA": "0c4f.6392.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.101.2",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "130862",
+              "OUTPUT_PACKETS": "3740",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa1-rtr-1": {
+      "name": "usa1-rtr-1",
+      "ip": "172.16.101.100",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "FastEthernet0/0": {
+            "name": "FastEthernet0/0",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "DEC21140",
+              "mac_address": "ca01.8e69.0000",
+              "bia": "ca01.8e69.0000",
+              "mtu": 1500,
+              "bandwidth": "100000 Kbit",
+              "duplex": "Half-duplex",
+              "speed": "100Mb/s",
+              "media_type": ""
+            },
+            "description": "this is an interface description",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/0": {
+            "name": "Ethernet1/0",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.001c",
+              "bia": "ca01.8e69.001c",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to R2",
+            "ip": "172.16.128.1/24",
+            "counters": {
+              "input_packets": 53534,
+              "output_packets": 61576,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/1": {
+            "name": "Ethernet1/1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.001d",
+              "bia": "ca01.8e69.001d",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to cloud",
+            "ip": "172.16.1.101/24",
+            "counters": {
+              "input_packets": 70491,
+              "output_packets": 112754,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/2": {
+            "name": "Ethernet1/2",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.001e",
+              "bia": "ca01.8e69.001e",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 284622,
+              "output_packets": 20605,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/3": {
+            "name": "Ethernet1/3",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.001f",
+              "bia": "ca01.8e69.001f",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/0": {
+            "name": "Ethernet2/0",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.0038",
+              "bia": "ca01.8e69.0038",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to switch1",
+            "ip": "172.16.101.100/24",
+            "counters": {
+              "input_packets": 285182,
+              "output_packets": 66606,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/1": {
+            "name": "Ethernet2/1",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.0039",
+              "bia": "ca01.8e69.0039",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/2": {
+            "name": "Ethernet2/2",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.003a",
+              "bia": "ca01.8e69.003a",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to switch 2",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20582,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/3": {
+            "name": "Ethernet2/3",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.003b",
+              "bia": "ca01.8e69.003b",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/0": {
+            "name": "Ethernet3/0",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.0054",
+              "bia": "ca01.8e69.0054",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/1": {
+            "name": "Ethernet3/1",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.0055",
+              "bia": "ca01.8e69.0055",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/2": {
+            "name": "Ethernet3/2",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.0056",
+              "bia": "ca01.8e69.0056",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/3": {
+            "name": "Ethernet3/3",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca01.8e69.0057",
+              "bia": "ca01.8e69.0057",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Loopback0": {
+            "name": "Loopback0",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Loopback",
+              "mac_address": "",
+              "bia": "",
+              "mtu": 1514,
+              "bandwidth": "8000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "Test Loopback",
+            "ip": "192.168.1.1/24",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:25.752768",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "FastEthernet0/0",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "DEC21140",
+              "MAC_ADDRESS": "ca01.8e69.0000",
+              "BIA": "ca01.8e69.0000",
+              "DESCRIPTION": "this is an interface description",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Half-duplex",
+              "SPEED": "100Mb/s",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "100000 Kbit",
+              "DELAY": "100 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.001c",
+              "BIA": "ca01.8e69.001c",
+              "DESCRIPTION": "to R2",
+              "IP_ADDRESS": "172.16.128.1",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:08",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "1000",
+              "OUTPUT_RATE": "1000",
+              "INPUT_PPS": "1",
+              "OUTPUT_PPS": "1",
+              "INPUT_PACKETS": "53534",
+              "OUTPUT_PACKETS": "61576",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.001d",
+              "BIA": "ca01.8e69.001d",
+              "DESCRIPTION": "to cloud",
+              "IP_ADDRESS": "172.16.1.101",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "4000",
+              "OUTPUT_RATE": "8000",
+              "INPUT_PPS": "4",
+              "OUTPUT_PPS": "6",
+              "INPUT_PACKETS": "70491",
+              "OUTPUT_PACKETS": "112754",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.001e",
+              "BIA": "ca01.8e69.001e",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:01",
+              "LAST_OUTPUT": "00:00:05",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "284622",
+              "OUTPUT_PACKETS": "20605",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/3",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.001f",
+              "BIA": "ca01.8e69.001f",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.0038",
+              "BIA": "ca01.8e69.0038",
+              "DESCRIPTION": "to switch1",
+              "IP_ADDRESS": "172.16.101.100",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:06",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "5000",
+              "OUTPUT_RATE": "3000",
+              "INPUT_PPS": "5",
+              "OUTPUT_PPS": "2",
+              "INPUT_PACKETS": "285182",
+              "OUTPUT_PACKETS": "66606",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/1",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.0039",
+              "BIA": "ca01.8e69.0039",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.003a",
+              "BIA": "ca01.8e69.003a",
+              "DESCRIPTION": "to switch 2",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20582",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/3",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.003b",
+              "BIA": "ca01.8e69.003b",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/0",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.0054",
+              "BIA": "ca01.8e69.0054",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/1",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.0055",
+              "BIA": "ca01.8e69.0055",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/2",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.0056",
+              "BIA": "ca01.8e69.0056",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/3",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca01.8e69.0057",
+              "BIA": "ca01.8e69.0057",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Loopback0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Loopback",
+              "MAC_ADDRESS": "",
+              "BIA": "",
+              "DESCRIPTION": "Test Loopback",
+              "IP_ADDRESS": "192.168.1.1",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1514",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "8000000 Kbit",
+              "DELAY": "5000 usec",
+              "ENCAPSULATION": "LOOPBACK",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "0",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa2-rtr-1": {
+      "name": "usa2-rtr-1",
+      "ip": "172.16.128.2",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "FastEthernet0/0": {
+            "name": "FastEthernet0/0",
+            "status": {
+              "link": "administratively down",
+              "protocol": "down"
+            },
+            "hardware": {
+              "type": "DEC21140",
+              "mac_address": "ca02.8ea7.0000",
+              "bia": "ca02.8ea7.0000",
+              "mtu": 1500,
+              "bandwidth": "100000 Kbit",
+              "duplex": "Half-duplex",
+              "speed": "100Mb/s",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 0,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/0": {
+            "name": "Ethernet1/0",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.001c",
+              "bia": "ca02.8ea7.001c",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to R1",
+            "ip": "172.16.128.2/24",
+            "counters": {
+              "input_packets": 44436,
+              "output_packets": 70315,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/1": {
+            "name": "Ethernet1/1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.001d",
+              "bia": "ca02.8ea7.001d",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to cloud",
+            "ip": "172.16.1.102/24",
+            "counters": {
+              "input_packets": 53889,
+              "output_packets": 72259,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/2": {
+            "name": "Ethernet1/2",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.001e",
+              "bia": "ca02.8ea7.001e",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "to core 1",
+            "ip": "172.16.201.100/24",
+            "counters": {
+              "input_packets": 169013,
+              "output_packets": 61245,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet1/3": {
+            "name": "Ethernet1/3",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.001f",
+              "bia": "ca02.8ea7.001f",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20067,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/0": {
+            "name": "Ethernet2/0",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.0038",
+              "bia": "ca02.8ea7.0038",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.202.100/24",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 55812,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/1": {
+            "name": "Ethernet2/1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.0039",
+              "bia": "ca02.8ea7.0039",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20077,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/2": {
+            "name": "Ethernet2/2",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.003a",
+              "bia": "ca02.8ea7.003a",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20075,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet2/3": {
+            "name": "Ethernet2/3",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.003b",
+              "bia": "ca02.8ea7.003b",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20072,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/0": {
+            "name": "Ethernet3/0",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.0054",
+              "bia": "ca02.8ea7.0054",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20078,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/1": {
+            "name": "Ethernet3/1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.0055",
+              "bia": "ca02.8ea7.0055",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20071,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/2": {
+            "name": "Ethernet3/2",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.0056",
+              "bia": "ca02.8ea7.0056",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20075,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Ethernet3/3": {
+            "name": "Ethernet3/3",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "AmdP2",
+              "mac_address": "ca02.8ea7.0057",
+              "bia": "ca02.8ea7.0057",
+              "mtu": 1500,
+              "bandwidth": "10000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 20069,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:25.897467",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "FastEthernet0/0",
+              "LINK_STATUS": "administratively down",
+              "PROTOCOL_STATUS": "down",
+              "HARDWARE_TYPE": "DEC21140",
+              "MAC_ADDRESS": "ca02.8ea7.0000",
+              "BIA": "ca02.8ea7.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Half-duplex",
+              "SPEED": "100Mb/s",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "100000 Kbit",
+              "DELAY": "100 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "",
+              "OUTPUT_PACKETS": "0",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.001c",
+              "BIA": "ca02.8ea7.001c",
+              "DESCRIPTION": "to R1",
+              "IP_ADDRESS": "172.16.128.2",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "44436",
+              "OUTPUT_PACKETS": "70315",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.001d",
+              "BIA": "ca02.8ea7.001d",
+              "DESCRIPTION": "to cloud",
+              "IP_ADDRESS": "172.16.1.102",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:01",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "53889",
+              "OUTPUT_PACKETS": "72259",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.001e",
+              "BIA": "ca02.8ea7.001e",
+              "DESCRIPTION": "to core 1",
+              "IP_ADDRESS": "172.16.201.100",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:03",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "169013",
+              "OUTPUT_PACKETS": "61245",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet1/3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.001f",
+              "BIA": "ca02.8ea7.001f",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20067",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.0038",
+              "BIA": "ca02.8ea7.0038",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.202.100",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "55812",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.0039",
+              "BIA": "ca02.8ea7.0039",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20077",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.003a",
+              "BIA": "ca02.8ea7.003a",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20075",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet2/3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.003b",
+              "BIA": "ca02.8ea7.003b",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20072",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.0054",
+              "BIA": "ca02.8ea7.0054",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20078",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.0055",
+              "BIA": "ca02.8ea7.0055",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20071",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.0056",
+              "BIA": "ca02.8ea7.0056",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20075",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Ethernet3/3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "AmdP2",
+              "MAC_ADDRESS": "ca02.8ea7.0057",
+              "BIA": "ca02.8ea7.0057",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "10000 Kbit",
+              "DELAY": "1000 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "20069",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa2-core-02": {
+      "name": "usa2-core-02",
+      "ip": "172.16.201.2",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4e.daf9.0000",
+              "bia": "0c4e.daf9.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 253348,
+              "output_packets": 39134,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4e.daf9.0001",
+              "bia": "0c4e.daf9.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 212172,
+              "output_packets": 25564,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4e.daf9.0002",
+              "bia": "0c4e.daf9.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 35609,
+              "output_packets": 262123,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c4e.daf9.0003",
+              "bia": "0c4e.daf9.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 3,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0c4e.daf9.8001",
+              "bia": "0c4e.daf9.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.201.2/24",
+            "counters": {
+              "input_packets": 37799,
+              "output_packets": 3533,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:29.807802",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4e.daf9.0000",
+              "BIA": "0c4e.daf9.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "1000",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "1",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "253348",
+              "OUTPUT_PACKETS": "39134",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4e.daf9.0001",
+              "BIA": "0c4e.daf9.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:05",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "212172",
+              "OUTPUT_PACKETS": "25564",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4e.daf9.0002",
+              "BIA": "0c4e.daf9.0002",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:05",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "1000",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "1",
+              "INPUT_PACKETS": "35609",
+              "OUTPUT_PACKETS": "262123",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c4e.daf9.0003",
+              "BIA": "0c4e.daf9.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "3d11h",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "3",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0c4e.daf9.8001",
+              "BIA": "0c4e.daf9.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.201.2",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "37799",
+              "OUTPUT_PACKETS": "3533",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa2-core-01": {
+      "name": "usa2-core-01",
+      "ip": "172.16.201.1",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c21.c541.0000",
+              "bia": "0c21.c541.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 61290,
+              "output_packets": 229249,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c21.c541.0001",
+              "bia": "0c21.c541.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 39134,
+              "output_packets": 253348,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c21.c541.0002",
+              "bia": "0c21.c541.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 62029,
+              "output_packets": 246354,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c21.c541.0003",
+              "bia": "0c21.c541.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 138091,
+              "output_packets": 362258,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0c21.c541.8001",
+              "bia": "0c21.c541.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.201.1/24",
+            "counters": {
+              "input_packets": 37891,
+              "output_packets": 3669,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:29.822816",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c21.c541.0000",
+              "BIA": "0c21.c541.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "1000",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "1",
+              "INPUT_PACKETS": "61290",
+              "OUTPUT_PACKETS": "229249",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c21.c541.0001",
+              "BIA": "0c21.c541.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "1000",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "1",
+              "INPUT_PACKETS": "39134",
+              "OUTPUT_PACKETS": "253348",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c21.c541.0002",
+              "BIA": "0c21.c541.0002",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:05",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "1000",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "1",
+              "INPUT_PACKETS": "62029",
+              "OUTPUT_PACKETS": "246354",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c21.c541.0003",
+              "BIA": "0c21.c541.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "1000",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "1",
+              "INPUT_PACKETS": "138091",
+              "OUTPUT_PACKETS": "362258",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0c21.c541.8001",
+              "BIA": "0c21.c541.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.201.1",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "37891",
+              "OUTPUT_PACKETS": "3669",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "arista-1": {
+      "name": "arista-1",
+      "ip": "172.16.101.21",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "Ethernet1": {
+            "name": "Ethernet1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0001",
+              "bia": "0c96.dc32.0001",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet2": {
+            "name": "Ethernet2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0002",
+              "bia": "0c96.dc32.0002",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet3": {
+            "name": "Ethernet3",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0003",
+              "bia": "0c96.dc32.0003",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet4": {
+            "name": "Ethernet4",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0004",
+              "bia": "0c96.dc32.0004",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet5": {
+            "name": "Ethernet5",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0005",
+              "bia": "0c96.dc32.0005",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet6": {
+            "name": "Ethernet6",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0006",
+              "bia": "0c96.dc32.0006",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet7": {
+            "name": "Ethernet7",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0007",
+              "bia": "0c96.dc32.0007",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet8": {
+            "name": "Ethernet8",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0008",
+              "bia": "0c96.dc32.0008",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet9": {
+            "name": "Ethernet9",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0009",
+              "bia": "0c96.dc32.0009",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet10": {
+            "name": "Ethernet10",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.000a",
+              "bia": "0c96.dc32.000a",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet11": {
+            "name": "Ethernet11",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.000b",
+              "bia": "0c96.dc32.000b",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet12": {
+            "name": "Ethernet12",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.000c",
+              "bia": "0c96.dc32.000c",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "status_changes": 1
+            }
+          },
+          "Management1": {
+            "name": "Management1",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c96.dc32.0000",
+              "bia": "0c96.dc32.0000",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 44 seconds",
+              "status_changes": 2
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:30.209192",
+          "source_template": "arista_eos_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "Ethernet1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0001",
+              "BIA": "0c96.dc32.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0002",
+              "BIA": "0c96.dc32.0002",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0003",
+              "BIA": "0c96.dc32.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet4",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0004",
+              "BIA": "0c96.dc32.0004",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet5",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0005",
+              "BIA": "0c96.dc32.0005",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet6",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0006",
+              "BIA": "0c96.dc32.0006",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet7",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0007",
+              "BIA": "0c96.dc32.0007",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet8",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0008",
+              "BIA": "0c96.dc32.0008",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet9",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0009",
+              "BIA": "0c96.dc32.0009",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet10",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.000a",
+              "BIA": "0c96.dc32.000a",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet11",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.000b",
+              "BIA": "0c96.dc32.000b",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet12",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.000c",
+              "BIA": "0c96.dc32.000c",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 39 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Management1",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c96.dc32.0000",
+              "BIA": "0c96.dc32.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 44 seconds",
+              "LINK_STATUS_CHANGE": "2"
+            }
+          ]
+        }
+      },
+      "template": "arista_eos_show_interfaces",
+      "score": 30.0
+    },
+    "arista-3": {
+      "name": "arista-3",
+      "ip": "172.16.21.2",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "Ethernet1": {
+            "name": "Ethernet1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0001",
+              "bia": "0c3d.db29.0001",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet2": {
+            "name": "Ethernet2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.dbc0.d81f",
+              "bia": "",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "172.16.21.2/24",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet3": {
+            "name": "Ethernet3",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.dbc0.d81f",
+              "bia": "",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "172.16.22.2/24",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet4": {
+            "name": "Ethernet4",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0004",
+              "bia": "0c3d.db29.0004",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet5": {
+            "name": "Ethernet5",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0005",
+              "bia": "0c3d.db29.0005",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet6": {
+            "name": "Ethernet6",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0006",
+              "bia": "0c3d.db29.0006",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet7": {
+            "name": "Ethernet7",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0007",
+              "bia": "0c3d.db29.0007",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet8": {
+            "name": "Ethernet8",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0008",
+              "bia": "0c3d.db29.0008",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet9": {
+            "name": "Ethernet9",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0009",
+              "bia": "0c3d.db29.0009",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet10": {
+            "name": "Ethernet10",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.000a",
+              "bia": "0c3d.db29.000a",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet11": {
+            "name": "Ethernet11",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.000b",
+              "bia": "0c3d.db29.000b",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet12": {
+            "name": "Ethernet12",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.000c",
+              "bia": "0c3d.db29.000c",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "status_changes": 1
+            }
+          },
+          "Management1": {
+            "name": "Management1",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c3d.db29.0000",
+              "bia": "0c3d.db29.0000",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 26 seconds",
+              "status_changes": 2
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:30.491853",
+          "source_template": "arista_eos_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "Ethernet1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0001",
+              "BIA": "0c3d.db29.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.dbc0.d81f",
+              "BIA": "",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.21.2/24",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.dbc0.d81f",
+              "BIA": "",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.22.2/24",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet4",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0004",
+              "BIA": "0c3d.db29.0004",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet5",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0005",
+              "BIA": "0c3d.db29.0005",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet6",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0006",
+              "BIA": "0c3d.db29.0006",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet7",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0007",
+              "BIA": "0c3d.db29.0007",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet8",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0008",
+              "BIA": "0c3d.db29.0008",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet9",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0009",
+              "BIA": "0c3d.db29.0009",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet10",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.000a",
+              "BIA": "0c3d.db29.000a",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet11",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.000b",
+              "BIA": "0c3d.db29.000b",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet12",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.000c",
+              "BIA": "0c3d.db29.000c",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 21 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Management1",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c3d.db29.0000",
+              "BIA": "0c3d.db29.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 26 seconds",
+              "LINK_STATUS_CHANGE": "2"
+            }
+          ]
+        }
+      },
+      "template": "arista_eos_show_interfaces",
+      "score": 30.0
+    },
+    "arista-2": {
+      "name": "arista-2",
+      "ip": "172.16.21.1",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "Ethernet1": {
+            "name": "Ethernet1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0001",
+              "bia": "0c18.3d5d.0001",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet2": {
+            "name": "Ethernet2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d17.cbe7",
+              "bia": "",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "p2p_l3 to arista-3",
+            "ip": "172.16.21.1/24",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet3": {
+            "name": "Ethernet3",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d17.cbe7",
+              "bia": "",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "172.16.22.1/24",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet4": {
+            "name": "Ethernet4",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0004",
+              "bia": "0c18.3d5d.0004",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet5": {
+            "name": "Ethernet5",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0005",
+              "bia": "0c18.3d5d.0005",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet6": {
+            "name": "Ethernet6",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0006",
+              "bia": "0c18.3d5d.0006",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet7": {
+            "name": "Ethernet7",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0007",
+              "bia": "0c18.3d5d.0007",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet8": {
+            "name": "Ethernet8",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0008",
+              "bia": "0c18.3d5d.0008",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet9": {
+            "name": "Ethernet9",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0009",
+              "bia": "0c18.3d5d.0009",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet10": {
+            "name": "Ethernet10",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.000a",
+              "bia": "0c18.3d5d.000a",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet11": {
+            "name": "Ethernet11",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.000b",
+              "bia": "0c18.3d5d.000b",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Ethernet12": {
+            "name": "Ethernet12",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.000c",
+              "bia": "0c18.3d5d.000c",
+              "mtu": 9214,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "status_changes": 1
+            }
+          },
+          "Management1": {
+            "name": "Management1",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "Ethernet",
+              "mac_address": "0c18.3d5d.0000",
+              "bia": "0c18.3d5d.0000",
+              "mtu": 1500,
+              "bandwidth": ""
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "uptime": "3 days, 11 hours, 17 minutes, 35 seconds",
+              "status_changes": 2
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:30.568662",
+          "source_template": "arista_eos_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "Ethernet1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0001",
+              "BIA": "0c18.3d5d.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d17.cbe7",
+              "BIA": "",
+              "DESCRIPTION": "p2p_l3 to arista-3",
+              "IP_ADDRESS": "172.16.21.1/24",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet3",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d17.cbe7",
+              "BIA": "",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.22.1/24",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet4",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0004",
+              "BIA": "0c18.3d5d.0004",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet5",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0005",
+              "BIA": "0c18.3d5d.0005",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet6",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0006",
+              "BIA": "0c18.3d5d.0006",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet7",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0007",
+              "BIA": "0c18.3d5d.0007",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet8",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0008",
+              "BIA": "0c18.3d5d.0008",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet9",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0009",
+              "BIA": "0c18.3d5d.0009",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet10",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.000a",
+              "BIA": "0c18.3d5d.000a",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet11",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.000b",
+              "BIA": "0c18.3d5d.000b",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Ethernet12",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.000c",
+              "BIA": "0c18.3d5d.000c",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "9214",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 29 seconds",
+              "LINK_STATUS_CHANGE": "1"
+            },
+            {
+              "INTERFACE": "Management1",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "Ethernet",
+              "MAC_ADDRESS": "0c18.3d5d.0000",
+              "BIA": "0c18.3d5d.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "MTU": "1500",
+              "BANDWIDTH": "",
+              "INTERFACE_UP_TIME": "3 days, 11 hours, 17 minutes, 35 seconds",
+              "LINK_STATUS_CHANGE": "2"
+            }
+          ]
+        }
+      },
+      "template": "arista_eos_show_interfaces",
+      "score": 30.0
+    },
+    "usa2-access-01": {
+      "name": "usa2-access-01",
+      "ip": "172.16.201.3",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c45.ab92.0000",
+              "bia": "0c45.ab92.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 246382,
+              "output_packets": 62105,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c45.ab92.0001",
+              "bia": "0c45.ab92.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 25563,
+              "output_packets": 272172,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c45.ab92.0002",
+              "bia": "0c45.ab92.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 35684,
+              "output_packets": 272243,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0c45.ab92.0003",
+              "bia": "0c45.ab92.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 2,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0c45.ab92.8001",
+              "bia": "0c45.ab92.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.201.3/24",
+            "counters": {
+              "input_packets": 37822,
+              "output_packets": 3463,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:34.083849",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c45.ab92.0000",
+              "BIA": "0c45.ab92.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "246382",
+              "OUTPUT_PACKETS": "62105",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c45.ab92.0001",
+              "BIA": "0c45.ab92.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:09",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "25563",
+              "OUTPUT_PACKETS": "272172",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c45.ab92.0002",
+              "BIA": "0c45.ab92.0002",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:05",
+              "LAST_OUTPUT": "00:00:01",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "35684",
+              "OUTPUT_PACKETS": "272243",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0c45.ab92.0003",
+              "BIA": "0c45.ab92.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "3d11h",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "2",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0c45.ab92.8001",
+              "BIA": "0c45.ab92.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.201.3",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "37822",
+              "OUTPUT_PACKETS": "3463",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    },
+    "usa2-access-02": {
+      "name": "usa2-access-02",
+      "ip": "172.16.201.4",
+      "success": true,
+      "interfaces": {
+        "interfaces": {
+          "GigabitEthernet0/0": {
+            "name": "GigabitEthernet0/0",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cff.d376.0000",
+              "bia": "0cff.d376.0000",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 362285,
+              "output_packets": 138167,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/1": {
+            "name": "GigabitEthernet0/1",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cff.d376.0001",
+              "bia": "0cff.d376.0001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 202131,
+              "output_packets": 35610,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/2": {
+            "name": "GigabitEthernet0/2",
+            "status": {
+              "link": "up",
+              "protocol": "up (connected)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cff.d376.0002",
+              "bia": "0cff.d376.0002",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 212315,
+              "output_packets": 35616,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "GigabitEthernet0/3": {
+            "name": "GigabitEthernet0/3",
+            "status": {
+              "link": "down",
+              "protocol": "down (notconnect)"
+            },
+            "hardware": {
+              "type": "iGbE",
+              "mac_address": "0cff.d376.0003",
+              "bia": "0cff.d376.0003",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "Auto-duplex",
+              "speed": "Auto-speed",
+              "media_type": "unknown"
+            },
+            "description": "",
+            "ip": "",
+            "counters": {
+              "input_packets": 0,
+              "output_packets": 3,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          },
+          "Vlan1": {
+            "name": "Vlan1",
+            "status": {
+              "link": "up",
+              "protocol": "up"
+            },
+            "hardware": {
+              "type": "Ethernet SVI",
+              "mac_address": "0cff.d376.8001",
+              "bia": "0cff.d376.8001",
+              "mtu": 1500,
+              "bandwidth": "1000000 Kbit",
+              "duplex": "",
+              "speed": "",
+              "media_type": ""
+            },
+            "description": "",
+            "ip": "172.16.201.4/24",
+            "counters": {
+              "input_packets": 37802,
+              "output_packets": 3612,
+              "input_errors": 0,
+              "output_errors": 0
+            }
+          }
+        },
+        "_metadata": {
+          "normalized_timestamp": "2025-01-22T12:24:34.194537",
+          "source_template": "cisco_ios_show_interfaces",
+          "schema_version": "1.0",
+          "raw_data": [
+            {
+              "INTERFACE": "GigabitEthernet0/0",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cff.d376.0000",
+              "BIA": "0cff.d376.0000",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "00:00:00",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "1000",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "1",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "362285",
+              "OUTPUT_PACKETS": "138167",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cff.d376.0001",
+              "BIA": "0cff.d376.0001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:01",
+              "LAST_OUTPUT": "00:00:09",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "202131",
+              "OUTPUT_PACKETS": "35610",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/2",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up (connected)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cff.d376.0002",
+              "BIA": "0cff.d376.0002",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:01",
+              "LAST_OUTPUT": "00:00:05",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "212315",
+              "OUTPUT_PACKETS": "35616",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "GigabitEthernet0/3",
+              "LINK_STATUS": "down",
+              "PROTOCOL_STATUS": "down (notconnect)",
+              "HARDWARE_TYPE": "iGbE",
+              "MAC_ADDRESS": "0cff.d376.0003",
+              "BIA": "0cff.d376.0003",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "",
+              "PREFIX_LENGTH": "",
+              "MTU": "1500",
+              "DUPLEX": "Auto-duplex",
+              "SPEED": "Auto-speed",
+              "MEDIA_TYPE": "unknown",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "never",
+              "LAST_OUTPUT": "3d11h",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "0",
+              "OUTPUT_PACKETS": "3",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "0",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            },
+            {
+              "INTERFACE": "Vlan1",
+              "LINK_STATUS": "up",
+              "PROTOCOL_STATUS": "up",
+              "HARDWARE_TYPE": "Ethernet SVI",
+              "MAC_ADDRESS": "0cff.d376.8001",
+              "BIA": "0cff.d376.8001",
+              "DESCRIPTION": "",
+              "IP_ADDRESS": "172.16.201.4",
+              "PREFIX_LENGTH": "24",
+              "MTU": "1500",
+              "DUPLEX": "",
+              "SPEED": "",
+              "MEDIA_TYPE": "",
+              "BANDWIDTH": "1000000 Kbit",
+              "DELAY": "10 usec",
+              "ENCAPSULATION": "ARPA",
+              "LAST_INPUT": "00:00:00",
+              "LAST_OUTPUT": "never",
+              "LAST_OUTPUT_HANG": "never",
+              "QUEUE_STRATEGY": "fifo",
+              "INPUT_RATE": "0",
+              "OUTPUT_RATE": "0",
+              "INPUT_PPS": "0",
+              "OUTPUT_PPS": "0",
+              "INPUT_PACKETS": "37802",
+              "OUTPUT_PACKETS": "3612",
+              "RUNTS": "0",
+              "GIANTS": "0",
+              "INPUT_ERRORS": "0",
+              "CRC": "0",
+              "FRAME": "0",
+              "OVERRUN": "0",
+              "ABORT": "",
+              "OUTPUT_ERRORS": "",
+              "VLAN_ID": "",
+              "VLAN_ID_INNER": "",
+              "VLAN_ID_OUTER": ""
+            }
+          ]
+        }
+      },
+      "template": "cisco_ios_show_interfaces",
+      "score": 30.0
+    }
+  },
+  "failed": {}
+}

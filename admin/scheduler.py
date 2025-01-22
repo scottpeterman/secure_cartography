@@ -111,9 +111,9 @@ class SchedulerWidget(QWidget):
         self.load_jobs()
 
         # Setup scheduler timer
-        self.scheduler_timer = QTimer(self)
-        self.scheduler_timer.timeout.connect(self.check_scheduled_jobs)
-        self.scheduler_timer.start(60000)  # Check every minute
+        # self.scheduler_timer = QTimer(self)
+        # self.scheduler_timer.timeout.connect(self.check_scheduled_jobs)
+        # self.scheduler_timer.start(60000)  # Check every minute
 
     def setup_ui(self):
         """Initialize the user interface."""
@@ -830,6 +830,17 @@ class SchedulerWidget(QWidget):
                     ],
                     'schedule': 'manual',
                     'log_file': 'logs/inventory.log'
+                },
+
+                {
+                    'name': 'Database Upload Wrapper',
+                    'script': 'upload_wrapper.py',
+                    'args': [
+                        '--jobs-file',
+                        os.path.join(site_path, f'{site_name}.yaml')
+                    ],
+                    'schedule': 'manual',  # Changed from cron since we're disabling scheduling
+                    'log_file': 'logs/upload_wrapper.log'
                 }
             ]
         }
