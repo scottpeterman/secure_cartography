@@ -30,7 +30,7 @@ import threading
 from secure_cartography.util import get_db_path
 
 from secure_cartography.logger_manager import logger_manager
-
+from tfsm_fire import TextFSMAutoEngine
 
 
 def timeout_handler():
@@ -334,6 +334,9 @@ class NetworkDiscovery:
                         device = self._process_device(current_device, capabilities)
                         if device:
                             neighbors = capabilities.get('neighbors', {})
+
+                            if capabilities['platform'] == "ios":
+                                self.get_ios_cdp(current_device, capabilities)
                             self.logger.info(f"Processing {len(neighbors)} neighbors for {device.hostname}")
                             self._process_neighbors(device, neighbors)
                             self.network_map[device.hostname] = device
@@ -367,6 +370,73 @@ class NetworkDiscovery:
 
         return enriched_map
 
+    def get_ios_cdp(self, device, capabilities):
+        """
+        Get CDP neighbors for IOS devices using TextFSM for accuracy while preserving capabilities schema.
+        This is here because napalm was not parsing correctly and only returned partial neighbor info
+        Args:
+            device: The network device info object
+            capabilities: Device capabilities dictionary containing the driver connection
+        """
+        try:
+            from netmiko import ConnectHandler
+
+            # Create Netmiko connection using device info
+            net_connect = ConnectHandler(
+                device_type="cisco_ios",
+                host=device.ip,
+                username=device.username,
+                password=device.password,
+                timeout=device.timeout,
+                **device.optional_args
+            )
+
+            # Get raw CDP output
+            net_connect.send_command("term len 0")  # Disable pagination
+            cdp_output = net_connect.send_command("show cdp neighbors detail")
+            net_connect.disconnect()
+
+            # Use TextFSMAutoEngine to parse CDP data
+            engine = TextFSMAutoEngine("secure_cartography/tfsm_templates.db")
+            template_name, parsed_data, score = engine.find_best_template(cdp_output, "cdp_neighbors_detail")
+
+            if parsed_data and score > 0:
+                # Convert parsed data into capabilities CDP schema
+                cdp_neighbors = {}
+
+                for entry in parsed_data:
+                    hostname = entry['NEIGHBOR_NAME'].split('.')[0]  # Remove domain if present
+
+                    # Initialize neighbor entry if we haven't seen it before
+                    if hostname not in cdp_neighbors:
+                        cdp_neighbors[hostname] = {
+                            'ip': entry['MGMT_ADDRESS'],
+                            'platform': 'ios' if 'cisco' in entry['PLATFORM'].lower() else 'unknown',
+                            'connections': []
+                        }
+
+                    # Add connection pair to the list
+                    connection = [entry['LOCAL_INTERFACE'], entry['NEIGHBOR_INTERFACE']]
+                    if connection not in cdp_neighbors[hostname]['connections']:
+                        cdp_neighbors[hostname]['connections'].append(connection)
+
+                # Update capabilities maintaining its schema
+                if 'neighbors' not in capabilities:
+                    capabilities['neighbors'] = {}
+                capabilities['neighbors']['cdp'] = cdp_neighbors
+                self.logger.info(f"Successfully parsed {len(cdp_neighbors)} CDP neighbors using TextFSM")
+
+            else:
+                self.logger.warning("No suitable template found or parsing failed for CDP output")
+
+        except Exception as e:
+            self.logger.error(f"Error getting CDP neighbors for device: {e}")
+            return None
+        finally:
+            if 'net_connect' in locals() and net_connect.is_alive():
+                net_connect.disconnect()
+
+        return capabilities
     def _normalize_hostname(self, hostname: str) -> str:
         """Normalize hostname by removing domain and whitespace."""
         if not hostname:
@@ -487,6 +557,8 @@ class NetworkDiscovery:
 
             for neighbor_id, data in protocol_neighbors.items():
                 self.logger.debug(f"{protocol.upper()}: Processing neighbor {neighbor_id}")
+                if neighbor_id == "ush-m1-core":
+                    print("stop")
 
                 if self._is_excluded(neighbor_id):
                     self.logger.info(f"Neighbor {neighbor_id} is excluded by configuration. Skipping.")
@@ -504,8 +576,7 @@ class NetworkDiscovery:
                 for connection in data.get('connections', []):
                     self.logger.debug(f"{protocol.upper()}: Processing connection {connection} for {neighbor_id}")
 
-                    # Check if we should queue this neighbor for discovery
-                    if not self._is_known_device(neighbor_ip):
+                    if True:
                         self.logger.info(f"New device found: {neighbor_id} ({neighbor_ip})")
 
                         # Create new device info and queue it
@@ -1259,20 +1330,13 @@ class NetworkDiscovery:
         for existing_connection in device.connections[normalized_neighbor_id]:
             if (existing_connection.local_port == connection.local_port and
                     existing_connection.remote_port == connection.remote_port):
-                self.logger.debug(
-                    f"Duplicate connection detected: {connection.local_port} -> {connection.remote_port} "
-                    f"for neighbor {normalized_neighbor_id}. Protocol: {protocol}"
-                )
-                # Update IP/platform if they're empty
-                if not existing_connection.neighbor_ip:
-                    existing_connection.neighbor_ip = connection.neighbor_ip
-                if not existing_connection.neighbor_platform or existing_connection.neighbor_platform == 'unknown':
-                    existing_connection.neighbor_platform = connection.neighbor_platform
                 is_duplicate = True
-                break
+
+
 
         # Add the connection if it's not a duplicate
         if not is_duplicate:
+
             device.connections[normalized_neighbor_id].append(connection)
             self.logger.info(
                 f"Added connection: {connection.local_port} -> {connection.remote_port} "
@@ -1283,6 +1347,59 @@ class NetworkDiscovery:
                 f"Skipped adding duplicate connection: {connection.local_port} -> {connection.remote_port} "
                 f"for neighbor {normalized_neighbor_id}"
             )
+
+
+
+    # def _add_neighbor(self, device: NetworkDevice, neighbor_id: str, data: Dict, protocol: str) -> None:
+    #     """Add neighbor to device connections."""
+    #     if not hasattr(device, 'connections'):
+    #         device.connections = {}
+    #
+    #     # Normalize the neighbor_id
+    #     normalized_neighbor_id = self._normalize_hostname(neighbor_id)
+    #     self.logger.debug(f"Normalized neighbor ID: {neighbor_id} -> {normalized_neighbor_id}")
+    #
+    #     if normalized_neighbor_id not in device.connections:
+    #         device.connections[normalized_neighbor_id] = []
+    #
+    #     # Create the connection object
+    #     connection = DeviceConnection(
+    #         local_port=data.get('local_port', 'unknown'),
+    #         remote_port=data.get('remote_port', 'unknown'),
+    #         protocol=protocol,
+    #         neighbor_ip=data.get('ip', ''),
+    #         neighbor_platform=data.get('platform', 'unknown')
+    #     )
+    #
+    #     # Enhanced duplicate check
+    #     is_duplicate = False
+    #     for existing_connection in device.connections[normalized_neighbor_id]:
+    #         if (existing_connection.local_port == connection.local_port and
+    #                 existing_connection.remote_port == connection.remote_port):
+    #             self.logger.debug(
+    #                 f"Duplicate connection detected: {connection.local_port} -> {connection.remote_port} "
+    #                 f"for neighbor {normalized_neighbor_id}. Protocol: {protocol}"
+    #             )
+    #             # Update IP/platform if they're empty
+    #             if not existing_connection.neighbor_ip:
+    #                 existing_connection.neighbor_ip = connection.neighbor_ip
+    #             if not existing_connection.neighbor_platform or existing_connection.neighbor_platform == 'unknown':
+    #                 existing_connection.neighbor_platform = connection.neighbor_platform
+    #             is_duplicate = True
+    #             break
+    #
+    #     # Add the connection if it's not a duplicate
+    #     if not is_duplicate:
+    #         device.connections[normalized_neighbor_id].append(connection)
+    #         self.logger.info(
+    #             f"Added connection: {connection.local_port} -> {connection.remote_port} "
+    #             f"for neighbor {normalized_neighbor_id}. Protocol: {protocol}, IP: {connection.neighbor_ip}"
+    #         )
+    #     else:
+    #         self.logger.info(
+    #             f"Skipped adding duplicate connection: {connection.local_port} -> {connection.remote_port} "
+    #             f"for neighbor {normalized_neighbor_id}"
+    #         )
 
     def _is_excluded(self, device_id: str) -> bool:
         if not self.config.exclude_string:
