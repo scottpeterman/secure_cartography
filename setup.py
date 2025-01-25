@@ -15,7 +15,7 @@ requirements = [
 
 setup(
     name="secure-cartography",
-    version="0.8.3",
+    version="0.9.0",
     author="Scott Peterman",
     author_email="scottpeterman@gmail.com",
     description="A secure, Python-based network discovery and mapping tool using SSH-based device interrogation",
@@ -32,7 +32,7 @@ setup(
         "Topic :: System :: Monitoring",
         "Topic :: Security",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=requirements,
     package_data={
         "secure_cartography": [

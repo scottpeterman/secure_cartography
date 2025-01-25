@@ -1,0 +1,25 @@
+{
+  "cdp": {
+    "usa2-core-01": {
+      "ip": "172.16.201.1",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/2",
+          "GigabitEthernet0/0"
+        ]
+      ]
+    },
+    "usa1-rtr-1": {
+      "ip": "172.16.128.1",
+      "platform": "ios",
+      "connections": [
+        [
+          "Ethernet1/0",
+          "Ethernet1/0"
+        ]
+      ]
+    }
+  },
+  "lldp": {}
+}

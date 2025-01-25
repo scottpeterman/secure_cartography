@@ -9,7 +9,8 @@ include secure_cartography/tfsm_templates.db
 
 # Include HTML and other resource files
 recursive-include secure_cartography/resources *.html *.css *.js *.jpeg
-
+recursive-include secure_cartography/icons_lib *.jpg
+recursive-include secure_cartography/icons_lib *.json
 # Exclude unnecessary files or directories
 exclude .venv
 exclude *.pyc

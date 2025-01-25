@@ -13,6 +13,8 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
 from PyQt6.QtCore import Qt, pyqtSignal, QThread, QSettings
 from pathlib import Path
 from PyQt6.QtSvgWidgets import QSvgWidget
+
+from secure_cartography.map_enhance_widget import TopologyEnhanceWidget
 from secure_cartography.preview_widget import TopologyPreviewWidget
 from secure_cartography.mviewer import TopologyViewer
 from secure_cartography.credslib import SecureCredentials
@@ -390,8 +392,8 @@ class NetworkMapperWidget(QWidget):
         button_layout.addWidget(self.cancel_button)
 
         # Log button
-        self.show_log_button = QPushButton("Log")
-        self.show_log_button.clicked.connect(self.toggle_log)
+        self.show_log_button = QPushButton("Enhance")
+        self.show_log_button.clicked.connect(self.open_enhance_widget)
         self.show_log_button.setStyleSheet(utility_button_style)
         button_layout.addWidget(self.show_log_button)
 
@@ -535,6 +537,29 @@ class NetworkMapperWidget(QWidget):
         self.light_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.white)
 
         self.theme_toggle.setChecked(self.dark_mode)
+
+    def open_enhance_widget(self):
+        """Open the Topology Enhance Widget in a non-modal window"""
+        try:
+            # Check if the enhance window already exists and is visible
+            if hasattr(self, 'enhance_window') and self.enhance_window.isVisible():
+                self.enhance_window.raise_()
+                self.enhance_window.activateWindow()
+            else:
+                # Create the enhance dialog
+                self.enhance_window = QDialog(self)
+                self.enhance_window.setWindowTitle("Topology Enhance")
+                layout = QVBoxLayout(self.enhance_window)
+
+                # Add the enhance widget
+                self.enhance_widget = TopologyEnhanceWidget()
+                layout.addWidget(self.enhance_widget)
+
+                # Set the default size and show the dialog
+                self.enhance_window.resize(600, 400)
+                self.enhance_window.show()
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to open Enhance Widget: {str(e)}")
 
     def browse_output_dir(self):
         """Open file dialog to browse for output directory"""
@@ -919,6 +944,7 @@ class NetworkMapperWidget(QWidget):
         item = QListWidgetItem(f"{ip} - {status}")
         if status == "success":
             item.setBackground(Qt.GlobalColor.green)
+            item.setForeground(Qt.GlobalColor.black)
         elif status == "failed":
             item.setBackground(Qt.GlobalColor.red)
         self.device_list.addItem(item)

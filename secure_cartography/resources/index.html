@@ -58,6 +58,7 @@
                         <a class="nav-link" href="#configuration">Configuration</a>
                         <a class="nav-link" href="#discovery">Network Discovery</a>
                         <a class="nav-link" href="#visualization">Map Visualization</a>
+                        <a class="nav-link" href="#enhancement">Map Enhancement</a>
                         <a class="nav-link" href="#troubleshooting">Troubleshooting</a>
                     </div>
                 </nav>
@@ -79,6 +80,7 @@
                             <li>Real-time discovery progress monitoring</li>
                             <li>Dark and light theme support</li>
                             <li>Multiple visualization layouts</li>
+                            <li>Professional map enhancement options</li>
                         </ul>
                     </div>
 
@@ -89,6 +91,7 @@
                         C --> D[Set Discovery Parameters]
                         D --> E[Begin Mapping]
                         E --> F[Generate Network Map]
+                        F --> G[Enhance Visualization]
                     </div>
                 </section>
 
@@ -125,58 +128,8 @@
                                 <dd class="col-sm-9">Location for discovery results and maps</dd>
 
                                 <dt class="col-sm-3">Exclude Pattern</dt>
-                                <dd class="col-sm-9">
-                                    Comma-separated patterns to exclude specific devices or networks. For example:
-                                    <div class="mt-2">
-                                        <code>othersite-,sep</code>
-                                    </div>
-                                    <small class="text-muted mt-2 d-block">
-                                        This would exclude:
-                                        <ul class="mt-1 mb-0">
-                                            <li>Any device with "othersite-" in the name (e.g., "othersite-core-1")</li>
-                                            <li>Any Cisco IP phones (which contain "SEP" in their names)</li>
-                                        </ul>
-                                    </small>
-                                </dd>
+                                <dd class="col-sm-9">Patterns to exclude specific devices or networks</dd>
                             </dl>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4 class="mb-0">Using Exclude Patterns</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>Exclude patterns help control the scope of network discovery. Multiple patterns can be combined using commas.</p>
-
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Example Pattern</th>
-                                            <th>What it Excludes</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>othersite-</code></td>
-                                            <td>All devices containing "othersite-" in their name (e.g., othersite-core-1, othersite-switch-2)</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>sep</code></td>
-                                            <td>Cisco IP phones (which have "SEP" in their names)</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>test-,dev-</code></td>
-                                            <td>All devices with names containing "test-" or "dev-"</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="alert alert-info mt-3">
-                                <strong>Tip:</strong> Patterns are case-insensitive. Use commas to separate multiple patterns without spaces.
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -184,7 +137,7 @@
                 <section id="discovery" class="mb-5">
                     <h2>Network Discovery</h2>
                     <h4 class="mt-4">Discovery Algorithm</h4>
-                    <p>Secure Cartography uses Breadth-First Search (BFS) to systematically explore your network. Starting from the seed device, it discovers and processes each layer of neighbors before moving deeper into the network:</p>
+                    <p>Secure Cartography uses Breadth-First Search (BFS) to systematically explore your network:</p>
 
                     <div class="mermaid">
                     graph TB
@@ -221,53 +174,107 @@
                         style H fill:#9c6
                     </div>
 
-                    <div class="card mt-3 mb-4">
+                    <div class="card mt-3">
                         <div class="card-body">
-                            <h5>How BFS Discovery Works</h5>
+                            <h5>Discovery Process</h5>
                             <ol>
-                                <li>Starts at the seed device (Layer 1)</li>
-                                <li>Discovers all immediate neighbors before moving deeper</li>
-                                <li>Processes each layer completely before moving to the next</li>
-                                <li>Avoids revisiting devices, preventing loops</li>
-                                <li>Respects exclude patterns at each layer</li>
+                                <li>Starts at the seed device</li>
+                                <li>Discovers immediate neighbors</li>
+                                <li>Processes each layer completely</li>
+                                <li>Prevents loops by tracking visited devices</li>
+                                <li>Applies exclusion patterns</li>
                             </ol>
-                            <div class="alert alert-primary mt-2">
-                                <strong>Advantage:</strong> BFS ensures thorough discovery of nearby devices before exploring further network segments, making it ideal for network mapping.
-                            </div>
                         </div>
-                    </div>
-
-                    <div class="alert alert-info mt-3">
-                        <h5>Discovery Progress Indicators</h5>
-                        <ul>
-                            <li><strong>Discovered:</strong> Successfully mapped devices</li>
-                            <li><strong>Failed:</strong> Unreachable or authentication failed</li>
-                            <li><strong>Queue:</strong> Devices waiting to be processed</li>
-                            <li><strong>Total:</strong> Overall devices found</li>
-                        </ul>
                     </div>
                 </section>
 
                 <section id="visualization" class="mb-5">
                     <h2>Map Visualization</h2>
-                    <p>Choose from multiple layout algorithms to best represent your network topology:</p>
+                    <p>Choose from multiple layout algorithms:</p>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5>Kamada-Kawai (kk)</h5>
-                                    <p>Best for general network topologies</p>
+                                    <p>Optimal for general network topologies</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Reingold-Tilford (rt)</h5>
+                                    <p>Hierarchical tree-like layouts</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5>Circular</h5>
-                                    <p>Arranges devices in a circular pattern</p>
+                                    <p>Radial arrangement of devices</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="enhancement" class="mb-5">
+                    <h2>Map Enhancement</h2>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">Professional Visualization Options</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Layout Options</h5>
+                                    <ul>
+                                        <li><strong>Grid:</strong> Organized, structured layout</li>
+                                        <li><strong>Tree:</strong> Hierarchical representation</li>
+                                        <li><strong>Balloon:</strong> Radial arrangement from core</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Export Formats</h5>
+                                    <ul>
+                                        <li><strong>DrawIO (.drawio):</strong> Edit in draw.io</li>
+                                        <li><strong>GraphML (.graphml):</strong> Universal format</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <h5>Key Enhancement Features</h5>
+                                <ul class="mb-0">
+                                    <li>Professional network device icons</li>
+                                    <li>Optional endpoint device filtering</li>
+                                    <li>Customizable layout algorithms</li>
+                                    <li>Industry-standard export formats</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">Using the Enhancement Tool</h4>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>Click the "Enhance" button in the main interface</li>
+                                <li>Select your input topology file (.json)</li>
+                                <li>Choose desired layout algorithm</li>
+                                <li>Configure visualization options:
+                                    <ul>
+                                        <li>Enable/disable endpoint devices</li>
+                                        <li>Toggle professional device icons</li>
+                                    </ul>
+                                </li>
+                                <li>Export to DrawIO and GraphML formats</li>
+                            </ol>
                         </div>
                     </div>
                 </section>
