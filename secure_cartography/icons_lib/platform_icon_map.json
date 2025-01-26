@@ -25,7 +25,8 @@
     "IP Phone": "ip_phone.jpg",
     "SEP": "ip_phone.jpg",
     "ATA": "ata.jpg",
-    "VG": "ata.jpg"
+    "VG": "ata.jpg",
+    "Nexus": "carrier_routing_system.jpg"
   },
   "defaults": {
     "default_switch": "layer_3_switch.jpg",
@@ -39,33 +40,86 @@
   },
   "fallback_patterns": {
     "switch": {
-      "platform_patterns": ["switch", "nexus", "catalyst", "c9", "ws-c", "dcs", "eos"],
-      "name_patterns": ["-sml-", "-swl-", "sml.", "swl."],
+      "platform_patterns": [
+        "switch",
+        "nexus",
+        "catalyst",
+        "c9",
+        "ws-c",
+        "dcs",
+        "eos"
+      ],
+      "name_patterns": [
+        "-sml-",
+        "-swl-",
+        "sml.",
+        "swl.",
+        "-sw-",
+        "-mds-",
+        "-fcsw"
+      ],
       "icon": "default_switch"
     },
     "router": {
-      "platform_patterns": ["router", "isr", "asr", "csr", "iosv"],
-      "name_patterns": ["-rtr-", "rtr."],
+      "platform_patterns": [
+        "router",
+        "isr",
+        "asr",
+        "csr",
+        "iosv"
+      ],
+      "name_patterns": [
+        "-rtr-",
+        "rtr."
+      ],
       "icon": "default_router"
     },
     "firewall": {
-      "platform_patterns": ["firewall", "asa", "ftd", "palo"],
-      "name_patterns": ["-fw-", "fw."],
+      "platform_patterns": [
+        "firewall",
+        "asa",
+        "ftd",
+        "palo"
+      ],
+      "name_patterns": [
+        "-fw-",
+        "fw."
+      ],
       "icon": "default_firewall"
     },
     "wireless": {
-      "platform_patterns": ["ap", "aireos", "wireless", "aironet"],
-      "name_patterns": ["-ap-", "ap."],
+      "platform_patterns": [
+        "ap",
+        "aireos",
+        "wireless",
+        "aironet"
+      ],
+      "name_patterns": [
+        "-ap-",
+        "ap."
+      ],
       "icon": "default_wireless"
     },
     "phone": {
-      "platform_patterns": ["ip phone", "phone"],
-      "name_patterns": ["-ph-", "ph."],
+      "platform_patterns": [
+        "ip phone",
+        "phone"
+      ],
+      "name_patterns": [
+        "-ph-",
+        "ph."
+      ],
       "icon": "default_phone"
     },
     "ata": {
-      "platform_patterns": ["ata", "vg"],
-      "name_patterns": ["-ata-", "ata."],
+      "platform_patterns": [
+        "ata",
+        "vg"
+      ],
+      "name_patterns": [
+        "-ata-",
+        "ata."
+      ],
       "icon": "default_ata"
     }
   }
