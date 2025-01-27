@@ -187,7 +187,7 @@ python -m secure_cartography.scart
 - High-quality vector export
 
 ### draw.io (.drawio)
-![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/poc/drawio.png)
+![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/v2/screenshots/poc/drawio.png)
 - Collaborative diagram editing
 - Web-based access
 - Multiple export formats
@@ -305,14 +305,14 @@ Surveyor extends the capabilities of Secure Cartography with an intuitive GUI fo
 
 - **Screenshots**
 
-#### Job Dashboard
-![Job Dashboard](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/poc/home.png)
+#### Home Dashboard
+![home Dashboard](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/v2/screenshots/poc/home.png)
 
-#### Data View
-![Job Configuration](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/poc/device2.png)
+#### Jobs View
+![Job Configuration](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/v2/screenshots/poc/jobs.png)
 
 #### Data Exports
-![Tables](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/poc/db.png)
+![Tables](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/v2/screenshots/poc/db.png)
 
 ---
 
