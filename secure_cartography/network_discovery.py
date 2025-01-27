@@ -30,7 +30,7 @@ import threading
 from secure_cartography.util import get_db_path
 
 from secure_cartography.logger_manager import logger_manager
-from tfsm_fire import TextFSMAutoEngine
+from secure_cartography.tfsm_fire import TextFSMAutoEngine
 
 
 def timeout_handler():
@@ -133,6 +133,7 @@ def timeout(seconds=60):
 class NetworkDiscovery:
 
     def __init__(self, config: DiscoveryConfig):
+        self.processed_hostnames = set()
         self.config = config
         self.progress_callback = None
         self.log_callback = None
@@ -223,20 +224,20 @@ class NetworkDiscovery:
         return mapped_data
 
     def _is_visited(self, device: DeviceInfo) -> bool:
-        """Check if a device has already been visited."""
-        visited = device.hostname in self.visited_hostnames or device.ip in self.visited_ips
-        self.logger.debug(
-            f"Visited check for device {device.hostname} ({device.ip}): {visited}"
-        )
-        return visited
+        """Check if device already connected to, queued, failed, or successfully processed"""
+        visited = device.ip in self.visited
+        queued = any(device.ip == item.ip for item in list(self.queue.queue))
+        failed = device.ip in self.failed_devices
+        processed = device.hostname in self.processed_hostnames
 
+        if visited or queued or failed or processed:
+            self.logger.debug(
+                f"Device {device.ip} visited: {visited}, queued: {queued}, failed: {failed}, processed: {processed}")
+        return visited or queued or failed or processed
     def _mark_visited(self, device: DeviceInfo) -> None:
-        """Mark a device as visited."""
-        self.visited_hostnames.add(device.hostname)
-        self.visited_ips.add(device.ip)
-        self.logger.debug(
-            f"Marked device as visited: {device.hostname} ({device.ip}). Visited count: {len(self.visited_ips)}"
-        )
+        """Mark that we've connected to this device"""
+        self.visited.add(device.ip)
+        self.logger.debug(f"Marked {device.ip} as visited. Total visited: {len(self.visited)}")
 
     def crawl(self):
         """Run network discovery process."""
@@ -258,49 +259,61 @@ class NetworkDiscovery:
         processing_seed_device = True
 
         while not self.queue.empty() and self.stats['devices_discovered'] < self.max_devices - 1:
+
             current_device = self.queue.get()
-            self.logger.info(
-                f"Dequeued device {current_device.hostname} (IP: {current_device.ip}). Queue size: {self.queue.qsize()}")
-
             try:
-                # Update stats for queue before processing
-                self.stats = {
-                    'devices_discovered': len(self.network_map),
-                    'devices_failed': len(self.failed_devices),
-                    'devices_queued': self.queue.qsize(),
-                    'devices_visited': len(self.visited_ips),
-                    'unreachable_hosts': len(self.unreachable_hosts)
-                }
-                self.logger.info(f"Starting processing of {current_device.hostname} (IP: {current_device.ip})")
-                self.logger.debug(f"Current visited IPs: {self.visited_ips}")
-                self.logger.debug(f"Current network_map devices: {list(self.network_map.keys())}")
-
+                self.logger.info(
+                    f"Dequeued device {current_device.hostname} (IP: {current_device.ip}). Queue size: {self.queue.qsize()}")
                 if self._is_visited(current_device):
-                    self.logger.debug(f"Already processed device: {current_device.hostname} ({current_device.ip})")
+                    self.logger.info(
+                        f"skipping previously visited device {current_device.hostname} (IP: {current_device.ip}). Queue size: {self.queue.qsize()}")
                     continue
-
-                self.emit_device_discovered(current_device.hostname, "processing")
-
-                # Check if device is reachable
-                if not self._check_port_open(current_device.hostname):
-                    self.logger.warning(f"Device unreachable: {current_device.hostname} (IP: {current_device.ip})")
-                    self.failed_devices.add(current_device.hostname)
-                    self.emit_device_discovered(current_device.hostname, "failed")
-                    continue
-
-                # Discover device capabilities and neighbors
                 try:
-                    if processing_seed_device:
-                        # self.logger.setLevel(logging.INFO)
-                        self.logger.info("Discovering seed device...")
-                        # self.logger.setLevel(logging.WARNING)
-                        processing_seed_device = False
+                    # Update stats for queue before processing
+                    self.stats = {
+                        'devices_discovered': len(self.network_map),
+                        'devices_failed': len(self.failed_devices),
+                        'devices_queued': self.queue.qsize(),
+                        'devices_visited': len(self.visited_ips),
+                        'unreachable_hosts': len(self.unreachable_hosts)
+                    }
+                    self.logger.info(f"Starting processing of {current_device.hostname} (IP: {current_device.ip})")
+                    self.logger.debug(f"Current visited IPs: {self.visited_ips}")
+                    self.logger.debug(f"Current network_map devices: {list(self.network_map.keys())}")
 
-                    def device_discovery_logic():
-                        if not current_device.platform:
-                            self.logger.info(f"Discovering platform for: {current_device.hostname}")
-                            current_device.platform = self.driver_discovery.detect_platform(current_device,
-                                                                                            config=self.config)
+                    if self._is_visited(current_device):
+                        self.logger.debug(f"Already processed device: {current_device.hostname} ({current_device.ip})")
+                        continue
+
+                    self.emit_device_discovered(current_device.hostname, "processing")
+
+                    # device.hostname check here
+                    exclude_patterns = self.config.exclude_string.split(',') if self.config.exclude_string else []
+                    if exclude_patterns and any(
+                            pattern.lower() in current_device.hostname.lower() for pattern in exclude_patterns):
+                        self.logger.info(f"Skipping excluded device: {current_device.hostname}")
+                        continue
+                    # Check if device is reachable
+                    if not self._check_port_open(current_device.hostname):
+                        self.logger.warning(f"Device unreachable: {current_device.hostname} (IP: {current_device.ip})")
+                        self.failed_devices.add(current_device.hostname)
+                        self.emit_device_discovered(current_device.hostname, "failed")
+                        continue
+
+                    # Discover device capabilities and neighbors
+                    try:
+                        if processing_seed_device:
+                            # self.logger.setLevel(logging.INFO)
+                            self.logger.info("Discovering seed device...")
+                            # self.logger.setLevel(logging.WARNING)
+                            processing_seed_device = False
+
+                        exclude_patterns = self.config.exclude_string.split(',') if self.config.exclude_string else []
+                        if exclude_patterns and any(
+                                pattern.lower() in current_device.hostname.lower() for pattern in exclude_patterns):
+                            self.logger.info(f"Skipping excluded device: {current_device.hostname}")
+                            continue
+
                         try:
                             capabilities = run_with_timeout(
                                 self.driver_discovery.get_device_capabilities,
@@ -308,68 +321,65 @@ class NetworkDiscovery:
                                 current_device,
                                 config=self.config
                             )
-                            # capabilities = self.driver_discovery.get_device_capabilities(current_device, config=self.config)
+                            # capabilities = run_with_timeout(device_discovery_logic, 60)  # 30 second timeout
+                        except TimeoutError as e:
+                            self.logger.error(f"Timeout discovering capabilities for {current_device.hostname}: {str(e)}")
+                            continue
                         except Exception as e:
-                            print(f"Failed get capabilities in netdisco ({e})")
-                        self.logger.info(
-                            f"Capabilities discovered for {current_device.hostname}: {capabilities['facts'].get('hostname', 'N/A')}")
-                        return capabilities
-                    try:
-                        capabilities = run_with_timeout(
-                            self.driver_discovery.get_device_capabilities,
-                            60,  # 30 second timeout
-                            current_device,
-                            config=self.config
-                        )
-                        # capabilities = run_with_timeout(device_discovery_logic, 60)  # 30 second timeout
-                    except TimeoutError as e:
-                        self.logger.error(f"Timeout discovering capabilities for {current_device.hostname}: {str(e)}")
-                        continue
+                            self.logger.error(f"Error discovering capabilities for {current_device.hostname}: {str(e)}")
+                            continue
+
+                        if capabilities:
+                            # Process neighbors and connections
+                            device = self._process_device(current_device, capabilities)
+                            if device:
+                                neighbors = capabilities.get('neighbors', {})
+
+                                if capabilities['platform'] == "ios":
+                                    self.get_ios_cdp(current_device, capabilities)
+                                self.logger.info(f"Processing {len(neighbors)} neighbors for {device.hostname}")
+                                self._process_neighbors(device, neighbors)
+                                self.network_map[device.hostname] = device
+                                self.processed_hostnames.add(device.hostname)
+                                self.emit_device_discovered(current_device.hostname, "success")
+
                     except Exception as e:
-                        self.logger.error(f"Error discovering capabilities for {current_device.hostname}: {str(e)}")
-                        continue
+                        self.logger.error(f"Failed to process device {current_device.hostname}: {str(e)}")
+                        self.failed_devices.add(current_device.hostname)
+                        self.emit_device_discovered(current_device.hostname, "failed")
+                        traceback.print_exc()
 
-                    if capabilities:
-                        # Process neighbors and connections
-                        device = self._process_device(current_device, capabilities)
-                        if device:
-                            neighbors = capabilities.get('neighbors', {})
-
-                            if capabilities['platform'] == "ios":
-                                self.get_ios_cdp(current_device, capabilities)
-                            self.logger.info(f"Processing {len(neighbors)} neighbors for {device.hostname}")
-                            self._process_neighbors(device, neighbors)
-                            self.network_map[device.hostname] = device
-                            self.emit_device_discovered(current_device.hostname, "success")
+                    self._mark_visited(current_device)
 
                 except Exception as e:
-                    self.logger.error(f"Failed to process device {current_device.hostname}: {str(e)}")
-                    self.failed_devices.add(current_device.hostname)
-                    self.emit_device_discovered(current_device.hostname, "failed")
+                    self.logger.error(f"Error in discovery loop for device {current_device.hostname}: {str(e)}")
                     traceback.print_exc()
 
-                self._mark_visited(current_device)
 
             except Exception as e:
-                self.logger.error(f"Error in discovery loop for device {current_device.hostname}: {str(e)}")
+                self.logger.error(f"Error in crawl loop for device {current_device.hostname}: {str(e)}")
                 traceback.print_exc()
+        try:
+            self.stats = {
+                'devices_discovered': len(self.network_map),
+                'devices_failed': len(self.failed_devices),
+                'devices_queued': self.queue.qsize(),
+                'devices_visited': len(self.visited_ips),
+                'unreachable_hosts': len(self.unreachable_hosts)
+            }
+            self.emit_device_discovered(None, "complete")
 
-        self.stats = {
-            'devices_discovered': len(self.network_map),
-            'devices_failed': len(self.failed_devices),
-            'devices_queued': self.queue.qsize(),
-            'devices_visited': len(self.visited_ips),
-            'unreachable_hosts': len(self.unreachable_hosts)
-        }
-        self.emit_device_discovered(None, "complete")
+            # Save transformed and enriched map
+            transformed_map = self.transform_map(self.network_map)
+            enriched_map = self.enrich_peer_data(transformed_map)
+            self._save_map_files(enriched_map)
 
-        # Save transformed and enriched map
-        transformed_map = self.transform_map(self.network_map)
-        enriched_map = self.enrich_peer_data(transformed_map)
-        self._save_map_files(enriched_map)
-
-        return enriched_map
-
+            return enriched_map
+        except Exception as e:
+            traceback.print_exc()
+            with open("error_dump_network_map.json", "w") as fhe:
+                fhe.write(json.dumps(self.network_map, indent=2))
+            self.logger.error("Failure generating map")
     def get_ios_cdp(self, device, capabilities):
         """
         Get CDP neighbors for IOS devices using TextFSM for accuracy while preserving capabilities schema.
@@ -473,79 +483,6 @@ class NetworkDiscovery:
             )
         return is_known
 
-    def _enhance_cdp_data(self, parsed_cdp):
-        """Convert parsed CDP data to the required neighbor format and queue new devices."""
-        enhanced_cdp = {}
-
-        for entry in parsed_cdp:
-            # Get and normalize device ID
-            device_id = entry.get('NEIGHBOR_NAME', '')
-            if not device_id:
-                chassis_id = entry.get('CHASSIS_ID', '')
-                device_id = chassis_id.split('.')[0]
-
-            if not device_id or any(x in device_id.lower() for x in ['show', 'invalid', 'total']):
-                self.logger.debug(f"CDP: Skipping invalid device_id: {device_id}")
-                continue
-
-            # Normalize the device ID
-            normalized_device_id = self._normalize_hostname(device_id)
-
-            # Get IP address with fallback
-            ip_address = entry.get('MGMT_ADDRESS') or entry.get('INTERFACE_IP', '')
-
-            self.logger.info(f"CDP: Processing neighbor {normalized_device_id} with IP {ip_address}")
-
-            # Initialize or update device data
-            if normalized_device_id not in enhanced_cdp:
-                enhanced_cdp[normalized_device_id] = {
-                    'ip': ip_address,
-                    'platform': 'ios',  # Default platform for CDP
-                    'connections': []
-                }
-
-            # Process connection information
-            if 'LOCAL_INTERFACE' in entry and 'NEIGHBOR_INTERFACE' in entry:
-                connection = [entry['LOCAL_INTERFACE'], entry['NEIGHBOR_INTERFACE']]
-                if connection not in enhanced_cdp[normalized_device_id]['connections']:
-                    enhanced_cdp[normalized_device_id]['connections'].append(connection)
-                    self.logger.debug(f"CDP: Added connection {connection} for {normalized_device_id}")
-
-            # Update platform if available
-            if 'PLATFORM' in entry:
-                platform_str = entry['PLATFORM'].lower()
-                if 'nx-os' in platform_str:
-                    enhanced_cdp[normalized_device_id]['platform'] = 'nxos_ssh'
-                elif 'eos' in platform_str:
-                    enhanced_cdp[normalized_device_id]['platform'] = 'eos'
-                else:
-                    enhanced_cdp[normalized_device_id]['platform'] = 'ios'
-
-            # Handle device queueing if IP is available
-            if ip_address:
-                self.logger.info(f"CDP: Evaluating {normalized_device_id} ({ip_address}) for queuing")
-                self.logger.debug(f"CDP Queue state for {ip_address}:")
-                self.logger.debug(f"  - In visited IPs: {ip_address in self.visited_ips}")
-                self.logger.debug(f"  - In visited hostnames: {normalized_device_id in self.visited_hostnames}")
-                self.logger.debug(f"  - In unreachable: {ip_address in self.unreachable_hosts}")
-
-                if not self._check_known_device(device_id, ip_address):
-                    new_device = DeviceInfo(
-                        hostname=ip_address,
-                        ip=ip_address,
-                        username=self.config.username,
-                        password=self.config.password,
-                        timeout=self.config.timeout,
-                        platform=enhanced_cdp[normalized_device_id]['platform']
-                    )
-                    self.logger.info(
-                        f"CDP: Queueing new device <font color='green'>{ip_address}</font> from <font color='yellow'>{normalized_device_id}</font>")
-                    self.queue.put(new_device)
-                else:
-                    self.logger.info(f"CDP: Skipping known device {ip_address} ({normalized_device_id})")
-
-        return enhanced_cdp
-
     def _process_neighbors(self, device: NetworkDevice, neighbors: Dict) -> None:
         """Process neighbors for both CDP and LLDP."""
         self.logger.info(f"Starting neighbor processing for device {device.hostname}")
@@ -560,9 +497,9 @@ class NetworkDiscovery:
                 if neighbor_id == "ush-m1-core":
                     print("stop")
 
-                if self._is_excluded(neighbor_id):
-                    self.logger.info(f"Neighbor {neighbor_id} is excluded by configuration. Skipping.")
-                    continue
+                # if self._is_excluded(neighbor_id):
+                #     self.logger.info(f"Neighbor {neighbor_id} is excluded by configuration. Skipping.")
+                #     continue
 
                 # Get neighbor IP and validate
                 neighbor_ip = data.get('ip', '')
@@ -580,21 +517,27 @@ class NetworkDiscovery:
                         self.logger.info(f"New device found: {neighbor_id} ({neighbor_ip})")
 
                         # Create new device info and queue it
-                        neighbor_device = DeviceInfo(
-                            hostname=neighbor_ip,
-                            ip=neighbor_ip,
-                            username=self.config.username,
-                            password=self.config.password,
-                            timeout=self.config.timeout,
-                            platform=data.get('platform', '')
-                        )
+                        if not self._is_visited(DeviceInfo(hostname=neighbor_ip, ip=neighbor_ip, password="", username="")):
+                            neighbor_device = DeviceInfo(
+                                hostname=neighbor_ip,
+                                ip=neighbor_ip,
+                                username=self.config.username,
+                                password=self.config.password,
+                                timeout=self.config.timeout,
+                                platform=data.get('platform', '')
+                            )
 
-                        self.logger.info(f"Queueing new device: {neighbor_ip}")
-                        self.queue.put(neighbor_device)
-                        self.logger.debug(f"Queue size after adding {neighbor_ip}: {self.queue.qsize()}")
-                    else:
-                        self.logger.debug(f"Device {neighbor_ip} already known, skipping queue")
+                            exclude_patterns = self.config.exclude_string.split(
+                                ',') if self.config.exclude_string else []
+                            if exclude_patterns and any(
+                                    pattern.lower() in neighbor_id.lower() for pattern in exclude_patterns):
+                                self.logger.info(f"Skipping excluded device: {neighbor_id}")
+                                continue
+                            self.logger.info(f"Queueing new device: {neighbor_ip}")
+                            self.queue.put(neighbor_device)
 
+                        else:
+                            self.logger.debug(f"Device {neighbor_ip} already visited/queued/failed, skipping queue")
                     # Add connection info regardless of queuing status
                     connection_data = {
                         'local_port': connection[0],
@@ -671,9 +614,9 @@ class NetworkDiscovery:
             if not device_id:
                 device_id = entry.get('CHASSIS_ID', '').replace(':', '').lower()
 
-            if not device_id or not self._is_valid_device_id(device_id):
-                self.logger.debug(f"LLDP: Skipping invalid device ID: {device_id}")
-                continue
+            # if not device_id or not self._is_valid_device_id(device_id):
+            #     self.logger.debug(f"LLDP: Skipping invalid device ID: {device_id}")
+            #     continue
 
             # Normalize the device ID
             normalized_device_id = self._normalize_hostname(device_id)
@@ -712,7 +655,7 @@ class NetworkDiscovery:
                 self.logger.debug(f"  - In visited hostnames: {normalized_device_id in self.visited_hostnames}")
                 self.logger.debug(f"  - In unreachable: {ip_address in self.unreachable_hosts}")
 
-                if not self._check_known_device(device_id, ip_address):
+                if not self._is_visited(DeviceInfo(hostname=ip_address, ip=ip_address, password="", username="")):
                     new_device = DeviceInfo(
                         hostname=ip_address,
                         ip=ip_address,
@@ -721,8 +664,14 @@ class NetworkDiscovery:
                         timeout=self.config.timeout,
                         platform=enhanced_lldp[normalized_device_id]['platform']
                     )
-                    self.logger.info(
-                        f"LLDP: Queueing new device <font color='green'>{ip_address}</font> from <font color='yellow'>{normalized_device_id}</font>")
+
+                    exclude_patterns = self.config.exclude_string.split(
+                        ',') if self.config.exclude_string else []
+                    if exclude_patterns and any(
+                            pattern.lower() in device_id.hostname.lower() for pattern in exclude_patterns):
+                        self.logger.info(f"Skipping excluded device: {device_id}")
+                        continue
+                    self.logger.info(f"Queueing new device: {device_id}")
                     self.queue.put(new_device)
                 else:
                     self.logger.info(f"LLDP: Skipping known device {ip_address} ({normalized_device_id})")
@@ -1016,14 +965,17 @@ class NetworkDiscovery:
 
         def normalize_hostname(hostname: str) -> str:
             """Normalize a single hostname"""
-            # Remove domain suffix
-            base_hostname = hostname.split('.')[0]
+            try:
+                # Remove domain suffix
+                base_hostname = hostname.split('.')[0]
 
-            # Remove text after space
-            base_hostname = base_hostname.split()[0]
+                # Remove text after space
+                base_hostname = base_hostname.split()[0]
 
-            # Normalize the base hostname
-            return base_hostname.lower().strip()
+                # Normalize the base hostname
+                return base_hostname.lower().strip()
+            except:
+                return str(hostname).lower()
 
         # First pass: create a mapping of normalized hostnames
         normalized_hosts = {}

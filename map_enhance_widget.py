@@ -1,17 +1,24 @@
+import json
 import sys
+from importlib import resources
+
 from pathlib import Path
 from PyQt6.QtWidgets import (QApplication, QDialog, QFileDialog, QVBoxLayout,
                              QHBoxLayout, QLineEdit, QPushButton, QLabel,
                              QCheckBox, QComboBox, QGroupBox, QMessageBox, QWidget)
-from PyQt6.QtCore import Qt
 
 from drawio_mapper2 import NetworkDrawioExporter
 from graphml_mapper4 import NetworkGraphMLExporter
-
+from icon_map_editor import IconConfigEditor
+from map_editor import TopologyWidget as EditorWidget
 
 class TopologyEnhanceWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        # with resources.path('secure_cartography', 'icons_lib') as icons_path:
+        #     self.icons_path = str(icons_path)
+        self.icons_path = str(Path(__file__).parent / 'icons_lib')
+        self.node_editor = None
         self.setup_ui()
 
     def setup_ui(self):
@@ -68,6 +75,13 @@ class TopologyEnhanceWidget(QWidget):
         options_group.setLayout(options_layout)
         layout.addWidget(options_group)
 
+        editor_mapping_btn = QPushButton("Manual Node Editor")
+        editor_mapping_btn.clicked.connect(self.edit_nodes)
+        layout.addWidget(editor_mapping_btn)
+
+        icon_mapping_btn = QPushButton("Edit Icon Mappings")
+        icon_mapping_btn.clicked.connect(self.edit_icon_mappings)
+        layout.addWidget(icon_mapping_btn)
         # Export Button
         export_btn = QPushButton("Export")
         export_btn.clicked.connect(self.export_topology)
@@ -76,16 +90,28 @@ class TopologyEnhanceWidget(QWidget):
         # Add stretch to push everything to the top
         layout.addStretch()
 
+    def edit_icon_mappings(self):
+        self.editor = IconConfigEditor()
+        self.editor.show()
+
+    def edit_nodes(self):
+        if not hasattr(self, 'node_editor') or self.node_editor is None:
+            self.node_editor = EditorWidget()  # Create new instance
+            self.node_editor.resize(800, 400)
+        self.node_editor.show()
+
+    def _get_icons_path(self):
+        with resources.path('secure_cartography', 'icons_lib') as icons_path:
+            return str(icons_path)
     def browse_input(self):
         filename, _ = QFileDialog.getOpenFileName(
             self,
             "Select Topology JSON File",
-            str(Path.home()),
+            ".",  # Current working directory
             "JSON Files (*.json)"
         )
         if filename:
             self.input_path.setText(filename)
-            # Set default output directory to input file's directory
             if not self.output_path.text():
                 self.output_path.setText(str(Path(filename).parent))
 
@@ -93,7 +119,7 @@ class TopologyEnhanceWidget(QWidget):
         directory = QFileDialog.getExistingDirectory(
             self,
             "Select Output Directory",
-            str(Path.home()),
+            ".",  # Current working directory
             QFileDialog.Option.ShowDirsOnly
         )
         if directory:
@@ -104,50 +130,36 @@ class TopologyEnhanceWidget(QWidget):
         output_dir = self.output_path.text()
 
         if not input_file or not output_dir:
-            QMessageBox.warning(
-                self,
-                "Missing Information",
-                "Please select both input file and output directory."
-            )
+            QMessageBox.warning(self, "Missing Information",
+                                "Please select both input file and output directory.")
             return
 
         try:
-            # Read input JSON
-            import json
             with open(input_file, 'r') as f:
                 network_data = json.load(f)
 
-            # Prepare common parameters
             base_name = Path(input_file).stem
             output_base = Path(output_dir) / base_name
             common_params = {
                 'include_endpoints': self.include_endpoints.isChecked(),
                 'use_icons': self.use_icons.isChecked(),
-                'layout_type': self.layout_combo.currentText()
+                'layout_type': self.layout_combo.currentText(),
+                'icons_dir': self.icons_path
             }
 
-            # Export to Draw.io format
             drawio_exporter = NetworkDrawioExporter(**common_params)
             drawio_output = output_base.with_suffix('.drawio')
             drawio_exporter.export_to_drawio(network_data, drawio_output)
 
-            # Export to GraphML format
             graphml_exporter = NetworkGraphMLExporter(**common_params)
             graphml_output = output_base.with_suffix('.graphml')
             graphml_exporter.export_to_graphml(network_data, graphml_output)
 
-            QMessageBox.information(
-                self,
-                "Export Complete",
-                f"Successfully exported to:\n{drawio_output}\n{graphml_output}"
-            )
+            QMessageBox.information(self, "Export Complete",
+                                    f"Successfully exported to:\n{drawio_output}\n{graphml_output}")
 
         except Exception as e:
-            QMessageBox.critical(
-                self,
-                "Export Error",
-                f"Error during export:\n{str(e)}"
-            )
+            QMessageBox.critical(self, "Export Error", f"Error during export:\n{str(e)}")
 
 
 def main():
@@ -155,7 +167,7 @@ def main():
 
     # Create a window to hold our widget
     window = QWidget()
-    window.setWindowTitle("Topology Enhance Test")
+    window.setWindowTitle("Topology Enhance")
 
     # Create layout for the window
     layout = QVBoxLayout(window)

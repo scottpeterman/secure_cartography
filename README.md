@@ -1,18 +1,16 @@
-
-
 # Secure Cartography & Surveyor Suite
 
 ## Overview
 The **Secure Cartography & Surveyor Suite** is a comprehensive, Python-based network discovery, mapping, and management toolkit. Designed for network engineers, IT administrators, and SMBs, it provides robust features for automated device interrogation, network topology visualization, and configuration management, all while maintaining strict security standards.
 
-
 ![arch](screenshots/poc/slides1.gif)
 
 Key features include:
-- **Automated Discovery:** SSH-based interrogation with platform auto-detection.
-- **Network Mapping:** JSON-based storage with support for CDP/LLDP protocols.
-- **Device Inventory & Configuration:** Inventory parsing and configuration backup for multi-vendor environments.
-- **Extensive GUI Support:** Modern PyQt6-based interface with detailed device dialogs and search functionality.
+- **Automated Discovery:** SSH-based interrogation with platform auto-detection
+- **Network Mapping:** JSON-based storage with support for CDP/LLDP protocols
+- **Device Inventory & Configuration:** Inventory parsing and configuration backup for multi-vendor environments
+- **Extensive GUI Support:** Modern PyQt6-based interface with detailed device dialogs and search functionality
+- **Advanced Topology Management:** Interactive merging and enhancement tools with visual previews
 
 ---
 
@@ -27,6 +25,8 @@ Key features include:
   - Quick-access buttons for browsing output folders and files
   - Modernized topology merge dialog with interactive preview
   - Enhanced dark/light mode support
+  - New node editor interface with platform auto-completion
+  - Comprehensive icon mapping system
 
 ---
 
@@ -40,6 +40,11 @@ Key features include:
 2. **Topology Merge Tool**
    ```bash
    python -m secure_cartography.merge_dialog
+   ```
+
+3. **Topology Enhancement**
+   ```bash
+   python -m secure_cartography.enhance
    ```
 
 ---
@@ -56,7 +61,7 @@ Key features include:
 - Improved device tracking and neighbor discovery
 - Real-time progress monitoring with enhanced logging
 - Smart platform detection and validation
-- Configurable exclusion patterns (e.g., `othersite-,sep` to exclude specific sites and IP phones)
+- Configurable exclusion patterns
 
 ### Visualization
 - Interactive topology viewer with Mermaid diagrams
@@ -69,6 +74,26 @@ Key features include:
   - Kamada-Kawai (KK) for general topologies
   - Circular layout for ring networks
   - Multipartite for layered networks
+  - Grid layout for structured networks
+  - Tree layout for hierarchical networks
+  - Balloon layout for radial hierarchies
+
+### Topology Enhancement
+- Interactive node editing with platform auto-completion
+- Bulk peer node updates
+- Customizable icon mappings for different export formats
+- Visual preview of topology changes
+- Support for device-specific icons and shapes
+- Pattern-based platform mapping
+
+### Map Merging
+- Interactive topology preview with SVG visualization
+- Intelligent topology merging with connection deduplication
+- Comprehensive merge logging
+- Multiple file support
+- Dark mode interface
+- Real-time merge preview
+- Automatic output filename suggestions
 
 ### Security
 - Master password-based encryption system
@@ -92,14 +117,14 @@ Key features include:
 - Device Detail Dialog:
   - Overview, Interfaces, Inventory, and MAC Address tabs
   - Real-time theme switching (dark/light modes)
-
-### Map Merging
-- Interactive topology preview
-- Intelligent topology merging with connection deduplication
-- Comprehensive merge logging
-- Multiple file support
-
----
+- Node Editor Interface:
+  - Double-click editing functionality
+  - Platform auto-completion
+  - Bulk peer updates
+- Icon Configuration:
+  - Separate Draw.io and GraphML mappings
+  - Visual icon/shape selection
+  - Pattern matching configuration
 
 ## Installation
 
@@ -125,7 +150,6 @@ merge-dialog
 
 # Or run as module for additional console output
 python -m secure_cartography.scart
-python -m secure_cartography.merge_dialog
 ```
 
 ---
@@ -156,14 +180,14 @@ python -m secure_cartography.merge_dialog
 ## External Tool Integration
 
 ### yEd GraphML (.graphml)
-![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/yed1.png)
+![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/poc/graphml.png)
 - Multiple automatic layout algorithms
 - Advanced grouping capabilities
 - Neighborhood analysis
 - High-quality vector export
 
 ### draw.io (.drawio)
-![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/drawio.png)
+![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/poc/drawio.png)
 - Collaborative diagram editing
 - Web-based access
 - Multiple export formats
@@ -282,10 +306,13 @@ Surveyor extends the capabilities of Secure Cartography with an intuitive GUI fo
 - **Screenshots**
 
 #### Job Dashboard
-![Job Dashboard](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/collector1.png)
+![Job Dashboard](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/poc/home.png)
 
-#### Job Configuration
-![Job Configuration](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/job_edit2.png)
+#### Data View
+![Job Configuration](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/poc/device2.png)
+
+#### Data Exports
+![Tables](https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/poc/db.png)
 
 ---
 
@@ -298,7 +325,3 @@ This project is licensed under the GNU General Public License v3.0 (GPLv3).
 Contributions are welcome! Please submit pull requests to the main repository or reach out via the issues page.
 
 ---
-
-## Support
-For support or inquiries, please contact [support@example.com](mailto:support@example.com).
-
