@@ -308,7 +308,5 @@ This project is licensed under the GNU General Public License v3.0 (GPLv3).
 
 ---
 
-## Contributions
-Contributions are welcome! Please submit pull requests to the main repository or reach out via the issues page.
 
 ---
