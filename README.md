@@ -30,24 +30,6 @@ Key features include:
 
 ---
 
-## Quick Start Guide
-
-1. **Network Discovery and Mapping**
-   ```bash
-   python -m secure_cartography.scart
-   ```
-
-2. **Topology Merge Tool**
-   ```bash
-   python -m secure_cartography.merge_dialog
-   ```
-
-3. **Topology Enhancement**
-   ```bash
-   python -m secure_cartography.enhance
-   ```
-
----
 
 ## Features
 
@@ -135,7 +117,7 @@ pip install secure-cartography
 
 ### From GitHub
 ```bash
-git clone https://github.com/scottpeterman/secure_cartography.git
+git clone -b v2 https://github.com/scottpeterman/secure_cartography.git
 cd secure_cartography
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
@@ -145,11 +127,10 @@ pip install -r requirements.txt
 ### Running the Application
 ```bash
 # Run as installed package
-scart
-merge-dialog
+pip install not yet available !
 
-# Or run as module for additional console output
-python -m secure_cartography.scart
+# Or run as as an application for additional console output
+python main_ui.py
 ```
 
 ---
