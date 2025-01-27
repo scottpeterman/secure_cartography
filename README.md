@@ -207,7 +207,10 @@ timeout: 60   # Optional
 ```
 
 #### Enhancing Maps
+### Maps with ICONS
+![Enhance maps Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/v2/screenshots/poc/enhance.png)
 Maps by default are text and boxes and lines. If you want a more traditional network diagram look, choose the "Enhance" button after creating your map, select the "map_name.json" file, hit export, and it will generate new .graphml and .drawio files with icons.
+
 
 #### Environment Variables
 Set credentials using environment variables:
