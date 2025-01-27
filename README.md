@@ -2,13 +2,31 @@
 
 Secure Cartography is a secure, Python-based network discovery and mapping tool designed for network engineers and IT professionals. It leverages SSH-based device interrogation to automate network discovery, visualize network topologies, and merge network maps across multi-vendor environments.
 
-![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides.gif)
+![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/ng/future.gif)
 
-## Version 0.9.1 Highlights
+## Version 0.9.2 Highlights
 
-- **Enhance map utility** - implements standard network icons in graphml and drawio files
-- **Network crawler optimizations**
-
+- **Major Performance Improvements**: 10x faster device discovery and processing
+- **Enhanced Visualization**: 
+  - Customizable device icons for both Draw.io and GraphML exports
+  - Interactive icon mapping editor for personalizing device representations
+  - Professional-grade network diagrams with vendor-specific shapes
+  - Improved layout algorithms for cleaner topology visualization
+- **Advanced Map Generation**:
+  - Accurate CDP/LLDP neighbor detection and mapping
+  - Intelligent interface mapping and labeling
+  - Support for complex network hierarchies
+  - Enhanced device platform detection
+- **UI Improvements**: 
+  - Quick-access buttons for browsing output folders and files
+  - Modernized topology merge dialog with interactive preview
+  - Enhanced dark/light mode support
+  - Icon configuration interface for customizing device representations
+- **CLI for automated mapping**:
+  - CLI args, yaml conf, and env vars for secrets
+  - Automated map generation with custom icon support
+  - See Appendix for detailed CLI usage
+  
 ## Quick Start Guide
 
 1. **Network Discovery and Mapping**

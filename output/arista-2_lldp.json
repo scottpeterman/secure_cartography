@@ -1,0 +1,32 @@
+[
+  {
+    "NEIGHBOR_NAME": "arista-1",
+    "CHASSIS_ID": "0c96.dc37.c1c3",
+    "MGMT_ADDRESS": "172.16.101.21",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.18.4F running on an Arista Networks vEOS",
+    "NEIGHBOR_INTERFACE": "Ethernet2",
+    "LOCAL_INTERFACE": "Ethernet1",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "6 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "arista-2",
+    "CHASSIS_ID": "0c18.3d17.cbe7",
+    "MGMT_ADDRESS": "172.16.21.1",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.18.4F running on an Arista Networks vEOS",
+    "NEIGHBOR_INTERFACE": "Ethernet2",
+    "LOCAL_INTERFACE": "Ethernet2",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "9 seconds"
+  },
+  {
+    "NEIGHBOR_NAME": "arista-2",
+    "CHASSIS_ID": "0c18.3d17.cbe7",
+    "MGMT_ADDRESS": "172.16.21.1",
+    "NEIGHBOR_DESCRIPTION": "Arista Networks EOS version 4.18.4F running on an Arista Networks vEOS",
+    "NEIGHBOR_INTERFACE": "Ethernet3",
+    "LOCAL_INTERFACE": "Ethernet3",
+    "NEIGHBOR_COUNT": "1",
+    "AGE": "9 seconds"
+  }
+]

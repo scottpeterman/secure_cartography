@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import (QApplication, QDialog, QFileDialog, QVBoxLayout,
 
 from secure_cartography.drawio_mapper2 import NetworkDrawioExporter
 from secure_cartography.graphml_mapper4 import NetworkGraphMLExporter
+from secure_cartography.icon_map_editor import IconConfigEditor
 
 
 class TopologyEnhanceWidget(QWidget):
@@ -74,6 +75,9 @@ class TopologyEnhanceWidget(QWidget):
         options_group.setLayout(options_layout)
         layout.addWidget(options_group)
 
+        icon_mapping_btn = QPushButton("Edit Icon Mappings")
+        icon_mapping_btn.clicked.connect(self.edit_icon_mappings)
+        layout.addWidget(icon_mapping_btn)
         # Export Button
         export_btn = QPushButton("Export")
         export_btn.clicked.connect(self.export_topology)
@@ -81,6 +85,10 @@ class TopologyEnhanceWidget(QWidget):
 
         # Add stretch to push everything to the top
         layout.addStretch()
+
+    def edit_icon_mappings(self):
+        self.editor = IconConfigEditor()
+        self.editor.show()
 
     def _get_icons_path(self):
         with resources.path('secure_cartography', 'icons_lib') as icons_path:
@@ -149,7 +157,7 @@ def main():
 
     # Create a window to hold our widget
     window = QWidget()
-    window.setWindowTitle("Topology Enhance Test")
+    window.setWindowTitle("Topology Enhance")
 
     # Create layout for the window
     layout = QVBoxLayout(window)

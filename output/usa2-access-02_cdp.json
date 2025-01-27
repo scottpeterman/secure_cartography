@@ -1,0 +1,29 @@
+[
+  {
+    "NEIGHBOR_NAME": "usa2-core-01.home.com",
+    "MGMT_ADDRESS": "172.16.201.1",
+    "PLATFORM": "Cisco ",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet0/2",
+    "LOCAL_INTERFACE": "GigabitEthernet0/0",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "usa2-core-02.home.com",
+    "MGMT_ADDRESS": "172.16.201.2",
+    "PLATFORM": "Cisco ",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet0/1",
+    "LOCAL_INTERFACE": "GigabitEthernet0/1",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP",
+    "CAPABILITIES": "Router Switch IGMP"
+  },
+  {
+    "NEIGHBOR_NAME": "usa2-access-02.home.com",
+    "MGMT_ADDRESS": "172.16.201.4",
+    "PLATFORM": "Cisco ",
+    "NEIGHBOR_INTERFACE": "GigabitEthernet0/2",
+    "LOCAL_INTERFACE": "GigabitEthernet0/2",
+    "NEIGHBOR_DESCRIPTION": "Cisco IOS Software, vios_l2 Software (vios_l2-ADVENTERPRISEK9-M), Version 15.2(4.0.55)E, TEST ENGINEERING ESTG_WEEKLY BUILD, synced to  END_OF_FLO_ISP",
+    "CAPABILITIES": "Router Switch IGMP"
+  }
+]
