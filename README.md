@@ -180,7 +180,7 @@ python -m secure_cartography.scart
 ## External Tool Integration
 
 ### yEd GraphML (.graphml)
-![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/poc/graphml.png)
+![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/v2/screenshots/poc/graphml.png)
 - Multiple automatic layout algorithms
 - Advanced grouping capabilities
 - Neighborhood analysis
