@@ -16,7 +16,7 @@ Key features include:
 
 ## Version Highlights
 
-### Version 0.8.3 Highlights
+### Version 0.8.3 - 0.9.2 Highlights
 - **Major Performance Improvements:** 10x faster device discovery and processing
 - **Enhanced Visualization:** New interactive Mermaid-based network topology viewer
 - **Improved Device Support:** Added support for Aruba/HP ProCurve switches (non-CX)
