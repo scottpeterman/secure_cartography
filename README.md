@@ -4,7 +4,7 @@ Secure Cartography is a secure, Python-based network discovery and mapping tool 
 
 ![Main Application](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/ng/future.gif)
 
-## Version 0.9.2 Highlights
+## Version 0.9.3 Highlights
 
 - **Major Performance Improvements**: 10x faster device discovery and processing
 - **Enhanced Visualization**: 
@@ -131,14 +131,14 @@ python -m secure_cartography.merge_dialog
 ## External Tool Integration
 
 ### yEd GraphML (.graphml)
-![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/yed1.png)
+![yEd Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/ng/new_maps.png)
 - Multiple automatic layout algorithms
 - Advanced grouping capabilities
 - Neighborhood analysis
 - High-quality vector export
 
 ### draw.io (.drawio)
-![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/drawio.png)
+![draw.io Example](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/ng/drawio.png)
 - Collaborative diagram editing
 - Web-based access
 - Multiple export formats
