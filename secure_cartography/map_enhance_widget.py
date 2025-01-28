@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (QApplication, QDialog, QFileDialog, QVBoxLayout,
 from secure_cartography.drawio_mapper2 import NetworkDrawioExporter
 from secure_cartography.graphml_mapper4 import NetworkGraphMLExporter
 from secure_cartography.icon_map_editor import IconConfigEditor
-
+from secure_cartography.map_editor import TopologyWidget as EditorWidget
 
 class TopologyEnhanceWidget(QWidget):
     def __init__(self, parent=None):
@@ -18,7 +18,7 @@ class TopologyEnhanceWidget(QWidget):
         # with resources.path('secure_cartography', 'icons_lib') as icons_path:
         #     self.icons_path = str(icons_path)
         self.icons_path = str(Path(__file__).parent / 'icons_lib')
-
+        self.node_editor = None
         self.setup_ui()
 
     def setup_ui(self):
@@ -75,6 +75,10 @@ class TopologyEnhanceWidget(QWidget):
         options_group.setLayout(options_layout)
         layout.addWidget(options_group)
 
+        editor_mapping_btn = QPushButton("Manual Node Editor")
+        editor_mapping_btn.clicked.connect(self.edit_nodes)
+        layout.addWidget(editor_mapping_btn)
+
         icon_mapping_btn = QPushButton("Edit Icon Mappings")
         icon_mapping_btn.clicked.connect(self.edit_icon_mappings)
         layout.addWidget(icon_mapping_btn)
@@ -89,6 +93,12 @@ class TopologyEnhanceWidget(QWidget):
     def edit_icon_mappings(self):
         self.editor = IconConfigEditor()
         self.editor.show()
+
+    def edit_nodes(self):
+        if not hasattr(self, 'node_editor') or self.node_editor is None:
+            self.node_editor = EditorWidget()  # Create new instance
+            self.node_editor.resize(800, 400)
+        self.node_editor.show()
 
     def _get_icons_path(self):
         with resources.path('secure_cartography', 'icons_lib') as icons_path:
