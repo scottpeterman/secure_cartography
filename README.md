@@ -1,5 +1,9 @@
 # Secure Cartography & Surveyor Suite
 
+⚠️ Important Notice
+
+The v2 branch is currently in Proof of Concept (POC) phase and is not intended for production environments. It contains experimental features and breaking changes that are still under development. For production use, please use the main branch or PyPI release.
+
 ## Overview
 The **Secure Cartography & Surveyor Suite** is a comprehensive, Python-based network discovery, mapping, and management toolkit. Designed for network engineers, IT administrators, and SMBs, it provides robust features for automated device interrogation, network topology visualization, and configuration management, all while maintaining strict security standards.
 
