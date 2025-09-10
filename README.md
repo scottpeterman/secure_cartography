@@ -14,6 +14,9 @@ Secure Cartography is a comprehensive network discovery and mapping tool that au
 ![Secure_Cartography](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/reboot/slides.gif)
 
 ## GUI Application Entry Point (`scart.py`)
+- pip install secure-cartography
+- scart <enter>
+- if from source python -m secure_cartography.scart
 
 
 ### Credential Management System
