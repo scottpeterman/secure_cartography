@@ -26,7 +26,8 @@
     "SEP": "ip_phone.jpg",
     "ATA": "ata.jpg",
     "VG": "ata.jpg",
-    "Nexus": "carrier_routing_system.jpg"
+    "Nexus": "carrier_routing_system.jpg",
+    "-ap": "wireless.jpg"
   },
   "defaults": {
     "default_switch": "layer_3_switch.jpg",

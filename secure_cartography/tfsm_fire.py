@@ -147,7 +147,7 @@ if __name__ == '__main__':
         print(f"Thread {threading.get_ident()}: Found template: {result[0]}")
 
 
-    engine = TextFSMAutoEngine("./secure_cartography/templates.db", verbose=True)
+    engine = TextFSMAutoEngine("./secure_cartography/tfsm_templates.db", verbose=True)
     threads = []
 
     # Create multiple threads

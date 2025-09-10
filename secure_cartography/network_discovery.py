@@ -484,7 +484,7 @@ class NetworkDiscovery:
         return is_known
 
     def _process_neighbors(self, device: NetworkDevice, neighbors: Dict) -> None:
-        """Process neighbors for both CDP and LLDP."""
+        """Process neighbors for both CDP and LLDP with correct peer mapping."""
         self.logger.info(f"Starting neighbor processing for device {device.hostname}")
         self.logger.debug(f"Raw neighbor data: {neighbors}")
 
@@ -494,67 +494,69 @@ class NetworkDiscovery:
 
             for neighbor_id, data in protocol_neighbors.items():
                 self.logger.debug(f"{protocol.upper()}: Processing neighbor {neighbor_id}")
-                if neighbor_id == "ush-m1-core":
-                    print("stop")
 
-                # if self._is_excluded(neighbor_id):
-                #     self.logger.info(f"Neighbor {neighbor_id} is excluded by configuration. Skipping.")
-                #     continue
+                # Normalize the neighbor hostname early
+                normalized_neighbor_id = self._normalize_hostname(neighbor_id)
 
                 # Get neighbor IP and validate
                 neighbor_ip = data.get('ip', '')
                 if not neighbor_ip:
                     self.logger.warning(f"No IP found for neighbor {neighbor_id}. Connection data: {data}")
-                    # continue
+                    # Still process the connection but without IP-based queuing
 
-                self.logger.info(f"{protocol.upper()}: Processing neighbor {neighbor_id} ({neighbor_ip})")
+                self.logger.info(f"{protocol.upper()}: Processing neighbor {normalized_neighbor_id} ({neighbor_ip})")
+
+                # Check exclusion patterns using the normalized neighbor ID
+                exclude_patterns = self.config.exclude_string.split(',') if self.config.exclude_string else []
+                if exclude_patterns and any(
+                        pattern.lower() in normalized_neighbor_id.lower() for pattern in exclude_patterns):
+                    self.logger.info(f"Skipping excluded device: {normalized_neighbor_id}")
+                    continue
 
                 # Process each connection for this neighbor
                 for connection in data.get('connections', []):
-                    self.logger.debug(f"{protocol.upper()}: Processing connection {connection} for {neighbor_id}")
+                    self.logger.debug(
+                        f"{protocol.upper()}: Processing connection {connection} for {normalized_neighbor_id}")
 
-                    if True:
-                        self.logger.info(f"New device found: {neighbor_id} ({neighbor_ip})")
+                    # Normalize interface names immediately
+                    local_port = InterfaceNormalizer.normalize(connection[0]) if len(connection) > 0 else 'unknown'
+                    remote_port = InterfaceNormalizer.normalize(connection[1]) if len(connection) > 1 else 'unknown'
 
-                        # Create new device info and queue it
-                        if not self._is_visited(DeviceInfo(hostname=neighbor_ip, ip=neighbor_ip, password="", username="")):
-                            neighbor_device = DeviceInfo(
-                                hostname=neighbor_ip,
-                                ip=neighbor_ip,
-                                username=self.config.username,
-                                password=self.config.password,
-                                timeout=self.config.timeout,
-                                platform=data.get('platform', '')
-                            )
-
-                            exclude_patterns = self.config.exclude_string.split(
-                                ',') if self.config.exclude_string else []
-                            if exclude_patterns and any(
-                                    pattern.lower() in neighbor_id.lower() for pattern in exclude_patterns):
-                                self.logger.info(f"Skipping excluded device: {neighbor_id}")
-                                continue
-                            self.logger.info(f"Queueing new device: {neighbor_ip}")
-                            self.queue.put(neighbor_device)
-
-                        else:
-                            self.logger.debug(f"Device {neighbor_ip} already visited/queued/failed, skipping queue")
-                    # Add connection info regardless of queuing status
+                    # Add connection info using normalized neighbor ID as the key
                     connection_data = {
-                        'local_port': connection[0],
-                        'remote_port': connection[1],
+                        'local_port': local_port,
+                        'remote_port': remote_port,
                         'ip': neighbor_ip,
                         'platform': data.get('platform', 'unknown')
                     }
 
-                    if device is not None:
-                        self.logger.debug(f"Adding connection for {neighbor_id}: {connection[0]} -> {connection[1]}")
-                        self._add_neighbor(device, neighbor_id, connection_data, protocol)
-                    else:
-                        self.logger.warning("Device object is None, cannot add neighbor connection")
+                    # Always add the connection using the normalized neighbor hostname as the key
+                    self.logger.debug(f"Adding connection for {normalized_neighbor_id}: {local_port} -> {remote_port}")
+                    self._add_neighbor(device, normalized_neighbor_id, connection_data, protocol)
 
-        self.logger.info(f"Completed neighbor processing for <font color='green'>{device.hostname}</font>")
+                    # Queue the device for discovery if it has an IP and hasn't been processed
+                    if neighbor_ip and not self._is_known_device(neighbor_ip):
+                        neighbor_device = DeviceInfo(
+                            hostname=neighbor_ip,  # Use IP for initial connection
+                            ip=neighbor_ip,
+                            username=self.config.username,
+                            password=self.config.password,
+                            timeout=self.config.timeout,
+                            platform=data.get('platform', '')
+                        )
+
+                        self.logger.info(
+                            f"Queueing new device: {neighbor_ip} (will be known as {normalized_neighbor_id})")
+                        self.queue.put(neighbor_device)
+                    else:
+                        if neighbor_ip:
+                            self.logger.debug(
+                                f"Device {neighbor_ip} ({normalized_neighbor_id}) already known, skipping queue")
+                        else:
+                            self.logger.debug(f"No IP for {normalized_neighbor_id}, cannot queue for discovery")
+
+        self.logger.info(f"Completed neighbor processing for {device.hostname}")
         self.logger.info(f"Current queue size: {self.queue.qsize()}")
-        self.logger.debug(f"Current visited IPs: {self.visited_ips}")
 
     def _is_known_device(self, ip: str) -> bool:
         """Check if a device IP is already known, queued, or unreachable."""
@@ -957,84 +959,42 @@ class NetworkDiscovery:
 
     def _normalize_hostnames(self, map_data: Dict) -> Dict:
         """
-        Normalize hostnames by:
-        1. Removing domain suffixes
-        2. Removing additional text after spaces
-        3. Merging duplicate hosts
+        This method should now be much simpler since hostnames are already normalized.
+        Just handle any edge cases or additional cleanup.
         """
+        # Since hostnames should already be normalized, this mainly handles
+        # any final cleanup or merging of edge cases
 
-        def normalize_hostname(hostname: str) -> str:
-            """Normalize a single hostname"""
-            try:
-                # Remove domain suffix
-                base_hostname = hostname.split('.')[0]
-
-                # Remove text after space
-                base_hostname = base_hostname.split()[0]
-
-                # Normalize the base hostname
-                return base_hostname.lower().strip()
-            except:
-                return str(hostname).lower()
-
-        # First pass: create a mapping of normalized hostnames
         normalized_hosts = {}
-        hostname_mapping = {}
 
-        # First, create a mapping of original to normalized hostnames
-        for hostname in map_data.keys():
-            normalized = normalize_hostname(hostname)
-            hostname_mapping[hostname] = normalized
+        for hostname, host_data in map_data.items():
+            # Double-check normalization (should be a no-op in most cases)
+            final_hostname = self._normalize_hostname(hostname)
 
-        # Process each host
-        for original_hostname, host_data in map_data.items():
-            normalized_hostname = hostname_mapping[original_hostname]
-
-            # Initialize or merge host data
-            if normalized_hostname not in normalized_hosts:
-                normalized_hosts[normalized_hostname] = {
-                    'node_details': host_data['node_details'],
-                    'peers': {}
-                }
+            if final_hostname not in normalized_hosts:
+                normalized_hosts[final_hostname] = host_data
             else:
-                # Merge node details, prioritizing non-empty/non-unknown values
-                existing_details = normalized_hosts[normalized_hostname]['node_details']
-                new_details = host_data['node_details']
+                # Merge data if somehow we have duplicates
+                existing = normalized_hosts[final_hostname]
 
-                # Update IP if current is empty or 'unknown'
-                if not existing_details.get('ip') or existing_details.get('ip') == 'unknown':
-                    existing_details['ip'] = new_details.get('ip', '')
+                # Merge node details
+                if not existing['node_details'].get('ip') and host_data['node_details'].get('ip'):
+                    existing['node_details']['ip'] = host_data['node_details']['ip']
 
-                # Update platform if current is empty or 'unknown'
-                if not existing_details.get('platform') or existing_details.get('platform') == 'unknown':
-                    existing_details['platform'] = new_details.get('platform', '')
+                if not existing['node_details'].get('platform') and host_data['node_details'].get('platform'):
+                    existing['node_details']['platform'] = host_data['node_details']['platform']
 
-            # Process peers
-            existing_peers = normalized_hosts[normalized_hostname]['peers']
-            for original_peer, peer_data in host_data['peers'].items():
-                # Normalize peer hostname
-                normalized_peer = hostname_mapping.get(original_peer, normalize_hostname(original_peer))
-
-                # Merge or add peer
-                if normalized_peer not in existing_peers:
-                    existing_peers[normalized_peer] = peer_data
-                else:
-                    # Merge peer details
-                    existing_peer = existing_peers[normalized_peer]
-
-                    # Update IP
-                    if not existing_peer.get('ip') or existing_peer.get('ip') == 'unknown':
-                        existing_peer['ip'] = peer_data.get('ip', '')
-
-                    # Update platform
-                    if not existing_peer.get('platform') or existing_peer.get('platform') == 'unknown':
-                        existing_peer['platform'] = peer_data.get('platform', '')
-
-                    # Merge connections
-                    existing_connections = set(tuple(conn) for conn in existing_peer.get('connections', []))
-                    new_connections = set(tuple(conn) for conn in peer_data.get('connections', []))
-                    combined_connections = list(existing_connections.union(new_connections))
-                    existing_peer['connections'] = [list(conn) for conn in combined_connections]
+                # Merge peers
+                for peer, peer_data in host_data['peers'].items():
+                    if peer not in existing['peers']:
+                        existing['peers'][peer] = peer_data
+                    else:
+                        # Merge connections
+                        existing_connections = set(
+                            tuple(conn) for conn in existing['peers'][peer].get('connections', []))
+                        new_connections = set(tuple(conn) for conn in peer_data.get('connections', []))
+                        combined_connections = list(existing_connections.union(new_connections))
+                        existing['peers'][peer]['connections'] = [list(conn) for conn in combined_connections]
 
         return normalized_hosts
 
@@ -1044,7 +1004,8 @@ class NetworkDiscovery:
 
         # Process each device in the network map
         for hostname, device in network_map.items():
-            normalized_hostname = self._normalize_hostname(hostname)
+            # Device hostname should already be normalized from _process_device
+            normalized_hostname = hostname
 
             # Add base device information
             transformed_map[normalized_hostname] = {
@@ -1057,38 +1018,35 @@ class NetworkDiscovery:
 
             # Process each peer connection
             for peer_id, connections in device.connections.items():
-                normalized_peer = self._normalize_hostname(peer_id)
+                # peer_id should already be normalized from _process_neighbors
+                normalized_peer = peer_id
 
-                # Find peer IP from connections or network map
+                # Find peer IP from connections
                 peer_ip = ""
-                # First try to get IP from connection info
-                if connections and connections[0].neighbor_ip:
-                    peer_ip = connections[0].neighbor_ip
-                # If not found, try to get from network map
-                elif normalized_peer in network_map:
-                    peer_ip = network_map[normalized_peer].ip
+                peer_platform = ""
+
+                if connections:
+                    # Get IP and platform from the first connection
+                    peer_ip = connections[0].neighbor_ip or ""
+                    peer_platform = connections[0].neighbor_platform or ""
 
                 # Initialize peer entry
                 transformed_map[normalized_hostname]["peers"][normalized_peer] = {
                     "ip": peer_ip,
-                    "platform": "",  # Platform will be enriched later
+                    "platform": peer_platform,
                     "connections": []
                 }
 
-                # Add all connections for this peer with normalized interface names
+                # Add all connections for this peer (interfaces should already be normalized)
                 for conn in connections:
-                    # Normalize both local and remote port names
-                    local_port = InterfaceNormalizer.normalize(conn.local_port)
-                    remote_port = InterfaceNormalizer.normalize(conn.remote_port)
-
-                    # Check if this connection pair already exists
-                    connection_pair = [local_port, remote_port]
+                    connection_pair = [conn.local_port, conn.remote_port]
                     if connection_pair not in transformed_map[normalized_hostname]["peers"][normalized_peer][
                         "connections"]:
                         transformed_map[normalized_hostname]["peers"][normalized_peer]["connections"].append(
                             connection_pair)
 
         return transformed_map
+
 
     def enrich_peer_data(self, data):
         """
@@ -1193,12 +1151,12 @@ class NetworkDiscovery:
             })
 
     def _process_device(self, device_info: DeviceInfo, capabilities: Dict) -> Optional[NetworkDevice]:
-        """Process device information with enhanced Nexus handling."""
+        """Process device information with enhanced hostname handling."""
         facts = capabilities['facts']
-        hostname = facts.get('hostname', device_info.hostname)
+        discovered_hostname = facts.get('hostname', device_info.hostname)
 
         # Handle potential Nexus device detected as IOS
-        if hostname == 'Kernel' or hostname == 'Unknown':
+        if discovered_hostname == 'Kernel' or discovered_hostname == 'Unknown':
             try:
                 # Try to reconnect with nxos_ssh if it was detected as IOS
                 if device_info.platform == 'ios':
@@ -1216,44 +1174,48 @@ class NetworkDiscovery:
                     # Get capabilities with nxos_ssh platform
                     alternate_capabilities = run_with_timeout(
                         self.driver_discovery.get_device_capabilities,
-                        30,  # 15 second timeout
+                        30,
                         alternate_device,
                         config=self.config
                     )
 
                     if alternate_capabilities and 'facts' in alternate_capabilities:
                         facts = alternate_capabilities['facts']
-                        hostname = facts.get('hostname')
+                        discovered_hostname = facts.get('hostname')
                         capabilities = alternate_capabilities
                         device_info.platform = 'nxos_ssh'
 
-                        # If still no valid hostname, use IP
-                        if not hostname or hostname in ['Kernel', 'Unknown']:
-                            hostname = f"nx-{device_info.hostname.replace('.', '_')}"
+                        # If still no valid hostname, generate one
+                        if not discovered_hostname or discovered_hostname in ['Kernel', 'Unknown']:
+                            discovered_hostname = f"nx-{device_info.hostname.replace('.', '_')}"
 
             except Exception as e:
                 self.logger.error(f"Failed to retry as NXOS device: {str(e)}")
-                hostname = f"nx-{device_info.hostname.replace('.', '_')}"
+                discovered_hostname = f"nx-{device_info.hostname.replace('.', '_')}"
 
-        # Process existing device if it exists
-        if hostname in self.network_map:
-            existing_device = self.network_map[hostname]
-            device = NetworkDevice(
-                hostname=hostname,
-                ip=existing_device.ip or device_info.hostname,
-                platform=existing_device.platform or facts.get('model', 'unknown'),
-                serial=existing_device.serial or facts.get('serial_number', 'unknown'),
-                connections=existing_device.connections
-            )
-            return device
+        # Normalize the discovered hostname
+        normalized_hostname = self._normalize_hostname(discovered_hostname)
 
-        # Create new device
+        # Check if we already have this device (by normalized hostname)
+        if normalized_hostname in self.network_map:
+            self.logger.info(f"Device {normalized_hostname} already exists in network map, updating...")
+            existing_device = self.network_map[normalized_hostname]
+
+            # Update IP if the existing device doesn't have one or has a different one
+            if not existing_device.ip or existing_device.ip != device_info.ip:
+                existing_device.ip = device_info.ip
+
+            return existing_device
+
+        # Create new device with normalized hostname
         device = NetworkDevice(
-            hostname=hostname,
-            ip=device_info.hostname,
+            hostname=normalized_hostname,  # Use normalized hostname
+            ip=device_info.ip,  # Use the actual IP we connected to
             platform=facts.get('model', 'unknown'),
             serial=facts.get('serial_number', 'unknown'),
         )
+
+        self.logger.info(f"Created new device: {normalized_hostname} (IP: {device_info.ip})")
         return device
 
     def _add_neighbor(self, device: NetworkDevice, neighbor_id: str, data: Dict, protocol: str) -> None:

@@ -11,6 +11,7 @@ from secure_cartography.drawio_mapper2 import NetworkDrawioExporter
 from secure_cartography.graphml_mapper4 import NetworkGraphMLExporter
 from secure_cartography.icon_map_editor import IconConfigEditor
 from secure_cartography.map_editor import TopologyWidget as EditorWidget
+from secure_cartography.enh_int_normalizer import InterfaceNormalizer
 
 class TopologyEnhanceWidget(QWidget):
     def __init__(self, parent=None):
@@ -90,6 +91,43 @@ class TopologyEnhanceWidget(QWidget):
         # Add stretch to push everything to the top
         layout.addStretch()
 
+    def normalize_topology_interfaces(self, network_data: dict) -> dict:
+        """
+        Normalize all interface names in the topology data before processing.
+        This ensures consistent interface naming and prevents duplicate connections.
+        """
+        normalized_data = {}
+
+        for node_id, node_data in network_data.items():
+            # Copy node details as-is
+            normalized_data[node_id] = {
+                'node_details': node_data.get('node_details', {}),
+                'peers': {}
+            }
+
+            # Process peers and normalize interface names
+            peers = node_data.get('peers', {})
+            for peer_id, peer_data in peers.items():
+                # Copy peer metadata
+                normalized_data[node_id]['peers'][peer_id] = {
+                    'ip': peer_data.get('ip', ''),
+                    'platform': peer_data.get('platform', ''),
+                    'connections': []
+                }
+
+                # Normalize all connection interface names
+                connections = peer_data.get('connections', [])
+                for connection in connections:
+                    if isinstance(connection, list) and len(connection) == 2:
+                        local_port = InterfaceNormalizer.normalize(connection[0], use_short_name=True)
+                        remote_port = InterfaceNormalizer.normalize(connection[1], use_short_name=True)
+                        normalized_data[node_id]['peers'][peer_id]['connections'].append([local_port, remote_port])
+                    else:
+                        # Keep non-standard connection formats as-is
+                        normalized_data[node_id]['peers'][peer_id]['connections'].append(connection)
+
+        return normalized_data
+
     def edit_icon_mappings(self):
         self.editor = IconConfigEditor()
         self.editor.show()
@@ -125,6 +163,7 @@ class TopologyEnhanceWidget(QWidget):
         if directory:
             self.output_path.setText(directory)
 
+
     def export_topology(self):
         input_file = self.input_path.text()
         output_dir = self.output_path.text()
@@ -147,6 +186,7 @@ class TopologyEnhanceWidget(QWidget):
                 'icons_dir': self.icons_path
             }
 
+            # Use original network_data directly - no normalization needed
             drawio_exporter = NetworkDrawioExporter(**common_params)
             drawio_output = output_base.with_suffix('.drawio')
             drawio_exporter.export_to_drawio(network_data, drawio_output)
