@@ -11,7 +11,7 @@ Secure Cartography is a comprehensive network discovery and mapping tool that au
 - **TextFSM Integration**: Advanced parsing engine for accurate device data extraction
 - **Map Enhancement Tools**: Interactive icon mapping and diagram customization
 
-![Secure_Cartography](screenshots/reboot/slides.gif)
+![Secure_Cartography](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/reboot/slides.gif)
 
 ## GUI Application Entry Point (`scart.py`)
 
