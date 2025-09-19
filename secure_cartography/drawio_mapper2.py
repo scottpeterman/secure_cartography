@@ -75,6 +75,9 @@ class NetworkTopologyFilter:
         for node_id, node_data in network_data.items():
             if self.is_endpoint(node_id, node_data):
                 endpoints.add(node_id)
+                print(f"DEBUG: Identified {node_id} as endpoint")
+
+        print(f"DEBUG: Found {len(endpoints)} endpoints: {endpoints}")
 
         filtered_topology = {}
         for node_id, node_data in network_data.items():
@@ -124,25 +127,100 @@ class IconManager:
             }
 
     def get_node_style(self, node_id: str, platform: str) -> Dict[str, str]:
-        """Get complete style dictionary for a node with debug logging"""
+        """Get complete style dictionary for a node with comprehensive debugging"""
         try:
             # Start with default styles
             style = self.style_defaults.copy()
 
-            print(f"\nDebug: Processing node {node_id} with platform {platform}")
+            # Special debug for SEP devices
+            if "SEP" in node_id.upper():
+                print(f"\n=== SEP DEVICE DEBUG ===")
+                print(f"node_id: '{node_id}'")
+                print(f"platform: '{platform}'")
+                print(f"Available patterns: {list(self.platform_patterns.keys())}")
+                print(f"SEP in platform_patterns: {'SEP' in self.platform_patterns}")
 
-            # Look for platform match
+            print(f"\nDebug: Processing node '{node_id}' with platform '{platform}'")
+
+            # Convert to lowercase for case-insensitive matching
+            platform_lower = platform.lower()
+            node_id_lower = node_id.lower()
+
+            # Look for platform match - try exact patterns first, then substrings
             shape = None
-            for pattern, shape_value in self.platform_patterns.items():
-                if pattern in platform:
-                    shape = shape_value
-                    print(f"Debug: Found platform match: {pattern} -> {shape}")
-                    break
-                else:
-                    print(f"Debug: No match for pattern: {pattern}")
 
+            # First pass: Try exact matches (case-insensitive)
+            print("Debug: Trying exact matches...")
+            for pattern, shape_value in self.platform_patterns.items():
+                pattern_lower = pattern.lower()
+                exact_platform_match = (pattern_lower == platform_lower)
+                exact_node_match = (pattern_lower == node_id_lower)
+
+                if "SEP" in node_id.upper():
+                    print(f"  Testing exact '{pattern}' vs platform '{platform}': {exact_platform_match}")
+                    print(f"  Testing exact '{pattern}' vs node_id '{node_id}': {exact_node_match}")
+
+                if exact_platform_match or exact_node_match:
+                    shape = shape_value
+                    print(f"Debug: Found EXACT match: '{pattern}' -> {shape}")
+                    break
+
+            # Second pass: Try substring matches if no exact match found
+            if not shape:
+                print("Debug: No exact matches, trying substring matches...")
+                for pattern, shape_value in self.platform_patterns.items():
+                    pattern_lower = pattern.lower()
+                    substring_platform_match = (pattern_lower in platform_lower)
+                    substring_node_match = (pattern_lower in node_id_lower)
+
+                    # Show results for ALL patterns when debugging SEP
+                    if "SEP" in node_id.upper():
+                        print(f"  Testing substring '{pattern}' in platform '{platform}': {substring_platform_match}")
+                        print(f"  Testing substring '{pattern}' in node_id '{node_id}': {substring_node_match}")
+
+                    if substring_platform_match or substring_node_match:
+                        shape = shape_value
+                        print(f"Debug: Found SUBSTRING match: '{pattern}' -> {shape}")
+                        break
+
+            # Third pass: Try fallback patterns if still no match
+            if not shape:
+                print("Debug: No direct pattern match, trying fallback patterns...")
+                if hasattr(self, 'fallback_patterns') and self.fallback_patterns:
+                    for fallback_type, fallback_config in self.fallback_patterns.items():
+                        if "SEP" in node_id.upper():
+                            print(f"  Checking fallback type: {fallback_type}")
+                            print(f"  Config: {fallback_config}")
+
+                        # Check platform patterns
+                        for fallback_pattern in fallback_config.get('platform_patterns', []):
+                            if fallback_pattern.lower() in platform_lower:
+                                # Handle both 'shape' and 'icon' keys in fallback config
+                                shape = fallback_config.get('shape')
+                                if not shape and 'icon' in fallback_config:
+                                    shape = self.style_defaults.get(fallback_config['icon'])
+                                print(f"Debug: Found FALLBACK platform match: '{fallback_pattern}' -> {shape}")
+                                break
+
+                        # Check name patterns if no platform match
+                        if not shape:
+                            for name_pattern in fallback_config.get('name_patterns', []):
+                                if name_pattern.lower() in node_id_lower:
+                                    # Handle both 'shape' and 'icon' keys in fallback config
+                                    shape = fallback_config.get('shape')
+                                    if not shape and 'icon' in fallback_config:
+                                        shape = self.style_defaults.get(fallback_config['icon'])
+                                    print(f"Debug: Found FALLBACK name match: '{name_pattern}' -> {shape}")
+                                    break
+
+                        if shape:
+                            break
+                else:
+                    print("Debug: No fallback_patterns available")
+
+            # Apply the shape if found
             if shape:
-                # Extract just the shape name from mxgraph format
+                # Handle mxgraph format shapes
                 if "shape=mxgraph" in shape:
                     style.update({
                         "shape": shape.split('=')[1],
@@ -156,13 +234,22 @@ class IconManager:
                 # Convert style dict to string for debug
                 style_str = ";".join(f"{k}={v}" for k, v in style.items())
                 print(f"Debug: Final style string: {style_str}")
+            else:
+                print(f"Debug: No pattern match found for '{node_id}', using default style")
+                if "SEP" in node_id.upper():
+                    print("*** SEP DEVICE FALLBACK - FORCING PHONE ICON ***")
+                    style.update({
+                        "shape": "mxgraph.cisco.misc.ip_phone",
+                        "sketch": "0"
+                    })
 
             return style
 
         except Exception as e:
             print(f"Error in style generation for {node_id}: {e}")
+            import traceback
+            traceback.print_exc()
             return self.style_defaults
-
     def cleanup(self):
         pass
 
@@ -329,14 +416,44 @@ class NetworkDrawioExporter:
         geometry.set("relative", "1")
         geometry.set("as", "geometry")
 
+    def preprocess_topology(self, network_data: dict) -> dict:
+        """Add missing node definitions for referenced nodes (like endpoints)"""
+        # Create sets of defined and referenced nodes
+        defined_nodes = set(network_data.keys())
+        referenced_nodes = set()
+
+        # First pass: Find all referenced nodes
+        for node_data in network_data.values():
+            if 'peers' in node_data:
+                referenced_nodes.update(node_data['peers'].keys())
+
+        # Create basic definitions for undefined nodes
+        enhanced_topology = network_data.copy()
+        for node_id in referenced_nodes - defined_nodes:
+            enhanced_topology[node_id] = {
+                "node_details": {
+                    "ip": "",
+                    "platform": "endpoint",  # Mark as endpoint
+                },
+                "peers": {}
+            }
+
+        return enhanced_topology
 
     def export_to_drawio(self, network_data: Dict, output_path: Path) -> None:
         """Export network topology to Draw.io format"""
         try:
+            network_data = self.preprocess_topology(network_data.copy())
+
+            print(f"DEBUG: include_endpoints = {self.include_endpoints}")
+            print(f"DEBUG: Original topology has {len(network_data)} nodes")
             # Get filtered topology if needed
             if not self.include_endpoints:
+                print("DEBUG: Filtering endpoints...")
                 network_data = self.topology_filter.filter_topology(network_data.copy())
-
+                print(f"DEBUG: Filtered topology has {len(network_data)} nodes")
+            else:
+                print("DEBUG: Including all endpoints")
             # Build edges list for layout calculation
             edges = []
             for source_id, source_data in network_data.items():

@@ -20,20 +20,22 @@
     "IOSv": "shape=mxgraph.cisco.switches.workgroup_switch",
     "vEOS": "shape=mxgraph.cisco.switches.layer_3_switch",
     "CCS-720": "shape=mxgraph.cisco.switches.workgroup_switch",
-    "VG202": "shape=mxgraph.cisco.misc.voice_router",
-    "IP Phone": "shape=mxgraph.cisco.misc.ip_phone",
-    "SEP": "shape=mxgraph.cisco.misc.ip_phone",
+    "VG202": "shape=mxgraph.cisco.routers.voice_router",
+    "IP Phone": "shape=mxgraph.cisco.modems_and_phones.ip_phone",
+    "SEP": "shape=mxgraph.cisco.modems_and_phones.ip_phone",
     "ATA": "shape=mxgraph.cisco.misc.ata",
-    "VG": "shape=mxgraph.cisco.misc.ata"
+    "VG": "shape=mxgraph.cisco.routers.voice_router",
+    "AP": "shape=mxgraph.cisco.wireless.wireless",
+    "-AP": "shape=mxgraph.cisco.wireless.wireless"
   },
   "defaults": {
-    "default_switch": "shape=mxgraph.cisco.switches.layer_3_switch",
+    "default_switch": "shape=mxgraph.cisco.switches.workgroup_switch",
     "default_router": "shape=mxgraph.cisco.routers.router",
-    "default_firewall": "shape=mxgraph.cisco.security.firewall",
+    "default_firewall": "shape=mxgraph.cisco.security.pix_firewall",
     "default_endpoint": "shape=mxgraph.cisco.computers_and_peripherals.pc",
-    "default_wireless": "shape=mxgraph.cisco.wireless.wireless_access_point",
-    "default_unknown": "shape=mxgraph.cisco.misc.generic_building",
-    "default_phone": "shape=mxgraph.cisco.misc.ip_phone",
+    "default_wireless": "shape=mxgraph.cisco.wireless.wireless",
+    "default_unknown": "shape=mxgraph.cisco.computers_and_peripherals.pc",
+    "default_phone": "shape=mxgraph.cisco.modems_and_phones.ip_phone",
     "default_ata": "shape=mxgraph.cisco.misc.ata"
   },
   "fallback_patterns": {

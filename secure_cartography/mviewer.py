@@ -5,7 +5,7 @@ from pathlib import Path
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QDialog, QVBoxLayout,
                              QHBoxLayout, QPushButton, QComboBox, QLabel,
                              QFileDialog, QMessageBox, QWidget, QToolBar)
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtGui import QAction
 
@@ -38,6 +38,25 @@ class TopologyViewer(QMainWindow):
         toolbar = QToolBar()
         self.addToolBar(toolbar)
 
+        # Create status area widget for the right side
+        self.status_widget = QWidget()
+        self.status_layout = QHBoxLayout(self.status_widget)
+        self.status_layout.setContentsMargins(0, 0, 10, 0)
+        self.status_layout.addStretch()  # Push content to the right
+
+        # Node/Edge count label
+        self.node_count_label = QLabel("")
+        self.node_count_label.setStyleSheet("color: #888; font-size: 11px;")
+        self.status_layout.addWidget(self.node_count_label)
+
+        # Loading indicator
+        self.loading_label = QLabel("")
+        self.loading_label.setStyleSheet("color: #888; font-size: 11px;")
+        self.status_layout.addWidget(self.loading_label)
+
+        # Add status widget to toolbar
+        toolbar.addWidget(self.status_widget)
+
         # Add toolbar actions
         open_action = QAction('Open', self)
         open_action.triggered.connect(self.open_file)
@@ -46,6 +65,11 @@ class TopologyViewer(QMainWindow):
         save_action = QAction('Save', self)
         save_action.triggered.connect(self.save_file)
         toolbar.addAction(save_action)
+
+        # Add debug action
+        debug_action = QAction('Debug Mermaid', self)
+        debug_action.triggered.connect(self.save_debug_mermaid)
+        toolbar.addAction(debug_action)
 
         # Add separator
         toolbar.addSeparator()
@@ -180,6 +204,54 @@ class TopologyViewer(QMainWindow):
         # self.web_view.page().runJavaScript("fitToView();")
         self.web_view.page().runJavaScript("window.zoom(4);")
 
+    def save_debug_mermaid(self):
+        """Save the current mermaid code to a debug file"""
+        if not self.topology_data:
+            QMessageBox.warning(self, "Warning", "No diagram to debug!")
+            return
+
+        try:
+            mermaid_code = self.generate_mermaid()
+
+            # Save to mermaid_debug.mermaid file
+            debug_file = Path("mermaid_debug.mermaid")
+            with open(debug_file, 'w', encoding='utf-8') as f:
+                f.write(mermaid_code)
+
+            # Also save some analysis info
+            analysis_file = Path("mermaid_debug_analysis.txt")
+            with open(analysis_file, 'w', encoding='utf-8') as f:
+                f.write("=== Mermaid Debug Analysis ===\n\n")
+                f.write(f"Total nodes: {len(self.network_graph.nodes()) if self.network_graph else 0}\n")
+                f.write(f"Total edges: {len(self.network_graph.edges()) if self.network_graph else 0}\n")
+                f.write(f"Layout: {self.layout_combo.currentText()}\n")
+                f.write(f"Mermaid code length: {len(mermaid_code)} characters\n\n")
+
+                if self.network_graph:
+                    f.write("=== Node Analysis ===\n")
+                    for node in sorted(self.network_graph.nodes()):
+                        node_data = self.network_graph.nodes[node]
+                        f.write(f"Node: {node}\n")
+                        f.write(f"  - Role: {node_data.get('role', 'unknown')}\n")
+                        f.write(f"  - Is Leaf: {node_data.get('is_leaf', False)}\n")
+                        f.write(f"  - Platform: {node_data.get('platform', 'N/A')}\n")
+                        f.write(f"  - Degree: {node_data.get('metric_degree', 0)}\n")
+                        f.write(f"  - Neighbors: {list(self.network_graph.neighbors(node))}\n\n")
+
+                f.write("\n=== Raw Mermaid Code ===\n")
+                f.write(mermaid_code)
+
+            QMessageBox.information(
+                self,
+                "Debug Files Created",
+                f"Debug files created:\n"
+                f"- {debug_file.absolute()}\n"
+                f"- {analysis_file.absolute()}\n\n"
+                f"You can open the .mermaid file in any text editor or mermaid viewer to debug syntax issues."
+            )
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to create debug files: {str(e)}")
 
     def open_file(self):
         """Open and load a topology JSON file"""
@@ -192,12 +264,16 @@ class TopologyViewer(QMainWindow):
 
         if file_name:
             try:
+                # Show loading message while reading file
+                self.loading_label.setText("Loading file...")
+
                 with open(file_name, 'r') as f:
                     self.topology_data = json.load(f)
                 self.analyze_topology()
                 self.render_diagram()
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to load file: {str(e)}")
+                self.show_loading_message(False)
 
     def save_file(self):
         """Save the current diagram as HTML"""
@@ -219,7 +295,6 @@ class TopologyViewer(QMainWindow):
                     f.write(html_content)
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to save file: {str(e)}")
-
 
     def analyze_topology(self):
         """Analyze network topology using NetworkX"""
@@ -265,6 +340,9 @@ class TopologyViewer(QMainWindow):
 
         self.network_graph = G
 
+        # Update node/edge count display
+        self.update_node_count_display()
+
     def generate_mermaid(self):
         """Generate Mermaid diagram code using topology analysis"""
         if not self.network_graph:
@@ -275,23 +353,18 @@ class TopologyViewer(QMainWindow):
         layout_mapping = {
             'TD': 'TD',
             'LR': 'LR',
-            # 'circle': 'TB',
-            # 'kk': 'LR',
-            # 'rt': 'TD',
-            # 'circular': 'TB',
-            # 'multipartite': 'LR'
         }
 
         mermaid_layout = layout_mapping.get(layout, 'TD')
         diagram_type = "flowchart" if layout == "circle" else "graph"
         lines = [f"{diagram_type} {mermaid_layout}"]
 
-
         processed_nodes = set()
         processed_connections = set()
 
         for node in self.network_graph.nodes():
-            node_id = node.replace("-", "_")
+            # Clean node ID for mermaid - replace problematic characters
+            node_id = node.replace("-", "_").replace(".", "_").replace(" ", "_")
             node_data = self.network_graph.nodes[node]
 
             if node_id not in processed_nodes:
@@ -307,24 +380,51 @@ class TopologyViewer(QMainWindow):
                         f"platform: {node_data.get('platform', 'N/A')}"
                     ]
 
+                # Escape quotes and special characters in node labels
+                node_label = "<br>".join(node_info).replace('"', '&quot;')
+
                 role = 'edge' if node_data.get('is_leaf', False) else node_data.get('role', 'core')
-                lines.append(f'{node_id}["{("<br>").join(node_info)}"]:::{role}')
+                lines.append(f'{node_id}["{node_label}"]:::{role}')
                 processed_nodes.add(node_id)
 
             for neighbor in self.network_graph.neighbors(node):
-                neighbor_id = neighbor.replace("-", "_")
+                # Clean neighbor ID for mermaid
+                neighbor_id = neighbor.replace("-", "_").replace(".", "_").replace(" ", "_")
                 connection_pair = tuple(sorted([node_id, neighbor_id]))
 
                 if connection_pair not in processed_connections:
                     edge_data = self.network_graph.edges[node, neighbor]
                     connection_label = edge_data.get('connection', '')
                     if connection_label:
-                        lines.append(f'{node_id} <-->|"{connection_label}"| {neighbor_id}')
+                        # Escape quotes in connection labels
+                        clean_label = connection_label.replace('"', '&quot;')
+                        lines.append(f'{node_id} <-->|"{clean_label}"| {neighbor_id}')
                     else:
                         lines.append(f'{node_id} <--> {neighbor_id}')
                     processed_connections.add(connection_pair)
 
         return "\n".join(lines)
+
+    def update_node_count_display(self):
+        """Update the node and edge count display in the status area"""
+        if self.network_graph:
+            node_count = len(self.network_graph.nodes())
+            edge_count = len(self.network_graph.edges())
+            self.node_count_label.setText(f"Nodes: {node_count} | Edges: {edge_count}")
+        else:
+            self.node_count_label.setText("")
+
+    def show_loading_message(self, show=True):
+        """Show or hide the loading message"""
+        if show and self.network_graph:
+            node_count = len(self.network_graph.nodes())
+            edge_count = len(self.network_graph.edges())
+            if node_count > 100 or edge_count > 100:  # Show warning for large graphs
+                self.loading_label.setText("Loading large topology...")
+            else:
+                self.loading_label.setText("Rendering...")
+        else:
+            self.loading_label.setText("")
 
     def generate_html(self, mermaid_code, show_device_list=True):
         theme = "dark" if self.dark_mode else "default"
@@ -350,7 +450,8 @@ class TopologyViewer(QMainWindow):
                         curve: 'basis',
                         padding: 20
                     }},
-                    maxTextSize: 100000
+                    maxTextSize: 200000,
+                    maxEdges: 10000
                 }});
 
                 // Store nodes list globally
@@ -479,11 +580,27 @@ class TopologyViewer(QMainWindow):
     def render_diagram(self):
         """Render the current diagram in the web view"""
         if self.topology_data:
-            html_content = self.generate_html(self.generate_mermaid())
-            self.web_view.setHtml(html_content)
+            # Show loading message
+            self.show_loading_message(True)
+
+            # Use QTimer to allow UI to update before heavy processing
+            QTimer.singleShot(10, self._render_diagram_async)
         else:
             # Show empty state
             self.web_view.setHtml(self.generate_html("graph TD\nA[No data loaded]"))
+            self.show_loading_message(False)
+
+    def _render_diagram_async(self):
+        """Async part of diagram rendering"""
+        try:
+            html_content = self.generate_html(self.generate_mermaid())
+            self.web_view.setHtml(html_content)
+        except Exception as e:
+            QMessageBox.critical(self, "Rendering Error", f"Failed to render diagram: {str(e)}")
+        finally:
+            # Hide loading message
+            self.show_loading_message(False)
+
 
 def main():
     """Standalone entry point"""
@@ -502,10 +619,11 @@ def main():
 
     # Calculate the center position
     x = (screen_geometry.width() - viewer.width()) // 2
-    y = (screen_geometry.height() - viewer  .height()) // 2
+    y = (screen_geometry.height() - viewer.height()) // 2
     viewer.move(x, y)
 
     return app.exec()
+
 
 if __name__ == '__main__':
     sys.exit(main())
