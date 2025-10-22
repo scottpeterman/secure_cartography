@@ -9,6 +9,7 @@ class Platform(Enum):
     CISCO_IOS = auto()
     CISCO_NXOS = auto()
     ARISTA = auto()
+    JUNIPER = auto()
     UNKNOWN = auto()
 
 
@@ -43,6 +44,41 @@ class InterfaceNormalizer:
     # Comprehensive interface specifications with both long and short names
     # NOTE: Order matters! Longer patterns must come first to avoid partial matches
     INTERFACE_SPECS = [
+        # Juniper Gigabit Ethernet (ge-0/0/0, ge-1/2/3)
+        InterfaceSpec(r"^(?:ge[-_])(\d+/\d+/\d+(?:\.\d+)?)",
+                      "ge-\\1", "ge-\\1",
+                      [Platform.JUNIPER]),
+
+        # Juniper 10 Gigabit Ethernet (xe-0/0/0)
+        InterfaceSpec(r"^(?:xe[-_])(\d+/\d+/\d+(?:\.\d+)?)",
+                      "xe-\\1", "xe-\\1",
+                      [Platform.JUNIPER]),
+
+        # Juniper 25/40/100 Gigabit Ethernet (et-0/0/0)
+        InterfaceSpec(r"^(?:et[-_])(\d+/\d+/\d+(?:\.\d+)?)",
+                      "et-\\1", "et-\\1",
+                      [Platform.JUNIPER]),
+
+        # Juniper Aggregated Ethernet (ae0, ae1, ae100)
+        InterfaceSpec(r"^(?:ae)(\d+(?:\.\d+)?)",
+                      "ae\\1", "ae\\1",
+                      [Platform.JUNIPER]),
+
+        # Juniper Management (fxp0, em0, me0)
+        InterfaceSpec(r"^(?:fxp|em|me)(\d+)",
+                      "fxp\\1", "fxp\\1",
+                      [Platform.JUNIPER]),
+
+        # Juniper Loopback (lo0)
+        InterfaceSpec(r"^(?:lo)(\d+)",
+                      "lo\\1", "lo\\1",
+                      [Platform.JUNIPER]),
+
+        # Juniper VLAN/IRB interfaces (irb.100, irb.200)
+        InterfaceSpec(r"^(?:irb)\.?(\d+)",
+                      "irb.\\1", "irb.\\1",
+                      [Platform.JUNIPER]),
+
         # Standard Ethernet interfaces - FIXED: ethernet before eth to prevent partial match
         InterfaceSpec(r"^(?:ethernet|eth|et)(\d+(?:/\d+)*(?:\.\d+)?)",
                       "Ethernet\\1", "Eth\\1"),

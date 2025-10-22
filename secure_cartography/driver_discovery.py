@@ -31,8 +31,8 @@ class DeviceInfo:
 class DriverDiscovery:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.supported_drivers = ['nxos_ssh', 'ios', 'eos', 'procurve']
-        self.napalm_neighbor_capable = ['procurve']
+        self.supported_drivers = ['nxos_ssh', 'ios', 'eos', 'procurve', 'junos']
+        self.napalm_neighbor_capable = ['procurve', 'junos']
 
         self._platform_cache = {}
         db_path = get_db_path()
@@ -118,7 +118,7 @@ class DriverDiscovery:
             is_nxos = False
 
         # Optimize driver sequence based on pre-check
-        driver_sequence = ['nxos_ssh', 'ios', 'eos'] if is_nxos else ['ios', 'eos', 'procurve', 'nxos_ssh']
+        driver_sequence = ['nxos_ssh', 'ios', 'eos', 'junos'] if is_nxos else ['ios', 'junos', 'eos', 'procurve', 'nxos_ssh']
 
         for driver_name in driver_sequence:
             try:
@@ -238,6 +238,11 @@ class DriverDiscovery:
                     'Arista' in facts['vendor'] or
                     'vEOS' in facts['model'] or
                     'EOS' in facts['os_version']
+            )
+        elif driver_name == 'junos':
+            return (
+                    'Juniper' in facts['vendor'] and
+                    'JUNOS' in facts['os_version']
             )
 
         return False
@@ -430,6 +435,8 @@ class DriverDiscovery:
         # Get IP address
         if 'MGMT_ADDRESS' in entry:
             mapped['ip'] = entry['MGMT_ADDRESS']
+        elif 'INTERFACE_IP' in entry:
+            mapped['ip'] = entry['INTERFACE_IP']
 
         # Get platform info
         if protocol == 'cdp':
@@ -452,10 +459,14 @@ class DriverDiscovery:
                 mapped['platform'] = self._detect_platform_from_desc(entry['NEIGHBOR_DESCRIPTION'])
             elif 'PLATFORM' in entry:
                 mapped['platform'] = self._detect_platform_from_desc(entry['PLATFORM'])
+            elif 'CAPABILITIES' in entry:
+                mapped['platform'] = self._detect_platform_from_capabilities(entry['CAPABILITIES'])
 
             # Get interface pairs - LLDP can have different field names
             local_port = entry.get('LOCAL_INTERFACE', '')
-            remote_port = entry.get('NEIGHBOR_INTERFACE', '') or entry.get('NEIGHBOR_PORT_ID', '')
+            remote_port = (entry.get('NEIGHBOR_INTERFACE', '') or
+                          entry.get('NEIGHBOR_PORT_ID', '') or
+                          entry.get('PORT_ID', ''))
             if local_port and remote_port:
                 mapped['connections'].append([local_port, remote_port])
 
@@ -475,8 +486,8 @@ class DriverDiscovery:
             # Get device hostname for logging
             hostname = device_conn.hostname if hasattr(device_conn, 'hostname') else 'unknown'
 
-            # CDP Processing
-            if platform != 'eos':
+            # CDP Processing (skip for EOS and Junos - they don't support CDP)
+            if platform not in ['eos', 'junos']:
                 try:
                     cdp_output = ssh_client(
                         host=hostname,
@@ -517,15 +528,25 @@ class DriverDiscovery:
 
             # LLDP Processing
             try:
+                # Junos uses different command and prompt
+                if platform == 'junos':
+                    lldp_command = "show lldp neighbors detail"
+                    prompt = ">"  # Junos operational mode prompt
+                    prompt_count = 1
+                else:
+                    lldp_command = "show lldp neighbor detail"
+                    prompt = "#"
+                    prompt_count = 3
+
                 lldp_output = ssh_client(
                     host=hostname,
                     user=device_conn._netmiko_device.username,
                     password=device_conn._netmiko_device.password,
-                    cmds="show lldp neighbor detail",
+                    cmds=lldp_command,
                     invoke_shell=False,
-                    prompt="#",
-                    prompt_count=3,
-                    timeout=3,
+                    prompt=prompt,
+                    prompt_count=prompt_count,
+                    timeout=5,
                     disable_auto_add_policy=False,
                     look_for_keys=False,
                     inter_command_time=.5
@@ -539,6 +560,8 @@ class DriverDiscovery:
                     show_command = 'cisco_ios_show_lldp_neighbors_detail'
                 if platform == 'nxos_ssh':
                     show_command = 'cisco_nxos_show_lldp_neighbors_detail'
+                if platform == 'junos':
+                    show_command = 'juniper_junos_show_lldp_neighbors_detail'
 
                 best_template, parsed_lldp, score = parser.find_best_template(lldp_output, show_command)
                 self.logger.info(f"LLDP Template: {best_template}, Score: {score}")
@@ -656,13 +679,32 @@ class DriverDiscovery:
         description = description.lower()
         if any(term in description for term in ['arista', 'eos']):
             return 'eos'
-        elif any(term in description for term in ['juniper', 'junos']):
+        elif any(term in description for term in ['juniper', 'junos', 'jnpr']):
             return 'junos'
         elif any(term in description for term in ['cisco', 'ios']):
             return 'ios'
         elif 'nx-os' in description:
             return 'nxos'
         return 'ios'  # default to ios if unknown
+
+    def _detect_platform_from_capabilities(self, capabilities: str) -> str:
+        """Detect platform from LLDP capabilities string (used by Junos)."""
+        if not capabilities:
+            return 'unknown'
+
+        capabilities = capabilities.lower()
+
+        # Check for Juniper-specific indicators
+        if any(term in capabilities for term in ['juniper', 'junos']):
+            return 'junos'
+
+        # Juniper uses capability codes
+        if 'router' in capabilities and 'bridge' in capabilities:
+            return 'junos'  # Likely Juniper router/switch
+        elif 'router' in capabilities:
+            return 'junos'
+
+        return 'unknown'
 
     def validate_credentials(self, device: DeviceInfo) -> bool:
         try:

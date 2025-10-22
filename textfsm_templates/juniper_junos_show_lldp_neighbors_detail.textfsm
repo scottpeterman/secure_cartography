@@ -1,0 +1,39 @@
+Value Required LOCAL_INTERFACE (\S+)
+Value CHASSIS_ID ([0-9a-f:]+)
+Value NEIGHBOR_PORT_ID (\S+)
+Value PORT_ID (\S+)
+Value NEIGHBOR_NAME (\S+)
+Value NEIGHBOR_DESCRIPTION (.+?)
+Value MGMT_ADDRESS (\d+\.\d+\.\d+\.\d+)
+Value CAPABILITIES (.+?)
+
+Start
+  ^Local\s+Interface -> Continue.Record
+  ^Local\s+Interface\s+Parent\s+Interface\s+Chassis\s+Id -> Neighbors
+  ^Interface:\s+${LOCAL_INTERFACE} -> Detail
+  ^\s*$$
+  ^. -> Error
+
+Neighbors
+  ^\s*${LOCAL_INTERFACE}\s+\S*\s+${CHASSIS_ID}\s+${NEIGHBOR_PORT_ID}\s+${NEIGHBOR_NAME} -> Record
+  ^Local\s+Interface
+  ^\s*$$
+  ^Detail -> Start
+  ^. -> Error
+
+Detail
+  ^\s+Chassis\s+ID\s*:\s+${CHASSIS_ID}
+  ^\s+Port\s+ID\s*:\s+${NEIGHBOR_PORT_ID}
+  ^\s+Port\s+ID\s*:\s+${PORT_ID}
+  ^\s+Port\s+description\s*:\s+${NEIGHBOR_DESCRIPTION}
+  ^\s+System\s+name\s*:\s+${NEIGHBOR_NAME}
+  ^\s+System\s+description\s*:\s+${NEIGHBOR_DESCRIPTION}
+  ^\s+Management\s+address\s*:\s+${MGMT_ADDRESS}
+  ^\s+System\s+capabilities\s*:\s+${CAPABILITIES}
+  ^Interface:\s+\S+ -> Continue.Record
+  ^Interface:\s+${LOCAL_INTERFACE}
+  ^\s*$$
+  ^. -> Error
+
+Error
+  ^.
