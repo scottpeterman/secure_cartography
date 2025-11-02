@@ -1,0 +1,405 @@
+/* ========================================
+   SIDEBAR NAVIGATION STYLES
+   SecureCartography Visualizer
+   Enhanced with hamburger menu pattern
+   ======================================== */
+
+/* Top bar with hamburger menu */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--md-surface);
+    border-bottom: 1px solid var(--md-outline);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px;
+    z-index: 999;
+}
+
+/* Hamburger menu button */
+.hamburger-btn {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s;
+    color: var(--md-on-surface);
+}
+
+.hamburger-btn:hover {
+    background: var(--md-surface-container-high);
+}
+
+.hamburger-btn:active {
+    transform: scale(0.95);
+}
+
+.hamburger-btn i {
+    width: 24px;
+    height: 24px;
+}
+
+/* Top bar title */
+.top-bar-title {
+    flex: 1;
+}
+
+.top-bar-title h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin: 0;
+}
+
+/* Top bar controls */
+.top-bar-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.top-bar .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-bar label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--md-on-surface-variant);
+}
+
+.top-bar select {
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--md-outline);
+    border-radius: 6px;
+    background: var(--md-surface-container);
+    color: var(--md-on-surface);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.top-bar select:hover {
+    border-color: var(--md-primary);
+}
+
+.top-bar select:focus {
+    outline: none;
+    border-color: var(--md-primary);
+    box-shadow: 0 0 0 3px rgba(var(--md-primary-rgb), 0.1);
+}
+
+/* Sidebar container */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px; /* Below top bar */
+    bottom: 40px; /* Above stats bar */
+    width: 260px;
+    background: var(--md-surface-container);
+    border-right: 1px solid var(--md-outline);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 998;
+}
+
+/* Collapsed state - slides out to the left */
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+/* Sidebar sections */
+.sidebar-section {
+    border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.sidebar-header {
+    padding: 16px;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--md-on-surface-variant);
+    text-transform: uppercase;
+    background: var(--md-surface-container-high);
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-header i {
+    width: 16px;
+    height: 16px;
+}
+
+.sidebar-content {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Sidebar controls */
+.sidebar-label {
+    font-size: 12px;
+    color: var(--md-on-surface-variant);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.sidebar-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--md-outline);
+    border-radius: 6px;
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sidebar-select:hover {
+    border-color: var(--md-primary);
+}
+
+.sidebar-select:focus {
+    outline: none;
+    border-color: var(--md-primary);
+    box-shadow: 0 0 0 3px rgba(var(--md-primary-rgb), 0.1);
+}
+
+/* Sidebar buttons with icons */
+.sidebar-btn {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--md-surface-container-highest);
+    border: 1px solid var(--md-outline);
+    border-radius: 8px;
+    color: var(--md-on-surface);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-btn i {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.sidebar-btn span {
+    flex: 1;
+}
+
+.sidebar-btn:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border-color: var(--md-primary);
+    transform: translateX(3px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-btn:active {
+    transform: translateX(3px) scale(0.98);
+}
+
+/* Modified indicator - pulsing animation */
+.sidebar-btn.modified-indicator {
+    background: var(--md-tertiary-container);
+    border-color: var(--md-tertiary);
+    color: var(--md-on-tertiary-container);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.sidebar-btn.modified-indicator:hover {
+    background: var(--md-tertiary);
+    color: var(--md-on-tertiary);
+    animation: none;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(var(--md-tertiary-rgb), 0.4);
+    }
+    50% {
+        opacity: 0.85;
+        box-shadow: 0 0 0 6px rgba(var(--md-tertiary-rgb), 0);
+    }
+}
+
+/* Graph container adjustments */
+#cy {
+    position: fixed;
+    left: 260px; /* Sidebar width */
+    top: 60px;   /* Top bar height */
+    right: 0;
+    bottom: 40px; /* Stats bar height */
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When sidebar collapsed, graph expands */
+.sidebar.collapsed ~ #cy {
+    left: 0;
+}
+
+/* Stats bar adjustments */
+.stats {
+    position: fixed;
+    bottom: 0;
+    left: 260px;
+    right: 0;
+    height: 40px;
+    background: var(--md-surface);
+    border-top: 1px solid var(--md-outline);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    font-size: 13px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 997;
+}
+
+.sidebar.collapsed ~ .stats {
+    left: 0;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-item i {
+    width: 16px;
+    height: 16px;
+    color: var(--md-primary);
+}
+
+.stat-label {
+    color: var(--md-on-surface-variant);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--md-on-surface);
+}
+
+/* Info panel adjustments */
+.info-panel {
+    left: auto;
+    right: 20px;
+    /* No transition needed - stays on right */
+}
+
+/* Responsive: auto-hide on narrow screens */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.mobile-visible {
+        transform: translateX(0);
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #cy {
+        left: 0;
+    }
+
+    .stats {
+        left: 0;
+    }
+
+    .top-bar-title h1 {
+        font-size: 16px;
+    }
+}
+
+/* Mobile: simplify controls */
+@media (max-width: 768px) {
+    .top-bar-controls {
+        display: none;
+    }
+
+    .top-bar-title h1 {
+        font-size: 14px;
+    }
+
+    .sidebar {
+        width: 280px; /* Slightly wider on mobile for easier touch */
+    }
+
+    .sidebar-btn {
+        padding: 14px 12px; /* Larger touch targets */
+    }
+}
+
+/* Scrollbar styling for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--md-surface-container);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--md-outline-variant);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--md-outline);
+}
+
+/* Loading state for buttons */
+.sidebar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.sidebar-btn:disabled:hover {
+    transform: none;
+    background: var(--md-surface-container-highest);
+    color: var(--md-on-surface);
+    border-color: var(--md-outline);
+}
+
+/* Overlay for mobile when sidebar is open */
+@media (max-width: 1024px) {
+    .sidebar-overlay {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 997;
+        display: none;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+}

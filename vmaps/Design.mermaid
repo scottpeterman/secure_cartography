@@ -1,0 +1,96 @@
+graph TB
+    subgraph "Browser Frontend"
+        HTML[index.html]
+
+        subgraph "JavaScript Modules (1,519 LOC)"
+            APP[app.js<br/>146 lines<br/>Orchestration]
+            API[api.js<br/>120 lines<br/>API Client]
+            UI[ui.js<br/>147 lines<br/>Modals & Toasts]
+            GRAPH[graph.js<br/>607 lines<br/>Cytoscape Graph]
+            LAYOUT[layout.js<br/>211 lines<br/>Layout Algorithms]
+            THEME[theme.js<br/>51 lines<br/>Theme Manager]
+            FILEMGR[file-manager.js<br/>237 lines<br/>File Operations]
+        end
+
+        subgraph "Styling"
+            CSS[app.css<br/>Application Styles]
+            THEMES[themes.css<br/>Material Design 3]
+        end
+
+        CYTOSCAPE[Cytoscape.js 3.26.0<br/>CDN Library]
+    end
+
+    subgraph "Flask Backend (app.py)"
+        ROUTES[REST API Routes]
+
+        subgraph "Core Functions"
+            VALIDATE[validate_map_name<br/>Security]
+            LOADTOPO[load_topology<br/>JSON Parser]
+            SAVELAYOUT[save_layout<br/>Persistence]
+            ICONMAP[get_icon_for_platform<br/>Icon Resolution]
+            CONVERT[convert_to_cytoscape<br/>Format Converter]
+        end
+    end
+
+    subgraph "Filesystem Storage"
+        WORKSPACE[maps/ Workspace]
+
+        subgraph "Map Directories"
+            MAP1[map_name/<br/>topology.json<br/>topology.json.backup<br/>layout.json]
+        end
+
+        DATA[data/<br/>platform_icon_map.json]
+        ICONS[static/icons_lib/<br/>586+ JPG icons]
+    end
+
+    %% Frontend flow
+    HTML --> APP
+    APP --> API
+    APP --> UI
+    APP --> GRAPH
+    APP --> LAYOUT
+    APP --> THEME
+    APP --> FILEMGR
+
+    API -.HTTP.-> ROUTES
+    GRAPH --> CYTOSCAPE
+    GRAPH --> LAYOUT
+    THEME --> CSS
+    HTML --> CSS
+    HTML --> THEMES
+
+    %% Backend flow
+    ROUTES --> VALIDATE
+    ROUTES --> LOADTOPO
+    ROUTES --> SAVELAYOUT
+    ROUTES --> ICONMAP
+    ROUTES --> CONVERT
+
+    %% Storage flow
+    LOADTOPO --> MAP1
+    SAVELAYOUT --> MAP1
+    CONVERT --> MAP1
+    ICONMAP --> DATA
+    ICONMAP --> ICONS
+
+    %% API Endpoints
+    ROUTES -."/api/maps".-> WORKSPACE
+    ROUTES -."/api/maps/{name}".-> MAP1
+    ROUTES -."/api/maps/{name}/layout".-> MAP1
+    ROUTES -."/api/maps/{name}/topology".-> MAP1
+    ROUTES -."/api/maps/upload".-> WORKSPACE
+
+    %% Data flow annotations
+    GRAPH -.Topology Export.-> API
+    API -.Save Topology.-> ROUTES
+    ROUTES -.Store.-> MAP1
+
+    classDef frontend fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef storage fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef library fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    class HTML,APP,API,UI,GRAPH,LAYOUT,THEME,FILEMGR,CSS,THEMES frontend
+    class ROUTES,VALIDATE,LOADTOPO,SAVELAYOUT,ICONMAP,CONVERT backend
+    class WORKSPACE,MAP1,DATA,ICONS storage
+    class CYTOSCAPE library
