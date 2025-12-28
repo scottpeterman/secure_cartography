@@ -475,8 +475,8 @@ class DiscoveryController(QObject):
         """Log successful device discovery."""
         hostname = data.get('hostname', 'unknown')
         method = data.get('method', 'unknown')
-        neighbors = data.get('neighbor_count', 0)
-        duration = data.get('duration_ms', 0)
+        neighbors = data.get('neighbor_count') or 0
+        duration = data.get('duration_ms') or 0
 
         self._safe_call(
             self.log_panel, 'success',
@@ -579,9 +579,9 @@ class DiscoveryController(QObject):
 
     def _on_crawl_complete(self, data: Dict[str, Any]):
         """Handle crawl completion."""
-        discovered = data.get('discovered', 0)
-        failed = data.get('failed', 0)
-        duration = data.get('duration_seconds', 0)
+        discovered = data.get('discovered') or 0
+        failed = data.get('failed') or 0
+        duration = data.get('duration_seconds') or 0
 
         self._safe_call(self.log_panel, 'info', "")
         self._safe_call(self.log_panel, 'info', "═══════════════════════════════════════")

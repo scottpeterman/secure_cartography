@@ -208,3 +208,26 @@ class TextFSMAutoEngine:
         self.connection_manager.close_all()
 
 
+# Example usage
+if __name__ == '__main__':
+    multiprocessing.freeze_support()
+
+
+    # Example of using the engine in multiple threads
+    def worker(engine, output, filter_str):
+        result = engine.find_best_template(output, filter_str)
+        print(f"Thread {threading.get_ident()}: Found template: {result[0]}")
+
+
+    engine = TextFSMAutoEngine("./secure_cartography/tfsm_templates.db", verbose=True)
+    threads = []
+
+    # Create multiple threads
+    for i in range(3):
+        t = threading.Thread(target=worker, args=(engine, "sample output", "show version"))
+        threads.append(t)
+        t.start()
+
+    # Wait for all threads to complete
+    for t in threads:
+        t.join()
