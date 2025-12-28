@@ -1,56 +1,130 @@
+#!/usr/bin/env python3
+"""
+Secure Cartography v2 - Setup Script
+SSH & SNMP-Based Network Discovery and Topology Mapping
+"""
+
 from setuptools import setup, find_packages
 from pathlib import Path
 
-# Read the README file
-readme_path = Path("README.md")
-long_description = readme_path.read_text(encoding="utf-8")
-
-# Read requirements file
-requirements_path = Path("requirements.txt")
-requirements = [
-    line.strip()
-    for line in requirements_path.read_text(encoding="utf-8").splitlines()
-    if line.strip() and not line.startswith("#")
-]
+# Read the README for long description
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="secure-cartography",
-    version="0.9.5",
+    version="2.0.0",
     author="Scott Peterman",
     author_email="scottpeterman@gmail.com",
-    description="A secure, Python-based network discovery and mapping tool using SSH-based device interrogation",
+    description="SSH & SNMP-Based Network Discovery and Topology Mapping",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/scottpeterman/secure_cartography",
-    packages=find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: OS Independent",
-        "Environment :: X11 Applications",
-        "Topic :: System :: Networking",
-        "Topic :: System :: Monitoring",
-        "Topic :: Security",
-    ],
-    python_requires=">=3.9",
-    install_requires=requirements,
+    license="GPL-3.0",
+
+    # Package discovery
+    packages=find_packages(exclude=["tests", "tests.*", "docs", "screenshots"]),
+
+    # Include non-Python files
+    include_package_data=True,
     package_data={
-        "secure_cartography": [
+        "sc2": [
+            "**/*.html",
+            "**/*.css",
+            "**/*.js",
+            "**/*.png",
+            "**/*.jpg",
+            "**/*.jpeg",
+            "**/*.svg",
+            "**/*.ico",
+            "**/*.gif",
+        ],
+        "sc2.scng.utils": [
             "tfsm_templates.db",
-            "resources/index.html",
-            "resources/splash.jpeg"
+        ],
+        "sc2.ui": [
+            "*.html",
+            "widgets/*.html",
         ],
     },
-    include_package_data=True,
-    entry_points={
-        'gui_scripts': [
-            'scart=secure_cartography.scart:main',
-            'merge-dialog=secure_cartography.merge_dialog:main',
-            'mviewer=secure_cartography.mviewer:main',
-            'map-editor=secure_cartography.map_editor:main',
-            'icon-platform-map=secure_cartography.icon_map_editor:main'
 
+    # Python version requirement
+    python_requires=">=3.10",
+
+    # Dependencies
+    install_requires=[
+        "pysnmp>=7.1",
+        "paramiko>=3.0",
+        "textfsm>=1.1",
+        "cryptography>=42.0",
+        "PyQt6>=6.6",
+        "PyQt6-WebEngine>=6.6",
+        "aiofiles>=23.0",
+        "PyYAML>=6.0",
+    ],
+
+    # Optional dependencies
+    extras_require={
+        "dev": [
+            "pytest>=7.0",
+            "pytest-asyncio>=0.21",
+            "black>=23.0",
+            "ruff>=0.1",
         ],
-        'console_scripts': ['sc=secure_cartography.sc:main']
+    },
+
+    # Entry points
+    entry_points={
+        "console_scripts": [
+            "sc2=sc2.ui.__main__:main",
+            "sc2-creds=sc2.scng.creds.cli:main",
+            "sc2-discover=sc2.scng.discovery.cli:main",
+        ],
+        "gui_scripts": [
+            "secure-cartography=sc2.ui.__main__:main",
+        ],
+    },
+
+    # Classifiers
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Environment :: X11 Applications :: Qt",
+        "Environment :: Win32 (MS Windows)",
+        "Environment :: MacOS X",
+        "Intended Audience :: System Administrators",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: Telecommunications Industry",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: System :: Networking",
+        "Topic :: System :: Networking :: Monitoring",
+        "Topic :: System :: Systems Administration",
+    ],
+
+    # Keywords for PyPI
+    keywords=[
+        "network",
+        "discovery",
+        "topology",
+        "snmp",
+        "ssh",
+        "cdp",
+        "lldp",
+        "cisco",
+        "arista",
+        "juniper",
+        "network-automation",
+        "network-mapping",
+    ],
+
+    # Project URLs
+    project_urls={
+        "Bug Reports": "https://github.com/scottpeterman/secure_cartography/issues",
+        "Source": "https://github.com/scottpeterman/secure_cartography",
+        "Documentation": "https://github.com/scottpeterman/secure_cartography#readme",
     },
 )

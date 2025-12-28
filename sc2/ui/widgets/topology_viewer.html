@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topology Viewer</title>
+    
+    <!-- Cytoscape.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    
+    <!-- QWebChannel for Python bridge -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-surface: #16213e;
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7b2cbf;
+            --border-color: #2a2a4a;
+            --node-border: #00d4ff;
+            --edge-color: #4a9eff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg-primary);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        #cy { width: 100vw; height: 100vh; }
+
+        #info-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            min-width: 200px;
+            max-width: 300px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        #info-panel.active { display: block; }
+        #info-panel h4 { color: var(--accent-primary); margin-bottom: 8px; font-size: 14px; }
+        .info-item { color: var(--text-primary); font-size: 12px; margin: 4px 0; }
+        .info-item strong { color: var(--text-secondary); }
+
+        #stats-bar {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            z-index: 1000;
+        }
+        #stats-bar span { color: var(--accent-primary); font-weight: 600; }
+
+        /* Debug panel */
+        #debug-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.85);
+            border: 1px solid #ff6b6b;
+            border-radius: 8px;
+            padding: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 2000;
+            font-family: monospace;
+            font-size: 11px;
+        }
+        #debug-panel h4 { color: #ff6b6b; margin-bottom: 8px; }
+        #debug-log { color: #00ff88; }
+        #debug-log .error { color: #ff6b6b; }
+        #debug-log .warn { color: #ffaa00; }
+        #debug-log .info { color: #00d4ff; }
+
+        #loading {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        #loading.hidden { display: none; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #controls {
+            position: fixed;
+            top: 10px;
+            left: 320px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+        #controls.hidden { display: none; }
+        .ctrl-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { background: var(--accent-primary); color: var(--bg-primary); }
+    </style>
+</head>
+<body>
+    <div id="cy"></div>
+
+    <div id="debug-panel" hidden>
+        <h4>🔍 JS Debug Log</h4>
+        <div id="debug-log"></div>
+    </div>
+
+    <div id="info-panel">
+        <h4>Device Information</h4>
+        <div id="info-content"></div>
+    </div>
+
+    <div id="stats-bar">
+        Nodes: <span id="node-count">0</span> |
+        Edges: <span id="edge-count">0</span>
+    </div>
+
+    <div id="controls" class="hidden">
+        <button class="ctrl-btn" onclick="TopologyViewer.fitView()">Fit View</button>
+        <button class="ctrl-btn" onclick="TopologyViewer.applyLayout('cose')">Auto Layout</button>
+        <button class="ctrl-btn" onclick="TopologyViewer.testLoad()">Test Load</button>
+    </div>
+
+    <div id="loading" class="hidden">
+        <div class="spinner"></div>
+    </div>
+<script>
+/**
+ * Debug logger - writes to both console and debug panel
+ */
+const DebugLog = {
+    panel: null,
+
+    init() {
+        this.panel = document.getElementById('debug-log');
+        this.log('info', 'Debug logger initialized');
+    },
+
+    log(level, msg) {
+        const timestamp = new Date().toISOString().substr(11, 12);
+        const line = `[${timestamp}] ${msg}`;
+
+        if (level === 'error') console.error(line);
+        else if (level === 'warn') console.warn(line);
+        else console.log(line);
+
+        if (this.panel) {
+            const div = document.createElement('div');
+            div.className = level;
+            div.textContent = line;
+            this.panel.appendChild(div);
+            this.panel.scrollTop = this.panel.scrollHeight;
+
+            while (this.panel.children.length > 50) {
+                this.panel.removeChild(this.panel.firstChild);
+            }
+        }
+    },
+
+    info(msg) { this.log('info', msg); },
+    warn(msg) { this.log('warn', msg); },
+    error(msg) { this.log('error', msg); }
+};
+
+/**
+ * TopologyViewer - Portable Cytoscape.js viewer
+ */
+const TopologyViewer = {
+    cy: null,
+    bridge: null,
+    iconBasePath: '',
+    platformMap: null,
+    loadCount: 0,
+
+    init() {
+        DebugLog.init();
+        DebugLog.info('TopologyViewer.init() called');
+
+        // Setup QWebChannel bridge
+        if (typeof QWebChannel !== 'undefined') {
+            DebugLog.info('QWebChannel found, connecting...');
+
+            new QWebChannel(qt.webChannelTransport, (channel) => {
+                this.bridge = channel.objects.bridge;
+                DebugLog.info('QWebChannel connected!');
+
+                if (this.bridge) {
+                    DebugLog.info('Bridge methods: ' + Object.keys(this.bridge).join(', '));
+
+                    if (this.bridge.onViewerReady) {
+                        this.bridge.onViewerReady();
+                        DebugLog.info('onViewerReady() called');
+                    }
+                }
+            });
+        } else {
+            DebugLog.warn('No QWebChannel - standalone mode');
+        }
+
+        // Initialize Cytoscape
+        DebugLog.info('Initializing Cytoscape...');
+        this.cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: [],
+            style: this.getStyles(),
+            layout: { name: 'preset' },
+            minZoom: 0.1,
+            maxZoom: 4,
+            wheelSensitivity: 0.3
+        });
+
+        this.setupEventHandlers();
+        this.hideLoading();
+
+        // Debug controls hidden by default (remove line below to show)
+        // document.getElementById('controls').classList.remove('hidden');
+
+        DebugLog.info('Init complete!');
+    },
+
+    getStyles() {
+        const root = getComputedStyle(document.documentElement);
+        const textColor = root.getPropertyValue('--text-primary').trim() || '#eaeaea';
+        const bgColor = root.getPropertyValue('--bg-surface').trim() || '#16213e';
+        const accentColor = root.getPropertyValue('--accent-primary').trim() || '#00d4ff';
+        const edgeColor = root.getPropertyValue('--edge-color').trim() || '#4a9eff';
+
+        return [
+            {
+                selector: 'node',
+                style: {
+                    'background-image': 'data(icon)',
+                    'background-fit': 'contain',
+                    'background-clip': 'none',
+                    'width': 50,
+                    'height': 50,
+                    'label': 'data(label)',
+                    'text-valign': 'bottom',
+                    'text-halign': 'center',
+                    'text-margin-y': 5,
+                    'font-size': '10px',
+                    'font-weight': '500',
+                    'color': textColor,
+                    'text-background-color': bgColor,
+                    'text-background-opacity': 0.9,
+                    'text-background-padding': '3px',
+                    'text-background-shape': 'roundrectangle',
+                    'border-width': 2,
+                    'border-color': accentColor,
+                    'border-opacity': 0.4
+                }
+            },
+            {
+                selector: 'node[?discovered]',  // discovered = true (truthy)
+                style: {
+                    'border-style': 'solid'
+                }
+            },
+            {
+                selector: 'node[!discovered]',  // discovered = false (falsy)
+                style: {
+                    'border-style': 'dashed',
+                    'border-color': '#ff6b6b',
+                    'border-width': 2,
+                    'border-opacity': 0.8,
+                    'opacity': 0.7
+                }
+            },
+            {
+                selector: 'node:selected',
+                style: {
+                    'border-width': 3,
+                    'border-opacity': 1,
+                    'border-color': accentColor
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 2,
+                    'line-color': edgeColor,
+                    'curve-style': 'bezier',
+                    'label': 'data(label)',
+                    'font-size': '8px',
+                    'color': textColor,
+                    'text-background-color': bgColor,
+                    'text-background-opacity': 0.9,
+                    'text-background-padding': '2px',
+                    'text-background-shape': 'roundrectangle',
+                    'text-rotation': 'autorotate',
+                    'text-margin-y': -8
+                }
+            },
+            {
+                selector: 'edge:selected',
+                style: { 'width': 3, 'line-color': accentColor }
+            }
+        ];
+    },
+
+    setupEventHandlers() {
+        if (!this.cy) return;
+
+        // Single-click: show info panel
+        this.cy.on('tap', 'node', (evt) => {
+            const node = evt.target;
+            this.showNodeInfo(node.data());
+            if (this.bridge && this.bridge.onNodeSelected) {
+                this.bridge.onNodeSelected(JSON.stringify(node.data()));
+            }
+        });
+
+        // Double-click: request edit dialog
+        this.cy.on('dblclick', 'node', (evt) => {
+            const node = evt.target;
+            const data = node.data();
+            DebugLog.info('Node edit requested: ' + data.id);
+
+            if (this.bridge && this.bridge.onNodeEditRequested) {
+                this.bridge.onNodeEditRequested(JSON.stringify(data));
+            }
+        });
+
+        this.cy.on('tap', 'edge', (evt) => {
+            const edge = evt.target;
+            this.showEdgeInfo(edge.data());
+            if (this.bridge && this.bridge.onEdgeSelected) {
+                this.bridge.onEdgeSelected(JSON.stringify(edge.data()));
+            }
+        });
+
+        this.cy.on('tap', (evt) => {
+            if (evt.target === this.cy) {
+                this.hideInfoPanel();
+            }
+        });
+
+        this.cy.on('dragfree', 'node', () => {
+            if (this.bridge && this.bridge.onLayoutChanged) {
+                this.bridge.onLayoutChanged(this.exportPositions());
+            }
+        });
+    },
+
+    /**
+     * Update a node's data and visual appearance (called from Python)
+     */
+    updateNode(nodeId, b64Data) {
+        DebugLog.info('updateNode: ' + nodeId);
+
+        try {
+            const jsonStr = atob(b64Data);
+            const data = JSON.parse(jsonStr);
+
+            const node = this.cy.getElementById(nodeId);
+            if (node && node.length > 0) {
+                // Update node data
+                node.data(data);
+
+                // Update visual style based on discovered status
+                const accentColor = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--accent-primary').trim() || '#00d4ff';
+
+                if (data.discovered === false) {
+                    node.style({
+                        'border-style': 'dashed',
+                        'border-color': '#ff6b6b',
+                        'opacity': 0.7
+                    });
+                    // Update label to show warning if not already there
+                    if (!data.label.includes('⚠')) {
+                        node.data('label', data.label + ' ⚠');
+                    }
+                } else {
+                    node.style({
+                        'border-style': 'solid',
+                        'border-color': accentColor,
+                        'opacity': 1
+                    });
+                    // Remove warning indicator if present
+                    const label = node.data('label');
+                    if (label && label.includes(' ⚠')) {
+                        node.data('label', label.replace(' ⚠', ''));
+                    }
+                }
+
+                // Update icon if provided
+                if (data.icon) {
+                    node.style('background-image', data.icon);
+                }
+
+                this.updateStats();
+                DebugLog.info('Node updated successfully');
+            } else {
+                DebugLog.warn('Node not found: ' + nodeId);
+            }
+        } catch (e) {
+            DebugLog.error('updateNode error: ' + e.message);
+        }
+    },
+
+    /**
+     * Load topology from base64-encoded JSON (called from Python)
+     */
+    loadTopologyB64(b64String) {
+        DebugLog.info('loadTopologyB64() called');
+        try {
+            const jsonString = atob(b64String);
+            this.loadTopology(jsonString);
+        } catch (error) {
+            DebugLog.error('B64 decode error: ' + error.message);
+        }
+    },
+
+    /**
+     * Load topology - MAIN ENTRY POINT
+     */
+    loadTopology(jsonString) {
+        this.loadCount++;
+        DebugLog.info('loadTopology() call #' + this.loadCount);
+
+        if (!jsonString) {
+            DebugLog.error('Empty input!');
+            return;
+        }
+
+        this.showLoading();
+
+        try {
+            let data = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+
+            let elements = [];
+            if (data.cytoscape) {
+                DebugLog.info('Format: VelocityMaps');
+                elements = this.parseCytoscapeFormat(data.cytoscape);
+            } else if (data.nodes && data.edges) {
+                DebugLog.info('Format: Cytoscape');
+                elements = this.parseCytoscapeFormat(data);
+            } else if (typeof data === 'object' && !Array.isArray(data)) {
+                DebugLog.info('Format: SC2 map.json');
+                elements = this.parseMapFormat(data);
+            }
+
+            this.cy.elements().remove();
+            this.cy.add(elements);
+
+            DebugLog.info('Loaded: ' + this.cy.nodes().length + ' nodes, ' + this.cy.edges().length + ' edges');
+
+            this.updateStats();
+            this.applyLayout('cose');
+            this.hideLoading();
+
+        } catch (error) {
+            DebugLog.error('loadTopology error: ' + error.message);
+            this.hideLoading();
+        }
+    },
+
+    testLoad() {
+        const testData = {
+            "test-switch-1": {
+                "node_details": { "ip": "10.0.0.1", "platform": "Cisco Catalyst" },
+                "peers": { "test-switch-2": { "connections": [["Gi0/1", "Gi0/1"]] } }
+            },
+            "test-switch-2": {
+                "node_details": { "ip": "10.0.0.2", "platform": "Arista DCS" },
+                "peers": { "test-switch-1": { "connections": [["Gi0/1", "Gi0/1"]] } }
+            }
+        };
+        this.loadTopology(JSON.stringify(testData));
+    },
+
+    parseCytoscapeFormat(data) {
+        const elements = [];
+
+        if (data.nodes) {
+            data.nodes.forEach(n => {
+                const nodeData = n.data || n;
+                elements.push({
+                    group: 'nodes',
+                    data: {
+                        id: nodeData.id,
+                        label: nodeData.label || nodeData.id,
+                        ip: nodeData.ip || '',
+                        platform: nodeData.platform || 'Unknown',
+                        icon: nodeData.icon || this.getIconForPlatform(nodeData.platform),
+                        discovered: nodeData.discovered !== false
+                    },
+                    position: n.position || undefined
+                });
+            });
+        }
+
+        if (data.edges) {
+            data.edges.forEach(e => {
+                const edgeData = e.data || e;
+                elements.push({
+                    group: 'edges',
+                    data: {
+                        id: edgeData.id || `${edgeData.source}-${edgeData.target}`,
+                        source: edgeData.source,
+                        target: edgeData.target,
+                        label: edgeData.label || ''
+                    }
+                });
+            });
+        }
+
+        return elements;
+    },
+
+    parseMapFormat(data) {
+        const elements = [];
+        const addedEdges = new Set();
+        const nodeIds = new Set();
+
+        // First pass: create discovered nodes
+        for (const [deviceName, deviceData] of Object.entries(data)) {
+            const details = deviceData.node_details || {};
+            nodeIds.add(deviceName);
+
+            elements.push({
+                group: 'nodes',
+                data: {
+                    id: deviceName,
+                    label: deviceName,
+                    ip: details.ip || '',
+                    platform: details.platform || 'Unknown',
+                    icon: details.icon || this.getIconForPlatform(details.platform),
+                    discovered: true
+                }
+            });
+        }
+
+        // Second pass: create edges and placeholder nodes
+        for (const [deviceName, deviceData] of Object.entries(data)) {
+            const peers = deviceData.peers || {};
+
+            for (const [peerName, peerData] of Object.entries(peers)) {
+                // Create placeholder for undiscovered peer
+                if (!nodeIds.has(peerName)) {
+                    nodeIds.add(peerName);
+                    elements.push({
+                        group: 'nodes',
+                        data: {
+                            id: peerName,
+                            label: peerName + ' ⚠',
+                            ip: '',
+                            platform: 'Undiscovered',
+                            icon: this.getUndiscoveredIcon(),
+                            discovered: false
+                        }
+                    });
+                }
+
+                const edgeId = [deviceName, peerName].sort().join('--');
+                if (!addedEdges.has(edgeId)) {
+                    addedEdges.add(edgeId);
+
+                    let label = '';
+                    const connections = peerData.connections || [];
+                    if (connections.length > 0 && connections[0].length >= 2) {
+                        label = `${connections[0][0]} ↔ ${connections[0][1]}`;
+                    }
+
+                    elements.push({
+                        group: 'edges',
+                        data: { id: edgeId, source: deviceName, target: peerName, label: label }
+                    });
+                }
+            }
+        }
+
+        return elements;
+    },
+
+    getUndiscoveredIcon() {
+        return 'data:image/svg+xml,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                <rect x="4" y="14" width="40" height="20" rx="3" fill="#4a4a4a" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4,2"/>
+                <text x="24" y="28" text-anchor="middle" fill="#ff6b6b" font-size="16" font-weight="bold">?</text>
+            </svg>
+        `);
+    },
+
+    getIconForPlatform(platform) {
+        if (!platform) return this.getDefaultIcon();
+        const p = platform.toLowerCase();
+        if (p.includes('cisco')) return this.getCiscoSwitchIcon();
+        if (p.includes('arista')) return this.getAristaSwitchIcon();
+        if (p.includes('juniper')) return this.getJuniperSwitchIcon();
+        return this.getDefaultIcon();
+    },
+
+    getCiscoSwitchIcon() {
+        return 'data:image/svg+xml,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                <rect x="4" y="14" width="40" height="20" rx="3" fill="#049fd9" stroke="#00bceb" stroke-width="1.5"/>
+                <circle cx="12" cy="24" r="2.5" fill="#6cc04a"/><circle cx="20" cy="24" r="2.5" fill="#6cc04a"/>
+                <circle cx="28" cy="24" r="2.5" fill="#6cc04a"/><circle cx="36" cy="24" r="2.5" fill="#fbab18"/>
+            </svg>
+        `);
+    },
+
+    getAristaSwitchIcon() {
+        return 'data:image/svg+xml,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                <rect x="4" y="14" width="40" height="20" rx="3" fill="#5c4ee5" stroke="#7c6ef0" stroke-width="1.5"/>
+                <circle cx="12" cy="24" r="2.5" fill="#00e5a0"/><circle cx="20" cy="24" r="2.5" fill="#00e5a0"/>
+                <circle cx="28" cy="24" r="2.5" fill="#00e5a0"/><circle cx="36" cy="24" r="2.5" fill="#ffcc00"/>
+            </svg>
+        `);
+    },
+
+    getJuniperSwitchIcon() {
+        return 'data:image/svg+xml,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                <rect x="4" y="14" width="40" height="20" rx="3" fill="#84bd00" stroke="#a0d911" stroke-width="1.5"/>
+                <circle cx="12" cy="24" r="2.5" fill="#ffffff"/><circle cx="20" cy="24" r="2.5" fill="#ffffff"/>
+                <circle cx="28" cy="24" r="2.5" fill="#ffffff"/><circle cx="36" cy="24" r="2.5" fill="#ff6600"/>
+            </svg>
+        `);
+    },
+
+    getDefaultIcon() {
+        return 'data:image/svg+xml,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                <rect x="4" y="14" width="40" height="20" rx="3" fill="#2a4a7a" stroke="#4a9eff" stroke-width="2"/>
+                <circle cx="12" cy="24" r="3" fill="#00ff88"/><circle cx="20" cy="24" r="3" fill="#00ff88"/>
+                <circle cx="28" cy="24" r="3" fill="#ffaa00"/><rect x="34" y="20" width="6" height="8" rx="1" fill="#4a9eff"/>
+            </svg>
+        `);
+    },
+
+    setPlatformMap(mapJson) {
+        try {
+            this.platformMap = JSON.parse(mapJson);
+            DebugLog.info('Platform map loaded');
+        } catch (e) {
+            DebugLog.error('Failed to parse platform map: ' + e.message);
+        }
+    },
+
+    applyLayout(algorithm = 'cose') {
+        if (!this.cy || this.cy.nodes().length === 0) return;
+
+        const layouts = {
+            'cose': { name: 'cose', animate: true, animationDuration: 500, nodeRepulsion: 8000, idealEdgeLength: 100, gravity: 0.25 },
+            'grid': { name: 'grid', animate: true, animationDuration: 300 },
+            'circle': { name: 'circle', animate: true, animationDuration: 300 },
+            'breadthfirst': { name: 'breadthfirst', animate: true, animationDuration: 300, directed: false, spacingFactor: 1.5 }
+        };
+
+        this.cy.layout(layouts[algorithm] || layouts['cose']).run();
+    },
+
+    fitView() {
+        if (this.cy) this.cy.fit(null, 30);
+    },
+
+    showNodeInfo(data) {
+        const panel = document.getElementById('info-panel');
+        const content = document.getElementById('info-content');
+        content.innerHTML = `
+            <div class="info-item"><strong>Name:</strong> ${data.label || data.id}</div>
+            <div class="info-item"><strong>IP:</strong> ${data.ip || 'N/A'}</div>
+            <div class="info-item"><strong>Platform:</strong> ${data.platform || 'Unknown'}</div>
+            <div class="info-item"><strong>Status:</strong> ${data.discovered !== false ? '✓ Discovered' : '⚠ Undiscovered'}</div>
+        `;
+        panel.querySelector('h4').textContent = 'Device Information';
+        panel.classList.add('active');
+    },
+
+    showEdgeInfo(data) {
+        const panel = document.getElementById('info-panel');
+        const content = document.getElementById('info-content');
+        content.innerHTML = `
+            <div class="info-item"><strong>Source:</strong> ${data.source}</div>
+            <div class="info-item"><strong>Target:</strong> ${data.target}</div>
+            <div class="info-item"><strong>Interfaces:</strong> ${data.label || 'N/A'}</div>
+        `;
+        panel.querySelector('h4').textContent = 'Connection Information';
+        panel.classList.add('active');
+    },
+
+    hideInfoPanel() {
+        document.getElementById('info-panel').classList.remove('active');
+    },
+
+    updateStats() {
+        document.getElementById('node-count').textContent = this.cy.nodes().length;
+        document.getElementById('edge-count').textContent = this.cy.edges().length;
+    },
+
+    exportPositions() {
+        const positions = {};
+        this.cy.nodes().forEach(node => {
+            const pos = node.position();
+            positions[node.id()] = { x: pos.x, y: pos.y };
+        });
+        return JSON.stringify(positions);
+    },
+
+    restorePositions(positionsJson) {
+        try {
+            const positions = JSON.parse(positionsJson);
+            this.cy.nodes().forEach(node => {
+                const pos = positions[node.id()];
+                if (pos) node.position(pos);
+            });
+            this.cy.fit(null, 30);
+        } catch (e) {
+            DebugLog.error('restorePositions error: ' + e.message);
+        }
+    },
+
+    setTheme(themeJson) {
+        try {
+            const theme = JSON.parse(themeJson);
+            const root = document.documentElement;
+            for (const [key, value] of Object.entries(theme)) {
+                root.style.setProperty(key, value);
+            }
+            if (this.cy) this.cy.style(this.getStyles());
+            document.body.style.background = theme['--bg-primary'] || '#1a1a2e';
+        } catch (e) {
+            DebugLog.error('setTheme error: ' + e.message);
+        }
+    },
+
+    showControls(show = true) {
+        document.getElementById('controls').classList.toggle('hidden', !show);
+    },
+
+    showLoading() {
+        document.getElementById('loading').classList.remove('hidden');
+    },
+
+    hideLoading() {
+        document.getElementById('loading').classList.add('hidden');
+    },
+
+    exportPNG() {
+        if (!this.cy) return null;
+        const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg-primary').trim() || '#1a1a2e';
+        return this.cy.png({ output: 'base64', bg: bg, full: true, scale: 2 });
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    TopologyViewer.init();
+});
+
+window.TopologyViewer = TopologyViewer;
+window.DebugLog = DebugLog;
+</script>
+</body>
+</html>

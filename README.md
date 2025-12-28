@@ -1,664 +1,633 @@
-# Secure Cartography - Network Discovery and Mapping
+# Secure Cartography v2
 
-## Overview
-Secure Cartography is a comprehensive network discovery and mapping tool that automates the process of documenting network topologies through SSH-based device interrogation. The system leverages CDP/LLDP protocols to discover device relationships and generates professional-grade network diagrams with customizable device icons and multiple export formats.
+**SSH & SNMP-Based Network Discovery and Topology Mapping**
 
-### Key Features
-- **Automated Network Discovery**: SSH-based multi-vendor device discovery
-- **Enhanced Visualization**: Customizable device icons for professional diagrams
-- **Multiple Output Formats**: JSON, GraphML (yEd), Draw.io, and SVG
-- **Security-First Design**: Encrypted credential storage with master password protection
-- **TextFSM Integration**: Advanced parsing engine for accurate device data extraction
-- **Map Enhancement Tools**: Interactive icon mapping and diagram customization
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![PyQt6](https://img.shields.io/badge/GUI-PyQt6-green.svg)](https://www.riverbankcomputing.com/software/pyqt/)
 
-![Secure_Cartography](https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/reboot/slides.gif)
+Secure Cartography is a network discovery tool that crawls your infrastructure via SNMP and SSH, collecting CDP/LLDP neighbor information to automatically generate topology maps. Built by a network engineer, for network engineers.
 
-## GUI Application Entry Point (`scart.py`)
-- pip install secure-cartography
-- scart <enter>
-- if from source python -m secure_cartography.scart
+<p align="center">
+  <img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_cyber.png" alt="Secure Cartography - Cyber Theme" width="800">
+</p>
 
+---
 
-### Credential Management System
-- **Master Password Protection**: All credentials encrypted with user-defined master password
-- **System Keyring Integration**: Leverages OS-native secure storage (Windows Credential Manager, macOS Keychain, Linux Secret Service)
-- **PBKDF2 Key Derivation**: Strong cryptographic key generation from master password
-- **Fernet Encryption**: Industry-standard symmetric encryption for credential storage
+## What's New in v2
 
-### Main Application Architecture
-```python
-class NetworkMapperWidget(QWidget):
-    """Primary GUI widget handling discovery and visualization"""
-    
-    def __init__(self, creds_manager: SecureCredentials, parent=None):
-        self.setup_ui()          # Initialize interface components
-        self.load_settings()     # Load encrypted credentials and preferences
-        self.set_dark_mode()     # Apply theme preferences
+Version 2 is a complete rewrite with a modernized architecture:
+
+| Feature | v1 | v2 |
+|---------|----|----|
+| Discovery Engine | Synchronous, single-threaded | **Async with configurable concurrency** |
+| Credential Storage | YAML + keyring | **SQLite vault with AES-256 encryption** |
+| CLI | Basic | **Full-featured with test/discover/crawl commands** |
+| Progress Reporting | Callbacks | **Structured events for GUI integration** |
+| SSH Support | Primary | **Fallback when SNMP unavailable** |
+| SNMP Support | v2c only | **v2c and v3 (authPriv)** |
+| GUI | PyQt5 | **PyQt6 with theme support (Cyber/Dark/Light)** |
+| Topology Viewer | External | **Embedded Cytoscape.js with live preview** |
+
+---
+
+## Features
+
+### Discovery Engine
+- **SNMP-first discovery** with automatic SSH fallback
+- **CDP and LLDP** neighbor detection across vendors
+- **Two-pass LLDP resolution** - correctly handles lldpLocPortNum vs ifIndex
+- **Bidirectional link validation** - only confirmed connections appear in topology
+- **Concurrent crawling** - discover 20+ devices simultaneously
+- **Depth-limited recursion** - control how far the crawler goes
+- **Exclusion patterns** - skip devices by hostname, sys_name, or sysDescr
+- **No-DNS mode** - use IPs directly from neighbor tables (home lab friendly)
+
+### Credential Management
+- **Encrypted SQLite vault** - AES-256-GCM encryption at rest
+- **Multiple credential types** - SSH (password + key), SNMPv2c, SNMPv3
+- **Priority ordering** - try credentials in sequence until one works
+- **Credential discovery** - auto-detect which credentials work on which devices
+
+### Live Topology Preview
+- **Embedded Cytoscape.js viewer** - interactive network visualization
+- **Real-time rendering** - topology displayed immediately after discovery
+- **Vendor-specific icons** - Cisco, Arista, Juniper with distinct styling
+- **Undiscovered peer nodes** - referenced but unreachable devices shown with warning markers
+- **Theme-aware** - visualization adapts to Cyber/Dark/Light themes
+- **Interactive controls** - fit view, auto-layout, node selection with details popup
+
+### Themed GUI
+- **Three themes** - Cyber (cyan), Dark (gold), Light (blue)
+- **Real-time progress** - live counters, depth tracking, log output
+- **Responsive design** - UI remains interactive during discovery
+- **Click-to-inspect** - node details (hostname, IP, platform) on selection
+
+### Supported Platforms
+| Vendor | SNMP | SSH | Notes |
+|--------|------|-----|-------|
+| Cisco IOS/IOS-XE | ✓ | ✓ | CDP + LLDP |
+| Cisco NX-OS | ✓ | ✓ | CDP + LLDP |
+| Arista EOS | ✓ | ✓ | LLDP primary |
+| Juniper JUNOS | ✓ | ✓ | LLDP primary |
+
+---
+
+## Screenshots
+
+<table>
+<tr>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_cyber.png" alt="Cyber Theme" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_dark.png" alt="Dark Theme" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_light.png" alt="Light Theme" width="280"></td>
+</tr>
+<tr>
+<td align="center"><b>Cyber</b> - Teal accents</td>
+<td align="center"><b>Dark</b> - Gold accents</td>
+<td align="center"><b>Light</b> - Blue accents</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/full_run_preview_cyber.png" alt="Topology - Cyber" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/run_complete_dark.png" alt="Topology - Dark" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/full_run_preview_light.png" alt="Topology - Light" width="280"></td>
+</tr>
+<tr>
+<td align="center">Topology Preview - Cyber</td>
+<td align="center">Topology Preview - Dark</td>
+<td align="center">Topology Preview - Light</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/login_cyan.png" alt="Login - Cyber" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/login_amber.png" alt="Login - Dark" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/login_light.png" alt="Login - Light" width="280"></td>
+</tr>
+<tr>
+<td align="center">Login - Cyber</td>
+<td align="center">Login - Dark</td>
+<td align="center">Login - Light</td>
+</tr>
+</table>
+
+---
+
+## Installation
+
+### Prerequisites
+- Python 3.10 or higher
+- pip
+
+### From Source
+```bash
+git clone https://github.com/scottpeterman/secure_cartography.git
+cd secure_cartography
+pip install -e .
 ```
 
-### GUI Configuration Management
-The interface provides comprehensive configuration through organized sections:
-- **Discovery Parameters**: Seed IP, credentials, timeout settings
-- **Scope Control**: Maximum devices, exclusion patterns, domain filtering
-- **Output Options**: Directory selection, map naming, layout algorithms
-- **Real-time Monitoring**: Progress tracking, device status, queue management
+### Dependencies
+```bash
+# Core
+pip install pysnmp-lextudio paramiko cryptography textfsm aiofiles
 
-### GUI-Based Discovery Workflow
-
-#### User Interface Flow
-1. **Credential Authentication**: Master password entry with secure credential loading
-2. **Configuration Setup**: Network parameters and discovery options via organized forms
-3. **Discovery Execution**: Multi-threaded processing with real-time progress monitoring
-4. **Result Visualization**: Interactive preview with multiple export options
-
-#### Discovery Worker Thread
-```python
-class NetworkDiscoveryWorker(QThread):
-    """Non-blocking discovery execution"""
-    device_discovered = pyqtSignal(str, str)  # Real-time device status
-    discovery_complete = pyqtSignal(dict)     # Final statistics
-    progress_update = pyqtSignal(dict)        # Queue and progress stats
-    log_message = pyqtSignal(str)             # Detailed logging
+# GUI
+pip install PyQt6 PyQt6-WebEngine
 ```
 
-The GUI maintains responsive interaction during discovery through:
-- **Separate Worker Thread**: Discovery runs independently of UI thread
-- **Real-time Updates**: Progress signals update interface components
-- **Cancellation Support**: User can abort long-running discovery operations
-- **Status Monitoring**: Device-by-device progress with color-coded results
+---
 
-#### Interactive Progress Monitoring
-The interface provides comprehensive discovery feedback:
-- **Progress Bar**: Overall completion percentage
-- **Device List**: Real-time device status (processing, success, failed)
-- **Statistics Panel**: Discovered, failed, queued, and total device counts
-- **Log Output**: Detailed discovery events with configurable verbosity levels
+## Quick Start
 
-#### Settings Persistence
-```python
-def save_settings(self):
-    """Secure settings storage with credential encryption"""
-    # Non-sensitive settings to QSettings
-    self.settings.setValue('seed_ip', self.seed_ip.text())
-    
-    # Encrypted credential storage
-    if self.creds_manager.is_unlocked():
-        cred = {
-            'primary_password': self.creds_manager.encrypt_value(self.password.text()),
-            'alternate_password': self.creds_manager.encrypt_value(self.alt_password.text())
-        }
-        self.creds_manager.save_credentials([cred], credentials_path)
+### 1. Initialize the Credential Vault
+```bash
+# Create vault and set master password
+python -m sc2.scng.creds init
+
+# Add SNMP credential
+python -m sc2.scng.creds add snmpv2c snmp-readonly --community public
+
+# Add SSH credential  
+python -m sc2.scng.creds add ssh network-admin --username admin
+
+# List credentials
+python -m sc2.scng.creds list
 ```
 
-## Discovery Engine Integration
+### 2. Test Connectivity
+```bash
+# Quick SNMP test (no vault needed)
+python -m sc2.scng.discovery test 192.168.1.1 --community public
 
-### NetworkDiscovery Backend Process
-The GUI initiates discovery through a worker thread that manages the core `NetworkDiscovery` class:
-
-#### Phase 1: Configuration and Initialization
-```python
-# GUI creates discovery configuration from form inputs
-discovery_config = {
-    'seed_ip': self.seed_ip.text(),
-    'username': self.username.text(),
-    'password': self.password.text(),
-    'max_devices': self.max_devices.value(),
-    'output_dir': Path(self.output_dir.text()),
-    'layout_algo': self.layout_algo.currentText()
-}
-
-# Initialize discovery engine with GUI-provided configuration
-discovery = NetworkDiscovery(DiscoveryConfig(**discovery_config))
+# Test with vault credentials
+python -m sc2.scng.discovery device 192.168.1.1
 ```
 
-Key components initialized:
-- **Queue System** - Device processing queue
-- **Tracking Sets** - Visited IPs, failed devices, unreachable hosts
-- **Logger** - Progress and debug logging with GUI callback
-- **Driver Discovery** - Multi-vendor device support
+### 3. Run Discovery
+```bash
+# Basic crawl
+python -m sc2.scng.discovery crawl 192.168.1.1 -d 3
 
-#### Phase 2: Seed Device Processing
-```python
-# Initialize with seed device from GUI configuration
-seed_device = DeviceInfo(
-    hostname=config.seed_ip,
-    ip=config.seed_ip,
-    username=config.username,
-    password=config.password,
-    timeout=config.timeout
-)
-queue.put(seed_device)
+# With options
+python -m sc2.scng.discovery crawl 192.168.1.1 10.0.0.1 \
+    -d 5 \
+    --domain corp.example.com \
+    --exclude "phone,wireless,linux" \
+    --output ./network_maps
 ```
 
-#### Phase 3: GUI-Integrated Discovery Loop
-The main discovery loop operates with real-time GUI feedback:
-
-```python
-# GUI receives progress updates through Qt signals
-def _handle_progress(self, progress_data):
-    """Handle progress updates from NetworkDiscovery"""
-    ip = progress_data.get('ip')
-    status = progress_data.get('status')
-    
-    # Update GUI elements in real-time
-    if ip and status:
-        self.device_discovered.emit(ip, status)  # Updates device list
-        
-    # Update progress statistics
-    self.progress_update.emit({
-        'devices_discovered': progress_data.get('devices_discovered', 0),
-        'devices_failed': progress_data.get('devices_failed', 0),
-        'devices_queued': progress_data.get('devices_queued', 0)
-    })
+### 4. Launch GUI
+```bash
+python -m sc2.ui
 ```
 
-The discovery process maintains the same core logic while providing GUI integration:
+---
 
-#### 3.1 Device Processing with Visual Feedback
-```python
-# Each device triggers GUI updates
-while not queue.empty() and devices_discovered < max_devices:
-    current_device = queue.get()
-    
-    # GUI shows "processing" status
-    self.emit_device_discovered(current_device.hostname, "processing")
-    
-    # Apply exclusion patterns from GUI configuration
-    exclude_patterns = self.config.exclude_string.split(',')
-    if matches_exclude_pattern(current_device.hostname):
-        continue
+## Architecture
+
+```
+sc2/
+├── scng/                      # Discovery engine
+│   ├── creds/                 # Credential vault
+│   │   ├── vault.py           # Encrypted SQLite storage
+│   │   ├── models.py          # SSH, SNMPv2c, SNMPv3 dataclasses
+│   │   ├── resolver.py        # Credential testing & discovery
+│   │   └── cli.py             # Credential management CLI
+│   │
+│   ├── discovery/             # Discovery engine
+│   │   ├── engine.py          # Async orchestration, crawl logic
+│   │   ├── models.py          # Device, Neighbor, Interface
+│   │   ├── cli.py             # Discovery CLI
+│   │   │
+│   │   ├── snmp/              # SNMP collection
+│   │   │   ├── walker.py      # Async GETBULK table walks
+│   │   │   └── collectors/    # system, interfaces, lldp, cdp, arp
+│   │   │
+│   │   └── ssh/               # SSH fallback
+│   │       ├── client.py      # Paramiko wrapper
+│   │       ├── collector.py   # Vendor detection, command execution
+│   │       └── parsers.py     # TextFSM integration
+│   │
+│   └── utils/
+│       └── tfsm_fire.py       # TextFSM auto-template selection
+│
+└── ui/                        # PyQt6 GUI
+    ├── themes.py              # Theme system (Cyber/Dark/Light)
+    ├── login.py               # Vault unlock dialog
+    ├── main_window.py         # Main application window
+    │
+    └── widgets/               # Custom themed widgets
+        ├── panel.py               # Base panel with title bar
+        ├── connection_panel.py    # Seeds, domains, excludes
+        ├── credentials_panel.py   # Credential management UI
+        ├── discovery_options.py   # Depth, concurrency, toggles
+        ├── output_panel.py        # Output directory config
+        ├── progress_panel.py      # Stats, progress bar
+        ├── discovery_log.py       # Styled log output
+        ├── discovery_controller.py # Discovery↔UI bridge with throttled events
+        ├── topology_preview_panel.py  # Preview container (singleton)
+        ├── topology_viewer.py     # QWebEngineView + Cytoscape.js bridge
+        ├── topology_viewer.html   # Cytoscape.js visualization
+        ├── tag_input.py           # Tag/chip input widget
+        ├── toggle_switch.py       # iOS-style toggle
+        └── stat_box.py            # Counter display boxes
 ```
 
-#### 3.2 Enhanced Visual Progress Tracking
-The GUI provides rich visual feedback during each discovery phase:
-- **Device List Widget**: Real-time device status with color coding (green=success, red=failed)
-- **Progress Statistics**: Live counters for discovered, failed, queued, and total devices
-- **Log Output**: Detailed discovery events with user-selectable log levels
-- **Cancellation Control**: User can abort discovery with immediate cleanup
+---
 
-#### 3.3 Preview and Enhancement Integration
-Upon discovery completion, the GUI automatically:
-```python
-def on_discovery_complete(self, stats):
-    """Handle discovery completion with immediate visualization"""
-    # Load generated network map
-    json_map_path = Path(config['output_dir']) / f"{config['map_name']}.json"
-    self.preview_widget.load_topology(json_map_path)
-    
-    # Enable enhancement and viewer tools
-    self.enhance_button.setEnabled(True)
-    self.viewer_button.setEnabled(True)
+## Topology Viewer
+
+The embedded topology viewer uses [Cytoscape.js](https://js.cytoscape.org/) for interactive network visualization.
+
+### Features
+- **Automatic layout** - COSE algorithm for organic network arrangement
+- **Vendor icons** - Platform-specific SVG icons (Cisco, Arista, Juniper)
+- **Undiscovered nodes** - Peers referenced but not crawled shown with dashed borders and ⚠ markers
+- **Edge labels** - Interface pairs displayed on connections
+- **Click inspection** - Select nodes to view device details
+- **Theme integration** - Colors adapt to current UI theme
+
+### Data Flow
+```
+Discovery Engine → map.json → Base64 encode → QWebChannel → JavaScript → Cytoscape.js
 ```
 
-### Phase 4: Neighbor Processing
+The viewer uses base64 encoding for reliable Python→JavaScript data transfer, avoiding escaping issues with complex JSON payloads.
 
-#### 4.1 Protocol Processing
-For each discovered neighbor, the system processes both CDP and LLDP data:
-```python
-for protocol in ['cdp', 'lldp']:
-    protocol_neighbors = neighbors.get(protocol, {})
-    for neighbor_id, data in protocol_neighbors.items():
-        # Normalize hostname
-        normalized_neighbor_id = _normalize_hostname(neighbor_id)
-        
-        # Process connections
-        for connection in data.get('connections', []):
-            local_port = InterfaceNormalizer.normalize(connection[0])
-            remote_port = InterfaceNormalizer.normalize(connection[1])
+---
+
+## CLI Reference
+
+Secure Cartography provides two CLI modules that can be used independently of the GUI:
+
+- `sc2.scng.creds` - Credential vault management
+- `sc2.scng.discovery` - Network discovery engine
+
+Both CLIs support `--help` on all commands and subcommands.
+
+---
+
+### Credential Management (`sc2.scng.creds`)
+
+```
+usage: scng-creds [-h] [--vault-path VAULT_PATH] [--password PASSWORD]
+                  {init,unlock,add,list,show,remove,set-default,test,discover,change-password,deps} ...
 ```
 
-#### 4.2 Enhanced CDP Processing with TextFSM Fire
-For Cisco IOS devices, the system performs enhanced CDP parsing using the TextFSM Fire engine:
-```python
-if capabilities['platform'] == "ios":
-    get_ios_cdp(current_device, capabilities)
+#### Global Options
+
+| Option | Description |
+|--------|-------------|
+| `-v, --vault-path` | Path to vault database (default: `~/.scng/credentials.db`) |
+| `-p, --password` | Vault password (or set `SCNG_VAULT_PASSWORD` env var) |
+
+#### Commands
+
+##### `init` - Initialize a new vault
+```bash
+python -m sc2.scng.creds init
+python -m sc2.scng.creds init --vault-path /path/to/custom.db
 ```
 
-This addresses NAPALM's limitations by using TextFSM templates to parse `show cdp neighbors detail` output directly:
-```python
-# Use TextFSMAutoEngine for accurate parsing
-engine = TextFSMAutoEngine("secure_cartography/tfsm_templates.db")
-template_name, parsed_data, score = engine.find_best_template(cdp_output, "cdp_neighbors_detail")
+##### `add` - Add credentials
+```bash
+# SSH with password (prompts for password)
+python -m sc2.scng.creds add ssh admin-cred --username admin --password
+
+# SSH with key file
+python -m sc2.scng.creds add ssh key-cred --username automation --key-file ~/.ssh/id_rsa
+
+# SNMPv2c
+python -m sc2.scng.creds add snmpv2c readonly --community public
+
+# SNMPv3 (authPriv)
+python -m sc2.scng.creds add snmpv3 snmpv3-cred \
+    --username snmpuser \
+    --auth-protocol sha256 \
+    --auth-password authpass123 \
+    --priv-protocol aes128 \
+    --priv-password privpass123
 ```
 
-The TextFSM Fire engine provides:
-- **Template Auto-Selection**: Automatically finds the best matching template
-- **Scoring Algorithm**: Evaluates parsing quality based on data completeness
-- **Thread-Safe Operations**: Supports concurrent device processing
-- **Error Recovery**: Graceful handling of parsing failures
+##### `list` - List all credentials
+```bash
+python -m sc2.scng.creds list
+```
+Output shows credential name, type, priority, and default status.
 
-#### 4.3 Connection Mapping
-Each connection is stored with:
-- **Local Port** - Normalized interface name (e.g., "Gi0/1")
-- **Remote Port** - Normalized interface name on neighbor
-- **Neighbor IP** - Management IP address
-- **Platform** - Device platform type
-- **Protocol** - Discovery protocol (CDP/LLDP)
-
-#### 4.4 Queue Management
-New devices are queued for discovery if:
-- Device has a valid IP address
-- Device hasn't been visited or queued
-- Device doesn't match exclusion patterns
-- Maximum device limit hasn't been reached
-
-```python
-if neighbor_ip and not _is_known_device(neighbor_ip):
-    neighbor_device = DeviceInfo(
-        hostname=neighbor_ip,
-        ip=neighbor_ip,
-        username=config.username,
-        password=config.password,
-        timeout=config.timeout
-    )
-    queue.put(neighbor_device)
+##### `show` - Show credential details
+```bash
+python -m sc2.scng.creds show admin-cred
+python -m sc2.scng.creds show admin-cred --reveal  # Show passwords/communities
 ```
 
-### Phase 5: Data Transformation
+##### `remove` - Delete a credential
+```bash
+python -m sc2.scng.creds remove old-credential
+```
 
-#### 5.1 NetworkDevice to Map Format
-Raw device objects are transformed into the standard mapping format:
-```python
-transformed_map = transform_map(network_map)
-# Result format:
+##### `set-default` - Set credential as default for its type
+```bash
+python -m sc2.scng.creds set-default admin-cred
+```
+
+##### `test` - Test credential against a host
+```bash
+python -m sc2.scng.creds test admin-cred 192.168.1.1
+python -m sc2.scng.creds test readonly 10.0.0.1
+```
+
+##### `discover` - Find which credentials work on a host
+```bash
+python -m sc2.scng.creds discover 192.168.1.1
+```
+Tests all credentials and reports which ones succeed.
+
+##### `change-password` - Change vault master password
+```bash
+python -m sc2.scng.creds change-password
+```
+
+##### `deps` - Check required dependencies
+```bash
+python -m sc2.scng.creds deps
+```
+
+---
+
+### Network Discovery (`sc2.scng.discovery`)
+
+```
+usage: scng.discovery [-h] {test,device,crawl} ...
+```
+
+#### Commands
+
+##### `test` - Quick SNMP connectivity test (no vault required)
+```bash
+python -m sc2.scng.discovery test 192.168.1.1 --community public
+python -m sc2.scng.discovery test 192.168.1.1 --community public --verbose
+```
+
+##### `device` - Discover a single device
+```bash
+python -m sc2.scng.discovery device 192.168.1.1
+python -m sc2.scng.discovery device core-switch.example.com --output ./results
+```
+
+##### `crawl` - Recursive network discovery
+```
+usage: scng.discovery crawl [-h] [-d DEPTH] [--domain DOMAINS] [--exclude EXCLUDE_PATTERNS]
+                            [-o OUTPUT] [-v] [--no-dns] [-c CONCURRENCY] [-t TIMEOUT]
+                            [--no-color] [--timestamps] [--json-events]
+                            seeds [seeds ...]
+```
+
+| Option | Description |
+|--------|-------------|
+| `seeds` | One or more seed IP addresses or hostnames |
+| `-d, --depth` | Maximum discovery depth (default: 3) |
+| `--domain` | Domain suffix for hostname resolution (repeatable) |
+| `--exclude` | Exclusion patterns for devices to skip (repeatable, comma-separated) |
+| `-o, --output` | Output directory for results |
+| `-v, --verbose` | Enable debug output |
+| `--no-dns` | Disable DNS lookups; use IPs from LLDP/CDP directly |
+| `-c, --concurrency` | Maximum parallel discoveries (default: 20) |
+| `-t, --timeout` | SNMP timeout in seconds (default: 5) |
+| `--no-color` | Disable colored terminal output |
+| `--timestamps` | Show timestamps in log output |
+| `--json-events` | Output events as JSON lines (for GUI/automation integration) |
+
+#### Crawl Examples
+
+```bash
+# Basic crawl from single seed
+python -m sc2.scng.discovery crawl 192.168.1.1
+
+# Multiple seeds with depth limit
+python -m sc2.scng.discovery crawl 10.1.1.1 10.2.1.1 --depth 5
+
+# With domain suffix for DNS resolution
+python -m sc2.scng.discovery crawl core-sw01 --domain corp.example.com --domain example.com
+
+# Exclude devices by pattern (matches hostname, sys_name, or sysDescr)
+python -m sc2.scng.discovery crawl 192.168.1.1 --exclude "linux,vmware,phone"
+
+# Multiple exclude flags also work
+python -m sc2.scng.discovery crawl 192.168.1.1 \
+    --exclude "linux" \
+    --exclude "phone" \
+    --exclude "wireless"
+
+# Home lab mode (no DNS, faster)
+python -m sc2.scng.discovery crawl 192.168.1.1 --no-dns
+
+# High concurrency for large networks
+python -m sc2.scng.discovery crawl 10.0.0.1 -c 50 -d 10 -o ./enterprise_map
+
+# Full production example
+python -m sc2.scng.discovery crawl \
+    core-rtr-01.dc1.example.com \
+    core-rtr-01.dc2.example.com \
+    --depth 8 \
+    --domain dc1.example.com \
+    --domain dc2.example.com \
+    --exclude "linux,esxi,vcenter,phone,wireless,ups" \
+    --concurrency 30 \
+    --timeout 10 \
+    --output ./network_discovery_$(date +%Y%m%d) \
+    --verbose
+```
+
+#### Exclusion Patterns
+
+The `--exclude` option filters devices from propagating the crawl. Patterns are:
+
+- **Case-insensitive** substring matches
+- **Comma-separated** for multiple patterns in one flag
+- Matched against **three fields**: `sysDescr`, `hostname`, and `sys_name`
+
+This means exclusions work for both SNMP-discovered devices (via sysDescr) and SSH-discovered devices (via hostname).
+
+| Pattern | Matches |
+|---------|---------|
+| `linux` | Any device with "linux" in sysDescr, hostname, or sys_name |
+| `rtr-lab,sw-test` | Devices with "rtr-lab" OR "sw-test" in any field |
+| `phone,wireless,ap-` | Common patterns to skip IP phones and APs |
+
+**Note:** Excluded devices are still discovered (credentials tested, data collected), but their neighbors are not queued for further discovery. This prevents the crawl from expanding through non-network infrastructure.
+
+---
+
+## Output Format
+
+Discovery creates per-device folders with JSON data:
+
+```
+discovery_output/
+├── core-switch-01/
+│   ├── device.json      # System info, interfaces
+│   ├── cdp.json         # CDP neighbors
+│   └── lldp.json        # LLDP neighbors
+├── dist-switch-01/
+│   └── ...
+├── discovery_summary.json
+└── map.json             # Topology with bidirectional validation
+```
+
+### map.json (Topology)
+```json
 {
-    "device_hostname": {
-        "node_details": {
-            "ip": "192.168.1.1",
-            "platform": "ios"
-        },
-        "peers": {
-            "neighbor_hostname": {
-                "ip": "192.168.1.2",
-                "platform": "eos",
-                "connections": [["Gi0/1", "Eth1"]]
-            }
-        }
+  "core-switch-01": {
+    "node_details": {
+      "ip": "10.1.1.1",
+      "platform": "Arista vEOS-lab EOS 4.33.1F"
+    },
+    "peers": {
+      "dist-switch-01": {
+        "ip": "10.1.1.2",
+        "connections": [
+          ["Eth1/1", "Gi0/1"],
+          ["Eth1/2", "Gi0/2"]
+        ]
+      }
     }
+  }
 }
 ```
 
-#### 5.2 Data Enrichment
-The system enriches peer data by cross-referencing discovered devices:
+---
+
+## GUI Theme System
+
+The GUI uses a comprehensive theme system with three built-in themes:
+
+| Theme | Primary | Accent | Use Case |
+|-------|---------|--------|----------|
+| **Cyber** | `#0a0a0f` | `#00ffff` (cyan) | SOC/NOC aesthetic |
+| **Dark** | `#000000` | `#d4af37` (gold) | Professional elegance |
+| **Light** | `#ffffff` | `#2563eb` (blue) | Bright environments |
+
+See [README_Style_Guide.md](README_Style_Guide.md) for widget styling details.
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [README_Creds.md](README_Creds.md) | Credential vault API and CLI |
+| [README_scng.md](README_scng.md) | Discovery engine architecture |
+| [README_SNMP_Discovery.md](README_SNMP_Discovery.md) | SNMP collection details |
+| [README_SSH_Discovery.md](README_SSH_Discovery.md) | SSH fallback module |
+| [README_Progress_events.md](README_Progress_events.md) | GUI progress event reference |
+| [README_Style_Guide.md](README_Style_Guide.md) | PyQt6 widget theming guide |
+
+---
+
+## Development Status
+
+### ✅ Complete
+- Credential vault with encryption
+- SNMP discovery (v2c, v3)
+- SSH fallback discovery
+- Async crawl engine with progress events
+- CLI for creds and discovery
+- Theme system (Cyber/Dark/Light)
+- Login dialog with vault unlock
+- Main window layout with all panels
+- Custom themed widgets
+- Discovery↔UI integration with throttled events
+- Live topology preview with Cytoscape.js
+- Undiscovered peer node visualization
+
+### 📋 Planned
+- Map enhancement tools (manual node positioning, annotations)
+- Credential auto-discovery integration
+- Settings persistence
+- Export topology as PNG/SVG
+- Full-screen topology viewer
+- Topology diff (compare discoveries)
+
+---
+
+## Technical Notes
+
+### Threading Architecture
+The GUI uses a careful threading model to prevent UI lockups:
+
+- **Discovery runs in QThread** - async engine wrapped in worker thread
+- **Events throttled at source** - high-frequency events (stats, topology) rate-limited before emission
+- **QueuedConnection for all signals** - ensures slots execute on main thread
+- **WebView isolation** - no webview updates during active discovery; topology loads once at completion
+
+### Topology Data Transfer
+Python→JavaScript communication uses base64 encoding:
 ```python
-enriched_map = enrich_peer_data(transformed_map)
+# Python side
+b64_data = base64.b64encode(json.dumps(topology).encode()).decode()
+self._run_js(f"TopologyViewer.loadTopologyB64('{b64_data}')")
 ```
-
-This updates peer platform information using actual discovered device data when available.
-
-#### 5.3 Hostname Normalization
-Final hostname normalization ensures consistency:
-- Removes domain suffixes (e.g., "router.domain.com" → "router")
-- Handles special cases (Nexus devices reporting "Kernel" hostname)
-- Merges duplicate entries
-
-### Enhanced Map Visualization and GUI Integration
-
-#### Map Enhancement Tools
-The GUI's "Enhance" button launches the `TopologyEnhanceWidget`, providing professional diagram customization:
-
-```python
-def open_enhance_widget(self):
-    """Open the Topology Enhance Widget in a non-modal window"""
-    self.enhance_window = QDialog(self)
-    self.enhance_window.setWindowTitle("Topology Enhance")
-    
-    # Add the enhance widget
-    self.enhance_widget = TopologyEnhanceWidget()
-    layout.addWidget(self.enhance_widget)
-    
-    self.enhance_window.resize(600, 400)
-    self.enhance_window.show()
+```javascript
+// JavaScript side  
+loadTopologyB64(b64String) {
+    const jsonString = atob(b64String);
+    this.loadTopology(jsonString);
+}
 ```
+This avoids JSON escaping issues with complex network data containing special characters.
 
-#### Interactive Device Icon Mapping
-The enhancement tool transforms basic network diagrams into professional visualizations:
+---
 
-**Icon Customization Features:**
-- **Interactive Icon Editor**: Map discovered device platforms to custom icons
-- **Vendor-Specific Shapes**: 
-  - Cisco devices: Router and switch icons with IOS/NX-OS variants
-  - Arista devices: EOS-specific switch representations
-  - HP/Aruba devices: ProCurve switch icons
-  - Generic devices: Configurable fallback icons
+## Security Considerations
 
-**Multi-Format Icon Support:**
-```python
-# GraphML enhancement for yEd compatibility
-if device_platform == 'ios':
-    node_style = 'cisco_router_icon'
-elif device_platform == 'eos':
-    node_style = 'arista_switch_icon'
-elif device_platform == 'nxos_ssh':
-    node_style = 'cisco_nexus_icon'
-```
+- **Master password** is never stored; derived key is held in memory only while vault is unlocked
+- **Credentials are encrypted** with AES-256-GCM before storage
+- **Salt** is randomly generated per installation
+- **No credentials in logs** - discovery output never includes passwords/communities
+- **Vault auto-locks** when application exits
 
-**Draw.io Integration:**
-- **Custom Stencils**: Network device shape libraries
-- **Automatic Styling**: Platform-based icon assignment
-- **Collaborative Editing**: Maintains compatibility with Draw.io web editor
-- **Professional Templates**: Pre-configured icon sets for enterprise networks
+---
 
-#### GUI Preview and Viewer Integration
-The main interface provides multiple visualization options:
+## Performance
 
-**Map Preview Widget:**
-```python
-class TopologyPreviewWidget:
-    """Embedded network map preview with theme support"""
-    def load_topology(self, json_path):
-        # Load network map data
-        # Apply current theme (dark/light mode)
-        # Render interactive preview
-```
+Typical discovery rates:
+- Single device (SNMP): 2-5 seconds
+- Single device (SSH fallback): 5-15 seconds
+- 100 devices: 3-8 minutes with 20 concurrent workers
+- 750+ devices: ~4-5 hours (production tested, 88%+ success rate)
 
-**Standalone Topology Viewer:**
-```python
-def open_topology_viewer(self):
-    """Launch full-screen interactive topology viewer"""
-    viewer = TopologyViewer(
-        topology_data=topology_data, 
-        dark_mode=self.dark_mode, 
-        parent=self
-    )
-    viewer.show()
-```
+GUI remains responsive during discovery due to throttled event architecture.
 
-#### Theme Integration and Visual Consistency
-The GUI maintains visual consistency across all components:
+---
 
-```python
-def set_dark_mode(self, is_dark: bool):
-    """Apply theme to entire application"""
-    if is_dark:
-        app.setPalette(self.dark_palette)
-        # Update preview widget theme
-        self.preview_widget.dark_mode = is_dark
-        # Regenerate diagrams with dark theme
-        if hasattr(self, 'current_json_path'):
-            self.preview_widget.load_topology(self.current_json_path)
-```
+## License
 
-**Theme Features:**
-- **System-wide Dark/Light Mode**: Consistent across all interface elements
-- **Dynamic Theme Switching**: Real-time theme changes without restart
-- **Diagram Theme Sync**: Network diagrams automatically match interface theme
-- **Preference Persistence**: Theme choice saved with encrypted settings
+This project is licensed under the **GNU General Public License v3.0** - see [LICENSE](LICENSE) for details.
 
-## TextFSM Fire Engine
+GPL v3 is required due to the use of PyQt6.
 
-### Overview
-The TextFSM Fire engine (`tfsm_fire.py`) is a sophisticated template matching system that automatically selects the best TextFSM template for parsing network device output. This addresses limitations in existing parsing libraries by providing intelligent template selection and scoring.
+---
 
-### Core Architecture
+## Author
 
-#### Thread-Safe Database Operations
-```python
-class ThreadSafeConnection:
-    """Thread-local storage for SQLite connections"""
-    def __init__(self, db_path: str, verbose: bool = False):
-        self.db_path = db_path
-        self._local = threading.local()
-    
-    @contextmanager
-    def get_connection(self):
-        """Get a thread-local connection"""
-        if not hasattr(self._local, 'connection'):
-            self._local.connection = sqlite3.connect(self.db_path)
-```
+**Scott Peterman** - Principal Infrastructure Engineer
 
-The engine maintains thread-local SQLite connections to support concurrent device processing without database locking issues.
+- GitHub: [@scottpeterman](https://github.com/scottpeterman)
+- LinkedIn: [scottpeterman](https://www.linkedin.com/in/scottpeterman/)
 
-#### Template Auto-Selection Algorithm
-```python
-def find_best_template(self, device_output: str, filter_string: Optional[str] = None):
-    """Try filtered templates against output and return best match"""
-    best_score = 0
-    # Filter templates by command type
-    templates = self.get_filtered_templates(conn, filter_string)
-    
-    for template in templates:
-        # Parse output with current template
-        parsed = textfsm_template.ParseText(device_output)
-        score = self._calculate_template_score(parsed_dicts, template, device_output)
-        
-        if score > best_score:
-            best_score = score
-            best_template = template['cli_command']
-            best_parsed_output = parsed_dicts
-```
+*Built by a network engineer who got tired of manually drawing topology diagrams.*
 
-### Template Scoring System
-The engine evaluates template effectiveness using multiple factors:
+---
 
-#### Scoring Criteria
-1. **Record Count Scoring (0-30 points)**:
-   - Version commands: 30 points for single record, 15 for multiple
-   - Other commands: 10 points per record (max 30)
+## Acknowledgments
 
-2. **Data Completeness Scoring**:
-   - Evaluates field population rates
-   - Penalizes empty or null values
-   - Rewards comprehensive data extraction
-
-3. **Command Type Matching**:
-   - Exact command matches receive higher scores
-   - Partial command matches receive moderate scores
-   - Generic templates receive lower baseline scores
-
-#### Example Scoring Logic
-```python
-def _calculate_template_score(self, parsed_data: List[Dict], template: sqlite3.Row, raw_output: str) -> float:
-    score = 0.0
-    
-    # Record count scoring
-    num_records = len(parsed_data)
-    if 'version' in template['cli_command'].lower():
-        score += 30 if num_records == 1 else 15
-    else:
-        score += min(30, num_records * 10)
-    
-    # Data completeness evaluation
-    if parsed_data:
-        populated_fields = sum(1 for record in parsed_data 
-                             for value in record.values() 
-                             if value and value.strip())
-        score += populated_fields * 2
-    
-    return score
-```
-
-### Template Database Structure
-The SQLite database contains:
-- **Template Content**: TextFSM template definitions
-- **Command Mappings**: CLI commands to template associations
-- **Metadata**: Template descriptions and vendor information
-- **Performance Metrics**: Historical parsing success rates
-
-### Integration with Network Discovery
-The TextFSM Fire engine integrates seamlessly with the discovery process:
-
-#### Enhanced CDP Processing
-```python
-def get_ios_cdp(self, device, capabilities):
-    """Enhanced CDP parsing using TextFSM Fire"""
-    # Get raw CDP output
-    cdp_output = net_connect.send_command("show cdp neighbors detail")
-    
-    # Use TextFSM Fire for parsing
-    engine = TextFSMAutoEngine("secure_cartography/tfsm_templates.db")
-    template_name, parsed_data, score = engine.find_best_template(
-        cdp_output, 
-        "cdp_neighbors_detail"
-    )
-    
-    if parsed_data and score > 0:
-        # Convert to capabilities schema
-        cdp_neighbors = {}
-        for entry in parsed_data:
-            hostname = entry['NEIGHBOR_NAME'].split('.')[0]
-            cdp_neighbors[hostname] = {
-                'ip': entry['MGMT_ADDRESS'],
-                'platform': 'ios' if 'cisco' in entry['PLATFORM'].lower() else 'unknown',
-                'connections': [[entry['LOCAL_INTERFACE'], entry['NEIGHBOR_INTERFACE']]]
-            }
-```
-
-### Performance Optimizations
-1. **Template Filtering**: Pre-filters templates based on command context
-2. **Lazy Loading**: Templates loaded only when needed
-3. **Connection Pooling**: Thread-local database connections
-4. **Scoring Cache**: Results cached for repeated parsing operations
-
-### Error Handling and Recovery
-- **Graceful Degradation**: Falls back to NAPALM if TextFSM parsing fails
-- **Template Validation**: Verifies template syntax before execution
-- **Verbose Logging**: Detailed parsing attempts for troubleshooting
-- **Thread Safety**: Isolated error handling per processing thread
-
-## CLI Support (`sc.py`)
-
-### Automation Interface
-While the GUI is the primary interface, a CLI version supports automation scenarios:
-
-#### Configuration Processing
-The CLI processes configuration from multiple sources with precedence:
-1. **Defaults** - Base configuration values
-2. **YAML Config** - Configuration file (if provided)
-3. **CLI Arguments** - Command-line parameters
-4. **Environment Variables** - Highest precedence (SC_USERNAME, SC_PASSWORD, etc.)
-
-#### Example Usage
-```bash
-# YAML configuration approach
-sc --config network.yaml --seed-ip 192.168.1.1 --verbose
-
-# Environment variable approach
-SC_USERNAME=admin SC_PASSWORD=secret sc --config base.yaml
-
-# Full CLI specification
-sc --seed-ip 10.1.1.1 --max-devices 100 --exclude-string "sep,phone" --output-dir /tmp/maps
-```
-
-### Phase 6: File Output Generation
-
-#### 6.1 JSON Map Export
-```python
-# Save primary network map
-map_path = output_dir / f"{map_name}.json"
-with open(map_path, "w") as fh:
-    json.dump(normalized_map, indent=2, fp=fh)
-```
-
-#### 6.2 Multiple Format Generation
-The system generates multiple output formats:
-
-**GraphML (.graphml)**
-- Compatible with yEd Graph Editor
-- Supports advanced layout algorithms
-- Professional network diagram capabilities
-
-**Draw.io (.drawio)**
-- Web-based collaborative editing
-- Multiple export formats
-- Custom network device stencils
-
-**SVG (.svg)**
-- Scalable vector graphics
-- Direct preview in applications
-- Supports both light and dark themes
-
-```python
-create_network_diagrams(normalized_map, output_dir, map_name, layout_algo)
-```
-
-#### 6.3 Layout Algorithms
-Multiple layout options are supported:
-- **Kamada-Kawai (kk)** - Force-directed layout for general topologies
-- **Spring (rt)** - Real-time spring layout
-- **Circular** - Circular arrangement for ring topologies
-
-### Phase 7: Visualization Generation
-
-#### 7.1 NetworkX Graph Creation
-```python
-# Create graph from network map
-G = nx.Graph()
-for node, data in map_data.items():
-    G.add_node(node, ip=data['node_details']['ip'])
-    for peer, peer_data in data['peers'].items():
-        if peer in map_data:
-            G.add_edge(node, peer, connection=connection_label)
-```
-
-#### 7.2 SVG Rendering
-The system creates publication-quality SVG diagrams with:
-- **Balloon Layout** - Hierarchical positioning with core devices centered
-- **Interface Labels** - Connection information on edges
-- **Theme Support** - Dark/light mode compatibility
-- **Device Icons** - Vendor-specific visual representations
-
-## Error Handling and Recovery
-
-### Timeout Management
-- **Connection Timeouts** - Individual device connection limits
-- **Global Timeouts** - Overall discovery process limits
-- **Retry Logic** - Platform detection fallbacks (e.g., IOS → NX-OS)
-
-### Platform Detection Fallbacks
-```python
-# Handle Nexus devices misidentified as IOS
-if discovered_hostname in ['Kernel', 'Unknown']:
-    # Retry with nxos_ssh platform
-    alternate_capabilities = get_device_capabilities(
-        alternate_device_with_nxos_platform
-    )
-```
-
-### Progress Tracking
-Real-time statistics are maintained:
-- **Devices Discovered** - Successfully processed devices
-- **Devices Failed** - Connection or processing failures
-- **Devices Queued** - Pending discovery queue size
-- **Unreachable Hosts** - Network connectivity failures
-
-## Output Structure
-
-### File Organization
-```
-output_directory/
-├── map_name.json         # Primary network map data
-├── map_name.graphml      # yEd-compatible format
-├── map_name.drawio       # Draw.io format
-└── map_name.svg          # SVG visualization
-```
-
-### Data Persistence
-- **Credentials** - Securely encrypted and stored
-- **Discovery State** - Progress and statistics tracking
-- **Debug Information** - Detailed logs for troubleshooting (optional)
-
-## Configuration Examples
-
-### YAML Configuration
-```yaml
-seed_ip: 192.168.1.1
-max_devices: 500
-output_dir: "./network_maps"
-verbose: true
-map_name: production_network
-layout: "kk"
-domain: 'company.local'
-exclude: 'test-,dev-,phone'
-timeout: 60
-```
-
-### Environment Variables
-```bash
-export SC_USERNAME=netadmin
-export SC_PASSWORD=secure_password
-export SC_ALT_USERNAME=readonly
-export SC_ALT_PASSWORD=readonly_pass
-```
-
-This comprehensive discovery process enables automated mapping of complex multi-vendor network environments while maintaining security through encrypted credential storage and providing multiple output formats for different use cases.
+- Network visualization powered by [Cytoscape.js](https://js.cytoscape.org/)
+- SNMP operations via [pysnmp-lextudio](https://github.com/lextudio/pysnmp)
+- SSH via [Paramiko](https://www.paramiko.org/)
+- CLI parsing with [TextFSM](https://github.com/google/textfsm)
+- GUI powered by [PyQt6](https://www.riverbankcomputing.com/software/pyqt/)
+- Encryption via [cryptography](https://cryptography.io/)

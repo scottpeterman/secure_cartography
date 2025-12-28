@@ -1,0 +1,189 @@
+"""
+SecureCartography v2 - Topology Preview Panel Widget
+
+Placeholder/container for topology visualization.
+Can be extended to use QWebEngineView for SVG rendering.
+"""
+
+from typing import Optional
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QWidget, QVBoxLayout, QLabel, QFrame, QSizePolicy
+)
+from PyQt6.QtGui import QFont
+
+from ..themes import ThemeColors, ThemeManager
+from .panel import Panel
+
+
+class TopologyPreviewPanel(Panel):
+    """
+    Topology preview panel.
+
+    Shows either:
+    - Placeholder when no topology is loaded
+    - Preview image/SVG of the discovered topology
+
+    Layout:
+    ┌─ TOPOLOGY PREVIEW ───────────────────────────┐
+    │ ┌──────────────────────────────────────────┐ │
+    │ │                                          │ │
+    │ │               🔗                         │ │
+    │ │                                          │ │
+    │ │    Topology preview will appear here     │ │
+    │ │                                          │ │
+    │ └──────────────────────────────────────────┘ │
+    └──────────────────────────────────────────────┘
+
+    Usage:
+        preview = TopologyPreviewPanel(theme_manager=tm)
+
+        # Set placeholder message
+        preview.set_placeholder("Discovering network...")
+
+        # Load preview (future: SVG content)
+        preview.set_preview_html("<svg>...</svg>")
+
+        # Clear
+        preview.clear()
+    """
+
+    def __init__(
+        self,
+        theme_manager: Optional[ThemeManager] = None,
+        parent: Optional[QWidget] = None
+    ):
+        super().__init__(
+            title="TOPOLOGY PREVIEW",
+            icon="🗺️",
+            theme_manager=theme_manager,
+            parent=parent,
+            _defer_theme=True  # Apply theme after _setup_content
+        )
+        self._setup_content()
+        if theme_manager:
+            self.apply_theme(theme_manager.theme)
+
+    def _setup_content(self):
+        """Build the preview panel content."""
+        # Preview container
+        self.preview_frame = QFrame()
+        self.preview_frame.setObjectName("previewFrame")
+        self.preview_frame.setMinimumHeight(200)
+        self.preview_frame.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding
+        )
+
+        preview_layout = QVBoxLayout(self.preview_frame)
+        preview_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        preview_layout.setSpacing(12)
+
+        # Placeholder icon
+        self.placeholder_icon = QLabel("🔗")
+        self.placeholder_icon.setObjectName("placeholderIcon")
+        self.placeholder_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        font = self.placeholder_icon.font()
+        font.setPointSize(32)
+        self.placeholder_icon.setFont(font)
+        preview_layout.addWidget(self.placeholder_icon)
+
+        # Placeholder text
+        self.placeholder_text = QLabel("Topology preview will appear here")
+        self.placeholder_text.setObjectName("placeholderText")
+        self.placeholder_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        preview_layout.addWidget(self.placeholder_text)
+
+        self.content_layout.addWidget(self.preview_frame)
+
+        # For future: QWebEngineView for SVG rendering
+        # self.web_view = None  # Lazy load to avoid import cost
+
+    def set_placeholder(self, message: str, icon: str = "🔗"):
+        """Update placeholder message and icon."""
+        self.placeholder_icon.setText(icon)
+        self.placeholder_text.setText(message)
+        self.placeholder_icon.show()
+        self.placeholder_text.show()
+
+    def set_loading(self):
+        """Show loading state."""
+        self.set_placeholder("Generating topology...", "⏳")
+
+    def set_empty(self):
+        """Show empty state."""
+        self.set_placeholder("No topology data", "📭")
+
+    def set_error(self, message: str = ""):
+        """Show error state."""
+        self.set_placeholder(
+            message if message else "Failed to generate topology",
+            "⚠️"
+        )
+
+    def clear(self):
+        """Reset to default placeholder."""
+        self.set_placeholder("Topology preview will appear here", "🔗")
+
+    def set_preview_html(self, html_content: str):
+        """
+        Set preview content (HTML/SVG).
+
+        Note: Requires QWebEngineView for full functionality.
+        This is a placeholder implementation.
+        """
+        # For future implementation with QWebEngineView:
+        # if not self.web_view:
+        #     from PyQt6.QtWebEngineWidgets import QWebEngineView
+        #     self.web_view = QWebEngineView()
+        #     # Replace placeholder
+        # self.web_view.setHtml(html_content)
+
+        # For now, just hide placeholder if we have content
+        if html_content:
+            self.placeholder_icon.hide()
+            self.placeholder_text.setText("Preview loaded (render not implemented)")
+            self.placeholder_text.show()
+
+    def set_preview_file(self, file_path: str):
+        """
+        Load preview from file.
+
+        Args:
+            file_path: Path to HTML or SVG file
+        """
+        # For future implementation
+        pass
+
+    def _apply_content_theme(self, theme: ThemeColors):
+        """Apply theme to panel content."""
+        self.preview_frame.setStyleSheet(f"""
+            QFrame#previewFrame {{
+                background-color: {theme.bg_tertiary};
+                border: 1px dashed {theme.border_dim};
+                border-radius: 8px;
+            }}
+            
+            QLabel#placeholderIcon {{
+                color: {theme.text_muted};
+                background: transparent;
+                border: none;
+            }}
+            
+            QLabel#placeholderText {{
+                color: {theme.text_muted};
+                font-size: 13px;
+                background: transparent;
+                border: none;
+            }}
+        """)
+
+    def apply_theme(self, theme: ThemeColors):
+        """Apply theme to entire panel."""
+        super().apply_theme(theme)
+        self._apply_content_theme(theme)
+
+    def set_theme(self, theme_manager: ThemeManager):
+        """Update theme manager and apply."""
+        super().set_theme(theme_manager)
+        self._apply_content_theme(theme_manager.theme)
