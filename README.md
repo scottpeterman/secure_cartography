@@ -9,7 +9,7 @@
 Secure Cartography is a network discovery tool that crawls your infrastructure via SNMP and SSH, collecting CDP/LLDP neighbor information to automatically generate topology maps. Built by a network engineer, for network engineers.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_cyber.png" alt="Secure Cartography - Cyber Theme" width="800">
+  <img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/main_cyber.png" alt="Secure Cartography - Cyber Theme" width="800">
 </p>
 
 ---
@@ -77,9 +77,9 @@ Version 2 is a complete rewrite with a modernized architecture:
 
 <table>
 <tr>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_cyber.png" alt="Cyber Theme" width="280"></td>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_dark.png" alt="Dark Theme" width="280"></td>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/main_light.png" alt="Light Theme" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/main_cyber.png" alt="Cyber Theme" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/main_dark.png" alt="Dark Theme" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/main_light.png" alt="Light Theme" width="280"></td>
 </tr>
 <tr>
 <td align="center"><b>Cyber</b> - Teal accents</td>
@@ -90,9 +90,9 @@ Version 2 is a complete rewrite with a modernized architecture:
 
 <table>
 <tr>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/full_run_preview_cyber.png" alt="Topology - Cyber" width="280"></td>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/run_complete_dark.png" alt="Topology - Dark" width="280"></td>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/full_run_preview_light.png" alt="Topology - Light" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/full_run_preview_cyber.png" alt="Topology - Cyber" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/run_complete_dark.png" alt="Topology - Dark" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/full_run_preview_light.png" alt="Topology - Light" width="280"></td>
 </tr>
 <tr>
 <td align="center">Topology Preview - Cyber</td>
@@ -103,9 +103,9 @@ Version 2 is a complete rewrite with a modernized architecture:
 
 <table>
 <tr>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/login_cyan.png" alt="Login - Cyber" width="280"></td>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/login_amber.png" alt="Login - Dark" width="280"></td>
-<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/main/screenshots/login_light.png" alt="Login - Light" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/login_cyan.png" alt="Login - Cyber" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/login_amber.png" alt="Login - Dark" width="280"></td>
+<td><img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/login_light.png" alt="Login - Light" width="280"></td>
 </tr>
 <tr>
 <td align="center">Login - Cyber</td>
