@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 from typing import Optional, Dict, Any, Callable
+from sc2.scng.utils.resource_helper import read_resource_text, get_resource_path, resource_exists
 
 from PyQt6.QtCore import (
     Qt, QObject, pyqtSignal, pyqtSlot, QUrl
@@ -22,7 +23,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
 
-from .platform_icons import PlatformIconManager, get_platform_icon_manager
+from sc2.ui.widgets.platform_icons import PlatformIconManager, get_platform_icon_manager
 
 
 class TopologyBridge(QObject):
@@ -145,20 +146,26 @@ class TopologyViewer(QWidget):
             self._web_view.setHtml(self._get_fallback_html())
 
     def _get_html_path(self) -> Path:
-        """Get path to topology_viewer.html."""
-        # Check relative to this module
-        module_dir = Path(__file__).parent
-        candidates = [
-            module_dir / 'topology_viewer.html',
-            module_dir / 'resources' / 'topology_viewer.html',
-            module_dir.parent / 'resources' / 'topology_viewer.html',
-        ]
+        """Get path to topology_viewer.html using importlib.resources."""
+        # Define where your HTML lives - adjust package name to match your structure
+        # e.g., if topology_viewer.html is in sc2/ui/topology_viewer.html
+        RESOURCE_PACKAGE = 'sc2.ui.widgets'  # <-- adjust this
+        RESOURCE_NAME = 'topology_viewer.html'
 
-        for path in candidates:
-            if path.exists():
-                return path
+        try:
+            return get_resource_path(RESOURCE_PACKAGE, RESOURCE_NAME)
+        except Exception:
+            # Fallback for dev mode - check relative to module
+            module_dir = Path(__file__).parent
+            candidates = [
+                module_dir / 'topology_viewer.html',
+                module_dir / 'resources' / 'topology_viewer.html',
+            ]
+            for path in candidates:
+                if path.exists():
+                    return path
+            return candidates[0]
 
-        return candidates[0]  # Return first candidate even if missing
 
     def _get_fallback_html(self) -> str:
         """Minimal fallback HTML if viewer file is missing."""

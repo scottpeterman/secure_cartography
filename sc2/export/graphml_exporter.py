@@ -20,6 +20,12 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 from xml.dom import minidom
 
+from sc2.scng.utils.resource_helper import (
+    read_resource_bytes,
+    get_resource_dir,
+    iterate_resources,
+    resource_exists, read_resource_text
+)
 
 @dataclass
 class Connection:
@@ -112,13 +118,13 @@ class GraphMLExporter:
     }
 
     def __init__(
-        self,
-        use_icons: bool = True,
-        icons_dir: Optional[Path] = None,
-        include_endpoints: bool = True,
-        layout_type: str = 'grid',
-        font_size: int = 12,
-        font_family: str = "Dialog"
+            self,
+            use_icons: bool = True,
+            icons_dir: Optional[Path] = None,
+            include_endpoints: bool = True,
+            layout_type: str = 'grid',
+            font_size: int = 12,
+            font_family: str = "Dialog"
     ):
         self.use_icons = use_icons
         self.include_endpoints = include_endpoints
@@ -126,70 +132,104 @@ class GraphMLExporter:
         self.font_size = font_size
         self.font_family = font_family
 
-        # Resolve icons directory
+        # Resolve icons directory using importlib.resources
+        self._icons_package = None  # Package path for importlib.resources
+
         if icons_dir:
+            # User provided explicit path - use it directly
             self.icons_dir = Path(icons_dir)
         else:
-            # Default: sc2/ui/assets/icons_lib relative to this module
-            # Assumes this file is at sc2/export/graphml_exporter.py
-            module_dir = Path(__file__).parent
-            self.icons_dir = module_dir.parent / 'ui' / 'assets' / 'icons_lib'
+            # Use package resources - this works in wheels
+            # Adjust package name to match your structure
+            self._icons_package = 'sc2.ui.assets.icons_lib'
 
-            # Fallback: check if running from project root
-            if not self.icons_dir.exists():
-                alt_path = Path('sc2/ui/assets/icons_lib')
-                if alt_path.exists():
-                    self.icons_dir = alt_path
+            # For operations that need a real path, try to get it
+            # This will work for editable installs and source runs
+            try:
+                self.icons_dir = get_resource_dir(self._icons_package)
+            except RuntimeError:
+                # Package is zipped - icons_dir won't work, but _load_icon will
+                self.icons_dir = None
 
-        # Icon state
-        self.icons: Dict[str, str] = {}  # filename -> base64 data
-        self.icon_id_map: Dict[str, int] = {}  # filename -> resource ID
+        # Rest of __init__ stays the same...
+        self.icons: Dict[str, str] = {}
+        self.icon_id_map: Dict[str, int] = {}
         self.next_icon_id = 1
-
-        # Pattern matching
         self.patterns = self.DEFAULT_PATTERNS.copy()
         self.default_icons = self.DEFAULT_ICONS.copy()
-
-        # Load custom patterns if available
         self._load_icon_config()
-
-        # Processing state
         self.processed_connections: Set[tuple] = set()
-
-        # MAC address pattern for endpoint detection
         self.mac_pattern = re.compile(r'^([0-9a-f]{4}\.){2}[0-9a-f]{4}$', re.IGNORECASE)
 
     def _load_icon_config(self):
         """Load icon configuration from JSON if available."""
-        config_path = self.icons_dir / 'platform_icon_map.json'
-        if config_path.exists():
+        config_path = None
+        config_data = None
+
+        # Try package resources first (works in wheels)
+        if self._icons_package:
             try:
-                with open(config_path, 'r') as f:
-                    config = json.load(f)
-                    self.patterns.update(config.get('platform_patterns', {}))
-                    self.default_icons.update(config.get('defaults', {}))
-            except (json.JSONDecodeError, IOError) as e:
-                print(f"Warning: Could not load icon config: {e}")
+                config_data = read_resource_text(
+                    self._icons_package,
+                    'platform_icon_map.json'
+                )
+            except Exception:
+                pass
+
+        # Fallback to filesystem path
+        if config_data is None and self.icons_dir:
+            config_path = self.icons_dir / 'platform_icon_map.json'
+            if config_path.exists():
+                try:
+                    with open(config_path, 'r') as f:
+                        config_data = f.read()
+                except IOError:
+                    pass
+
+        if config_data:
+            try:
+                import json
+                config = json.loads(config_data)
+                self.patterns.update(config.get('platform_patterns', {}))
+                self.default_icons.update(config.get('defaults', {}))
+            except json.JSONDecodeError as e:
+                print(f"Warning: Could not parse icon config: {e}")
 
     def _load_icon(self, filename: str) -> Optional[str]:
         """Load and cache an icon file as base64."""
         if filename in self.icons:
             return self.icons[filename]
 
-        # Try different extensions
         base_name = Path(filename).stem
-        for ext in ['.jpg', '.jpeg', '.png']:
-            icon_path = self.icons_dir / f"{base_name}{ext}"
-            if icon_path.exists():
+
+        # Try package resources first (works in wheels)
+        if self._icons_package:
+            for ext in ['.jpg', '.jpeg', '.png']:
+                resource_name = f"{base_name}{ext}"
                 try:
-                    with open(icon_path, 'rb') as f:
-                        b64_data = base64.b64encode(f.read()).decode('utf-8')
-                        self.icons[filename] = b64_data
-                        return b64_data
-                except IOError as e:
-                    print(f"Warning: Could not load icon {icon_path}: {e}")
+                    icon_bytes = read_resource_bytes(self._icons_package, resource_name)
+                    b64_data = base64.b64encode(icon_bytes).decode('utf-8')
+                    self.icons[filename] = b64_data
+                    return b64_data
+                except Exception:
+                    continue
+
+        # Fallback to filesystem path
+        if self.icons_dir:
+            for ext in ['.jpg', '.jpeg', '.png']:
+                icon_path = self.icons_dir / f"{base_name}{ext}"
+                if icon_path.exists():
+                    try:
+                        with open(icon_path, 'rb') as f:
+                            b64_data = base64.b64encode(f.read()).decode('utf-8')
+                            self.icons[filename] = b64_data
+                            return b64_data
+                    except IOError as e:
+                        print(f"Warning: Could not load icon {icon_path}: {e}")
 
         return None
+
+
 
     def _get_icon_for_node(self, node_id: str, platform: str) -> Tuple[Optional[str], Optional[int]]:
         """

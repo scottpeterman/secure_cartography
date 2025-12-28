@@ -2,6 +2,8 @@
 SC2 Platform Icon Manager
 Loads platform-to-icon mapping from platform_icon_map.json and resolves to actual icon files.
 
+Updated for wheel compatibility using importlib.resources.
+
 Usage:
     from platform_icons import get_platform_icon_manager
 
@@ -11,10 +13,23 @@ Usage:
 """
 
 import json
-import re
+import sys
 from pathlib import Path
 from typing import Optional, Dict, List
 from dataclasses import dataclass, field
+
+# importlib.resources for package resource access (works in wheels)
+if sys.version_info >= (3, 9):
+    from importlib.resources import files, as_file
+else:
+    # pip install importlib_resources for Python 3.7-3.8
+    from importlib_resources import files, as_file
+
+
+# Package containing platform_icon_map.json and icons
+# Adjust to match your actual package structure
+ICONS_PACKAGE = 'sc2.ui.assets.icons_lib'
+CONFIG_FILENAME = 'platform_icon_map.json'
 
 
 @dataclass
@@ -30,6 +45,7 @@ class PlatformIconManager:
 
     config_path: Optional[Path] = None
     icons_dir: Optional[Path] = None
+    _icons_package: Optional[str] = None  # For importlib.resources access
 
     # Loaded from JSON
     platform_patterns: Dict[str, str] = field(default_factory=dict)
@@ -38,17 +54,57 @@ class PlatformIconManager:
 
     def __post_init__(self):
         """Load configuration on init."""
+        # Try package resources first (works in wheels)
+        if self._try_load_from_package():
+            return
+
+        # Fallback to filesystem paths (dev mode)
         if self.config_path is None:
-            # Default location relative to this module
-            self.config_path = self._find_config_path()
+            self.config_path = self._find_config_path_filesystem()
 
         if self.config_path and self.config_path.exists():
-            self._load_config()
+            self._load_config_from_file()
         else:
             self._load_builtin_defaults()
 
-    def _find_config_path(self) -> Optional[Path]:
-        """Find platform_icon_map.json in expected locations."""
+    def _try_load_from_package(self) -> bool:
+        """
+        Try to load config from package resources (importlib.resources).
+        Returns True if successful, False to fall back to filesystem.
+        """
+        try:
+            pkg_files = files(ICONS_PACKAGE)
+            config_traversable = pkg_files.joinpath(CONFIG_FILENAME)
+
+            # Try to read the config
+            config_text = config_traversable.read_text(encoding='utf-8')
+            config = json.loads(config_text)
+
+            # Successfully loaded - store package reference for icon loading
+            self._icons_package = ICONS_PACKAGE
+
+            # Try to get a real filesystem path for icons_dir (optional, for compatibility)
+            try:
+                # This works for editable installs and unzipped packages
+                with as_file(pkg_files) as pkg_path:
+                    self.icons_dir = Path(pkg_path)
+            except Exception:
+                # Zipped package - icons_dir stays None, we'll use _icons_package
+                self.icons_dir = None
+
+            # Load the config data
+            self.platform_patterns = config.get('platform_patterns', {})
+            self.defaults = config.get('defaults', {})
+            self.fallback_patterns = config.get('fallback_patterns', {})
+
+            return True
+
+        except Exception as e:
+            # Package resources not available - fall back to filesystem
+            return False
+
+    def _find_config_path_filesystem(self) -> Optional[Path]:
+        """Find platform_icon_map.json in expected filesystem locations (dev mode)."""
         module_dir = Path(__file__).parent
 
         candidates = [
@@ -68,8 +124,8 @@ class PlatformIconManager:
 
         return None
 
-    def _load_config(self):
-        """Load configuration from JSON file."""
+    def _load_config_from_file(self):
+        """Load configuration from JSON file on filesystem."""
         try:
             with open(self.config_path, 'r') as f:
                 config = json.load(f)
@@ -102,7 +158,20 @@ class PlatformIconManager:
             'default_ata': 'ata.jpg',
         }
 
-        # Find icons directory
+        # Try package resources first
+        try:
+            pkg_files = files(ICONS_PACKAGE)
+            self._icons_package = ICONS_PACKAGE
+            try:
+                with as_file(pkg_files) as pkg_path:
+                    self.icons_dir = Path(pkg_path)
+            except Exception:
+                self.icons_dir = None
+            return
+        except Exception:
+            pass
+
+        # Fall back to filesystem paths
         module_dir = Path(__file__).parent
         candidates = [
             module_dir.parent / 'assets' / 'icons_lib',
@@ -185,46 +254,148 @@ class PlatformIconManager:
         key = f'default_{device_type}'
         return self.defaults.get(key, self.defaults.get('default_unknown'))
 
+    def _read_icon_bytes(self, icon_filename: str) -> Optional[bytes]:
+        """
+        Read icon file bytes, using package resources or filesystem.
+        """
+        # Try package resources first
+        if self._icons_package:
+            try:
+                pkg_files = files(self._icons_package)
+                icon_traversable = pkg_files.joinpath(icon_filename)
+                return icon_traversable.read_bytes()
+            except Exception:
+                pass
+
+            # Try alternate extensions
+            base_name = icon_filename.rsplit('.', 1)[0] if '.' in icon_filename else icon_filename
+            for ext in ['.jpg', '.png', '.svg', '.gif']:
+                try:
+                    icon_traversable = pkg_files.joinpath(base_name + ext)
+                    return icon_traversable.read_bytes()
+                except Exception:
+                    continue
+
+        # Fall back to filesystem
+        if self.icons_dir:
+            icon_path = self.icons_dir / icon_filename
+            if icon_path.exists():
+                return icon_path.read_bytes()
+
+            # Try alternate extensions
+            base_name = icon_filename.rsplit('.', 1)[0] if '.' in icon_filename else icon_filename
+            for ext in ['.jpg', '.png', '.svg', '.gif']:
+                alt_path = self.icons_dir / (base_name + ext)
+                if alt_path.exists():
+                    return alt_path.read_bytes()
+
+        return None
+
     def get_icon_path(self, platform: str, device_name: str = "") -> Optional[Path]:
         """
         Get full path to icon file.
+
+        Note: May return None for zipped packages. Use get_icon_bytes() for
+        guaranteed access in all installation types.
 
         Returns:
             Path object or None if not found
         """
         icon_filename = self.get_icon_for_platform(platform, device_name)
-        if not icon_filename or not self.icons_dir:
+        if not icon_filename:
             return None
 
-        icon_path = self.icons_dir / icon_filename
-        if icon_path.exists():
-            return icon_path
+        # Try to get a real filesystem path
+        if self._icons_package:
+            try:
+                pkg_files = files(self._icons_package)
+                icon_traversable = pkg_files.joinpath(icon_filename)
+                # Use as_file to get a real path (extracts if needed)
+                with as_file(icon_traversable) as real_path:
+                    if real_path.exists():
+                        return real_path
+            except Exception:
+                pass
 
-        # Try without extension variations
-        for ext in ['.jpg', '.png', '.svg', '.gif']:
-            alt_path = self.icons_dir / (icon_filename.rsplit('.', 1)[0] + ext)
-            if alt_path.exists():
-                return alt_path
+        # Fall back to icons_dir
+        if self.icons_dir:
+            icon_path = self.icons_dir / icon_filename
+            if icon_path.exists():
+                return icon_path
+
+            # Try without extension variations
+            for ext in ['.jpg', '.png', '.svg', '.gif']:
+                alt_path = self.icons_dir / (icon_filename.rsplit('.', 1)[0] + ext)
+                if alt_path.exists():
+                    return alt_path
 
         return None
 
-    def get_icon_url(self, platform: str, device_name: str = "") -> str:
+    def get_icon_bytes(self, platform: str, device_name: str = "") -> Optional[bytes]:
         """
-        Get icon as file:// URL for use in web views.
+        Get icon file as bytes. Works reliably in all installation types.
 
         Args:
             platform: Platform string
             device_name: Optional device name for fallback matching
 
         Returns:
-            file:// URL string, or data: URL fallback
+            Icon file bytes or None
         """
-        icon_path = self.get_icon_path(platform, device_name)
+        icon_filename = self.get_icon_for_platform(platform, device_name)
+        if not icon_filename:
+            return None
+        return self._read_icon_bytes(icon_filename)
 
+    def get_icon_base64(self, platform: str, device_name: str = "") -> Optional[str]:
+        """
+        Get icon as base64-encoded string. Useful for embedding in HTML/GraphML.
+
+        Returns:
+            Base64 string or None
+        """
+        import base64
+        icon_bytes = self.get_icon_bytes(platform, device_name)
+        if icon_bytes:
+            return base64.b64encode(icon_bytes).decode('utf-8')
+        return None
+
+    def get_icon_url(self, platform: str, device_name: str = "") -> str:
+        """
+        Get icon as URL for use in web views.
+
+        Args:
+            platform: Platform string
+            device_name: Optional device name for fallback matching
+
+        Returns:
+            file:// URL, data: URL, or fallback SVG URL
+        """
+        # Try to get a file path first
+        icon_path = self.get_icon_path(platform, device_name)
         if icon_path and icon_path.exists():
             return icon_path.as_uri()
 
-        # Fallback to inline SVG
+        # Fall back to data: URL with embedded image
+        icon_bytes = self.get_icon_bytes(platform, device_name)
+        if icon_bytes:
+            import base64
+            # Detect mime type from first bytes
+            if icon_bytes[:3] == b'\xff\xd8\xff':
+                mime = 'image/jpeg'
+            elif icon_bytes[:8] == b'\x89PNG\r\n\x1a\n':
+                mime = 'image/png'
+            elif icon_bytes[:4] == b'GIF8':
+                mime = 'image/gif'
+            elif b'<svg' in icon_bytes[:100]:
+                mime = 'image/svg+xml'
+            else:
+                mime = 'application/octet-stream'
+
+            b64 = base64.b64encode(icon_bytes).decode('utf-8')
+            return f'data:{mime};base64,{b64}'
+
+        # Final fallback to inline SVG
         return self._get_fallback_svg_url(platform)
 
     def _get_fallback_svg_url(self, platform: str) -> str:
@@ -261,12 +432,25 @@ class PlatformIconManager:
 
     def get_available_icons(self) -> List[str]:
         """List all available icon files."""
-        if not self.icons_dir or not self.icons_dir.exists():
-            return []
-
         icons = []
-        for ext in ['*.jpg', '*.png', '*.svg', '*.gif']:
-            icons.extend([p.name for p in self.icons_dir.glob(ext)])
+
+        # Try package resources first
+        if self._icons_package:
+            try:
+                pkg_files = files(self._icons_package)
+                for item in pkg_files.iterdir():
+                    if item.name.endswith(('.jpg', '.png', '.svg', '.gif')):
+                        icons.append(item.name)
+                if icons:
+                    return sorted(icons)
+            except Exception:
+                pass
+
+        # Fall back to filesystem
+        if self.icons_dir and self.icons_dir.exists():
+            for ext in ['*.jpg', '*.png', '*.svg', '*.gif']:
+                icons.extend([p.name for p in self.icons_dir.glob(ext)])
+
         return sorted(icons)
 
 
@@ -301,6 +485,7 @@ if __name__ == '__main__':
     print("=" * 60)
     print(f"Config path: {manager.config_path}")
     print(f"Icons dir: {manager.icons_dir}")
+    print(f"Icons package: {manager._icons_package}")
     print(f"Platform patterns: {len(manager.platform_patterns)}")
     print(f"Fallback patterns: {len(manager.fallback_patterns)}")
     print(f"Available icons: {len(manager.get_available_icons())}")
@@ -311,14 +496,14 @@ if __name__ == '__main__':
         ("Cisco Nexus9000", "dc-spine-01"),
         ("Arista DCS-7050", "leaf-sw-01"),
         ("Juniper QFX5100", "edge-sw-01"),
-        ("Cisco ISR4331", "branch-rtr-01"),
-        ("Cisco ASA 5525", "fw-01"),
+        ("Cisco ISR", "branch-rtr-01"),
+        ("Cisco ASA", "fw-01"),
         ("Linux", "server-01"),
         ("Unknown Platform", "mystery-device"),
     ]
 
     for platform, name in test_platforms:
         icon = manager.get_icon_for_platform(platform, name)
-        path = manager.get_icon_path(platform, name)
-        exists = "✓" if path and path.exists() else "✗"
+        icon_bytes = manager.get_icon_bytes(platform, name)
+        exists = "✓" if icon_bytes else "✗"
         print(f"{platform:25} -> {icon:30} [{exists}]")

@@ -11,9 +11,25 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
+# Read requirements.txt
+def parse_requirements(filename):
+    """Parse requirements.txt, ignoring comments and empty lines."""
+    requirements = []
+    req_file = this_directory / filename
+    if req_file.exists():
+        for line in req_file.read_text().splitlines():
+            line = line.strip()
+            # Skip empty lines, comments, and editable installs
+            if line and not line.startswith('#') and not line.startswith('-e'):
+                # Remove any inline comments
+                if '#' in line:
+                    line = line.split('#')[0].strip()
+                requirements.append(line)
+    return requirements
+
 setup(
     name="secure-cartography",
-    version="2.0.0",
+    version="2.0.1",
     author="Scott Peterman",
     author_email="scottpeterman@gmail.com",
     description="SSH & SNMP-Based Network Discovery and Topology Mapping",
@@ -38,6 +54,7 @@ setup(
             "**/*.svg",
             "**/*.ico",
             "**/*.gif",
+            "**/*.json",
         ],
         "sc2.scng.utils": [
             "tfsm_templates.db",
@@ -51,17 +68,8 @@ setup(
     # Python version requirement
     python_requires=">=3.10",
 
-    # Dependencies
-    install_requires=[
-        "pysnmp>=7.1",
-        "paramiko>=3.0",
-        "textfsm>=1.1",
-        "cryptography>=42.0",
-        "PyQt6>=6.6",
-        "PyQt6-WebEngine>=6.6",
-        "aiofiles>=23.0",
-        "PyYAML>=6.0",
-    ],
+    # Dependencies from requirements.txt
+    install_requires=parse_requirements("requirements.txt"),
 
     # Optional dependencies
     extras_require={
