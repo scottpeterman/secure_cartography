@@ -617,7 +617,7 @@ GPL v3 is required due to the use of PyQt6.
 **Scott Peterman** - Engineer
 
 - GitHub: [@scottpeterman](https://github.com/scottpeterman)
-- LinkedIn: [scottpeterman](https://www.linkedin.com/in/scottpeterman/)
+- LinkedIn: [scottpeterman](https://www.linkedin.com/in/scott-peterman-networkeng/)
 
 *Built by a network engineer who got tired of manually drawing topology diagrams.*
 
