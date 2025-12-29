@@ -122,12 +122,14 @@ class GraphMLExporter:
             use_icons: bool = True,
             icons_dir: Optional[Path] = None,
             include_endpoints: bool = True,
+            connected_only: bool = False,
             layout_type: str = 'grid',
             font_size: int = 12,
             font_family: str = "Dialog"
     ):
         self.use_icons = use_icons
         self.include_endpoints = include_endpoints
+        self.connected_only = connected_only
         self.layout_type = layout_type
         self.font_size = font_size
         self.font_family = font_family
@@ -294,6 +296,7 @@ class GraphMLExporter:
 
         - Creates entries for referenced but undefined peers
         - Optionally filters out endpoints
+        - Optionally filters out standalone (unconnected) nodes
         """
         # Find all referenced nodes
         defined = set(data.keys())
@@ -328,6 +331,30 @@ class GraphMLExporter:
                             if pid not in endpoints
                         }
                     filtered[node_id] = node_copy
+            result = filtered
+
+        # =============================================================
+        # NEW: Filter standalone nodes if connected_only is True
+        # =============================================================
+        if self.connected_only:
+            # Build set of all nodes that have at least one connection
+            connected_nodes = set()
+
+            for node_id, node_data in result.items():
+                if isinstance(node_data, dict):
+                    peers = node_data.get('peers', {})
+                    if peers:
+                        # This node has outgoing connections
+                        connected_nodes.add(node_id)
+                        # All its peers are also connected
+                        connected_nodes.update(peers.keys())
+
+            # Filter to only connected nodes
+            filtered = {}
+            for node_id, node_data in result.items():
+                if node_id in connected_nodes:
+                    filtered[node_id] = node_data
+
             result = filtered
 
         return result

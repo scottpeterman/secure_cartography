@@ -614,7 +614,7 @@ GPL v3 is required due to the use of PyQt6.
 
 ## Author
 
-**Scott Peterman** - Engineer
+**Scott Peterman** - Network Engineer
 
 - GitHub: [@scottpeterman](https://github.com/scottpeterman)
 - LinkedIn: [scottpeterman](https://www.linkedin.com/in/scott-peterman-networkeng/)

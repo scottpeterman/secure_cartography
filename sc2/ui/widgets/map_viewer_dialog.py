@@ -20,7 +20,7 @@ from PyQt6.QtCore import Qt, pyqtSignal, QTimer
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QLabel, QPushButton,
     QFileDialog, QFrame, QComboBox, QMessageBox, QSizePolicy,
-    QToolBar, QStatusBar, QWidget
+    QToolBar, QStatusBar, QWidget, QCheckBox
 )
 from PyQt6.QtGui import QAction, QKeySequence
 
@@ -75,6 +75,7 @@ class MapViewerDialog(QDialog):
         self._current_file: Optional[Path] = None
         self._topology_data: Optional[Dict] = None
         self._viewer_ready = False
+        self._export_connected_only = False  # Track checkbox state
 
         self.setWindowTitle("Map Viewer")
         self.setMinimumSize(1000, 700)
@@ -162,12 +163,27 @@ class MapViewerDialog(QDialog):
 
         toolbar.addSeparator()
 
-        # Export
+        # Export PNG
         export_action = QAction("💾 Export PNG", self)
         export_action.setShortcut(QKeySequence("Ctrl+E"))
         export_action.setToolTip("Export as PNG image (Ctrl+E)")
         export_action.triggered.connect(self._on_export_png)
         toolbar.addAction(export_action)
+
+        toolbar.addSeparator()
+
+        # Connected-only checkbox for export
+        self._connected_only_checkbox = QCheckBox("Connected Only")
+        self._connected_only_checkbox.setObjectName("connectedOnlyCheckbox")
+        self._connected_only_checkbox.setToolTip(
+            "Export only devices with connections\n"
+            "(excludes standalone/orphan nodes)"
+        )
+        self._connected_only_checkbox.setChecked(False)
+        self._connected_only_checkbox.stateChanged.connect(
+            lambda state: setattr(self, '_export_connected_only', state == 2)
+        )
+        toolbar.addWidget(self._connected_only_checkbox)
 
         # Export to yEd GraphML
         export_yed_action = QAction("📊 Export yEd", self)
@@ -397,27 +413,23 @@ class MapViewerDialog(QDialog):
             return
 
         try:
-            # Import exporter (lazy load to avoid circular imports)
             from sc2.export.graphml_exporter import GraphMLExporter
 
-            # Try to get icons directory from icon manager
-            icons_dir = None
-            if hasattr(self._icon_manager, 'icons_dir'):
-                icons_dir = self._icon_manager.icons_dir
-            elif hasattr(self._icon_manager, 'base_path'):
-                icons_dir = self._icon_manager.base_path
-
-            # Create exporter with icons enabled
+            # Create exporter with current options
             exporter = GraphMLExporter(
                 use_icons=True,
-                icons_dir=icons_dir,
                 include_endpoints=True,
+                connected_only=self._export_connected_only,
                 layout_type='grid'
             )
 
-            # Export
             exporter.export(self._topology_data, Path(path))
-            self._status_label.setText(f"Exported: {Path(path).name}")
+
+            # Update status message to reflect filtering
+            status_msg = f"Exported: {Path(path).name}"
+            if self._export_connected_only:
+                status_msg += " (connected only)"
+            self._status_label.setText(status_msg)
 
         except ImportError:
             QMessageBox.warning(
@@ -616,6 +628,29 @@ class MapViewerDialog(QDialog):
                 border: 1px solid {theme.border_dim};
                 selection-background-color: {theme.accent};
                 color: {theme.text_primary};
+            }}
+            
+            QCheckBox#connectedOnlyCheckbox {{
+                color: {theme.text_primary};
+                spacing: 6px;
+                padding: 4px 8px;
+            }}
+            
+            QCheckBox#connectedOnlyCheckbox::indicator {{
+                width: 16px;
+                height: 16px;
+                border: 1px solid {theme.border_dim};
+                border-radius: 3px;
+                background-color: {theme.bg_tertiary};
+            }}
+            
+            QCheckBox#connectedOnlyCheckbox::indicator:checked {{
+                background-color: {theme.accent};
+                border-color: {theme.accent};
+            }}
+            
+            QCheckBox#connectedOnlyCheckbox::indicator:hover {{
+                border-color: {theme.accent};
             }}
             
             QStatusBar#mapViewerStatus {{

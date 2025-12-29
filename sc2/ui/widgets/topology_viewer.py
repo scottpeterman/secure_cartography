@@ -436,7 +436,7 @@ class TopologyViewer(QWidget):
         escaped = json_str.replace('\\', '\\\\').replace("'", "\\'")
         self._run_js(f"TopologyViewer.restorePositions('{escaped}')")
 
-    def export_png_base64(self) -> Optional[str]:
+    def exportexport_png_base64(self) -> Optional[str]:
         """
         Export current view as PNG.
 
