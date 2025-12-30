@@ -486,6 +486,9 @@ class MainWindow(QMainWindow):
         self.action_buttons.test_single_clicked.connect(self._on_test_single)
         self.action_buttons.enhance_map_clicked.connect(self._on_enhance_map)
 
+        # Preview panel expand button
+        self.preview_panel.open_full_viewer.connect(self._on_enhance_map)
+
         # Credentials changes
         self.credentials_panel.credentials_changed.connect(self._on_credentials_changed)
 
@@ -653,6 +656,8 @@ class MainWindow(QMainWindow):
 
     def _on_enhance_map(self):
         """Handle map viewer button click (formerly enhance map)."""
+        from pathlib import Path
+
         # Create dialog if needed (or reuse existing)
         if not hasattr(self, '_map_viewer_dialog') or self._map_viewer_dialog is None:
             self._map_viewer_dialog = MapViewerDialog(
@@ -667,5 +672,17 @@ class MainWindow(QMainWindow):
         self._map_viewer_dialog.show()
         self._map_viewer_dialog.raise_()
         self._map_viewer_dialog.activateWindow()
+
+        # Auto-load map.json from output directory
+        output_dir = self.output_panel.output_directory
+        if output_dir:
+            map_file = Path(output_dir) / "map.json"
+            if map_file.exists():
+                # Only load if it's a different file than what's already loaded
+                current_file = self._map_viewer_dialog._current_file
+                if current_file != map_file:
+                    self._map_viewer_dialog.open_file(str(map_file))
+                    self.log_panel.info(f"Map Viewer opened: {map_file.name}")
+                    return
 
         self.log_panel.info("Map Viewer opened")

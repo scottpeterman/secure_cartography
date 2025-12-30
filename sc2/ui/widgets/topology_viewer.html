@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Topology Viewer</title>
-    
+
     <!-- Cytoscape.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
-    
+
+    <!-- Dagre layout extension for hierarchical graphs -->
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+
     <!-- QWebChannel for Python bridge -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
-    
+
     <style>
         :root {
             --bg-primary: #1a1a2e;
@@ -152,7 +156,8 @@
 
     <div id="controls" class="hidden">
         <button class="ctrl-btn" onclick="TopologyViewer.fitView()">Fit View</button>
-        <button class="ctrl-btn" onclick="TopologyViewer.applyLayout('cose')">Auto Layout</button>
+        <button class="ctrl-btn" onclick="TopologyViewer.applyLayout('dagre')">Hierarchical</button>
+        <button class="ctrl-btn" onclick="TopologyViewer.applyLayout('cose')">Force Layout</button>
         <button class="ctrl-btn" onclick="TopologyViewer.testLoad()">Test Load</button>
     </div>
 
@@ -206,10 +211,20 @@ const TopologyViewer = {
     iconBasePath: '',
     platformMap: null,
     loadCount: 0,
+    dagreAvailable: false,
 
     init() {
         DebugLog.init();
         DebugLog.info('TopologyViewer.init() called');
+
+        // Register dagre extension if available
+        if (typeof cytoscapeDagre !== 'undefined') {
+            cytoscape.use(cytoscapeDagre);
+            this.dagreAvailable = true;
+            DebugLog.info('Dagre layout extension registered');
+        } else {
+            DebugLog.warn('Dagre extension not available - hierarchical layout will fallback');
+        }
 
         // Setup QWebChannel bridge
         if (typeof QWebChannel !== 'undefined') {
@@ -246,9 +261,6 @@ const TopologyViewer = {
 
         this.setupEventHandlers();
         this.hideLoading();
-
-        // Debug controls hidden by default (remove line below to show)
-        // document.getElementById('controls').classList.remove('hidden');
 
         DebugLog.info('Init complete!');
     },
@@ -482,7 +494,10 @@ const TopologyViewer = {
             DebugLog.info('Loaded: ' + this.cy.nodes().length + ' nodes, ' + this.cy.edges().length + ' edges');
 
             this.updateStats();
-            this.applyLayout('cose');
+
+            // Use dagre (hierarchical) as default layout
+            this.applyLayout('dagre');
+
             this.hideLoading();
 
         } catch (error) {
@@ -493,13 +508,39 @@ const TopologyViewer = {
 
     testLoad() {
         const testData = {
-            "test-switch-1": {
-                "node_details": { "ip": "10.0.0.1", "platform": "Cisco Catalyst" },
-                "peers": { "test-switch-2": { "connections": [["Gi0/1", "Gi0/1"]] } }
+            "core-switch": {
+                "node_details": { "ip": "10.0.0.1", "platform": "Cisco Catalyst 9500" },
+                "peers": {
+                    "dist-sw-1": { "connections": [["Gi1/0/1", "Gi0/1"]] },
+                    "dist-sw-2": { "connections": [["Gi1/0/2", "Gi0/1"]] }
+                }
             },
-            "test-switch-2": {
-                "node_details": { "ip": "10.0.0.2", "platform": "Arista DCS" },
-                "peers": { "test-switch-1": { "connections": [["Gi0/1", "Gi0/1"]] } }
+            "dist-sw-1": {
+                "node_details": { "ip": "10.0.1.1", "platform": "Arista DCS-7050" },
+                "peers": {
+                    "core-switch": { "connections": [["Gi0/1", "Gi1/0/1"]] },
+                    "access-1": { "connections": [["Gi1/1", "Gi0/1"]] },
+                    "access-2": { "connections": [["Gi1/2", "Gi0/1"]] }
+                }
+            },
+            "dist-sw-2": {
+                "node_details": { "ip": "10.0.2.1", "platform": "Juniper QFX5100" },
+                "peers": {
+                    "core-switch": { "connections": [["Gi0/1", "Gi1/0/2"]] },
+                    "access-3": { "connections": [["Gi1/1", "Gi0/1"]] }
+                }
+            },
+            "access-1": {
+                "node_details": { "ip": "10.0.10.1", "platform": "Cisco WS-C2960" },
+                "peers": { "dist-sw-1": { "connections": [["Gi0/1", "Gi1/1"]] } }
+            },
+            "access-2": {
+                "node_details": { "ip": "10.0.20.1", "platform": "Cisco WS-C2960" },
+                "peers": { "dist-sw-1": { "connections": [["Gi0/1", "Gi1/2"]] } }
+            },
+            "access-3": {
+                "node_details": { "ip": "10.0.30.1", "platform": "Cisco WS-C2960" },
+                "peers": { "dist-sw-2": { "connections": [["Gi0/1", "Gi1/1"]] } }
             }
         };
         this.loadTopology(JSON.stringify(testData));
@@ -676,17 +717,113 @@ const TopologyViewer = {
         }
     },
 
-    applyLayout(algorithm = 'cose') {
+    applyLayout(algorithm = 'dagre') {
         if (!this.cy || this.cy.nodes().length === 0) return;
 
-        const layouts = {
-            'cose': { name: 'cose', animate: true, animationDuration: 500, nodeRepulsion: 8000, idealEdgeLength: 100, gravity: 0.25 },
-            'grid': { name: 'grid', animate: true, animationDuration: 300 },
-            'circle': { name: 'circle', animate: true, animationDuration: 300 },
-            'breadthfirst': { name: 'breadthfirst', animate: true, animationDuration: 300, directed: false, spacingFactor: 1.5 }
-        };
+        DebugLog.info('Applying layout: ' + algorithm);
 
-        this.cy.layout(layouts[algorithm] || layouts['cose']).run();
+        let layoutConfig;
+
+        switch (algorithm) {
+            case 'dagre':
+                if (this.dagreAvailable) {
+                    layoutConfig = {
+                        name: 'dagre',
+                        rankDir: 'TB',           // Top to Bottom
+                        nodeSep: 60,             // Horizontal spacing
+                        rankSep: 80,             // Vertical spacing between tiers
+                        edgeSep: 10,
+                        ranker: 'network-simplex',
+                        animate: true,
+                        animationDuration: 500,
+                        fit: true,
+                        padding: 30
+                    };
+                } else {
+                    DebugLog.warn('Dagre not available, falling back to breadthfirst');
+                    layoutConfig = {
+                        name: 'breadthfirst',
+                        directed: true,
+                        spacingFactor: 1.5,
+                        animate: true,
+                        animationDuration: 500,
+                        fit: true,
+                        padding: 30
+                    };
+                }
+                break;
+
+            case 'cose':
+                layoutConfig = {
+                    name: 'cose',
+                    animate: true,
+                    animationDuration: 500,
+                    nodeRepulsion: 8000,
+                    idealEdgeLength: 100,
+                    gravity: 0.25,
+                    fit: true,
+                    padding: 30
+                };
+                break;
+
+            case 'concentric':
+                layoutConfig = {
+                    name: 'concentric',
+                    animate: true,
+                    animationDuration: 500,
+                    concentric: function(node) {
+                        return node.degree();
+                    },
+                    levelWidth: function(nodes) {
+                        return Math.max(1, Math.floor(nodes.length / 4));
+                    },
+                    minNodeSpacing: 50,
+                    fit: true,
+                    padding: 30
+                };
+                break;
+
+            case 'grid':
+                layoutConfig = {
+                    name: 'grid',
+                    animate: true,
+                    animationDuration: 300,
+                    fit: true,
+                    padding: 30,
+                    avoidOverlap: true,
+                    condense: true
+                };
+                break;
+
+            case 'circle':
+                layoutConfig = {
+                    name: 'circle',
+                    animate: true,
+                    animationDuration: 300,
+                    fit: true,
+                    padding: 30,
+                    avoidOverlap: true
+                };
+                break;
+
+            case 'breadthfirst':
+                layoutConfig = {
+                    name: 'breadthfirst',
+                    animate: true,
+                    animationDuration: 300,
+                    directed: false,
+                    spacingFactor: 1.5,
+                    fit: true,
+                    padding: 30
+                };
+                break;
+
+            default:
+                DebugLog.warn('Unknown layout: ' + algorithm + ', using dagre');
+                return this.applyLayout('dagre');
+        }
+
+        this.cy.layout(layoutConfig).run();
     },
 
     fitView() {

@@ -12,9 +12,10 @@ Usage:
     dialog.open_file("/path/to/map.json")
 """
 
+import copy
 import json
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Set
 
 from PyQt6.QtCore import Qt, pyqtSignal, QTimer
 from PyQt6.QtWidgets import (
@@ -41,6 +42,171 @@ def theme_colors_to_viewer_theme(theme: ThemeColors) -> Dict[str, str]:
         '--border-color': theme.border_dim,
         '--node-border': theme.accent,
         '--edge-color': theme.accent_dim,
+    }
+
+
+def filter_topology(topology_data: Dict, connected_only: bool = True, include_leaves: bool = False) -> Dict:
+    """
+    Filter topology based on connection criteria.
+
+    Args:
+        topology_data: The topology to filter
+        connected_only: If True, exclude orphan nodes (no connections either direction)
+        include_leaves: If True, include leaf nodes (referenced but no outgoing peers)
+                       If False, only show nodes that have outgoing peer connections
+
+    Connection types:
+    - Orphan: No connections in either direction (always excluded if connected_only=True)
+    - Leaf: Referenced by others but has no outgoing peers (servers, endpoints, phones)
+    - Infrastructure: Has outgoing peer connections (switches, routers, firewalls)
+    """
+    if not topology_data:
+        return topology_data
+
+    # Handle different topology formats
+    if 'nodes' in topology_data:
+        # Cytoscape format: {"nodes": [...], "edges": [...]}
+        return _filter_cytoscape_format(topology_data, connected_only, include_leaves)
+    elif 'cytoscape' in topology_data:
+        # VelocityMaps format: {"cytoscape": {"nodes": [...], "edges": [...]}}
+        filtered_cyto = _filter_cytoscape_format(topology_data['cytoscape'], connected_only, include_leaves)
+        result = topology_data.copy()
+        result['cytoscape'] = filtered_cyto
+        return result
+    else:
+        # SC2 map format: {device_name: {peers: {...}, node_details: {...}}}
+        return _filter_sc2_format(topology_data, connected_only, include_leaves)
+
+
+def _filter_sc2_format(topology: Dict, connected_only: bool, include_leaves: bool) -> Dict:
+    """Filter SC2 native format based on connection criteria."""
+    if not connected_only and include_leaves:
+        # No filtering needed
+        return topology
+
+    # Build set of all referenced peers
+    all_referenced_peers: Set[str] = set()
+    for node_name, node_data in topology.items():
+        if isinstance(node_data, dict):
+            for peer_name in node_data.get('peers', {}).keys():
+                all_referenced_peers.add(peer_name)
+                all_referenced_peers.add(peer_name.lower())
+
+    # Build set of nodes with outgoing peers (infrastructure nodes)
+    nodes_with_peers: Set[str] = set()
+    for node_name, node_data in topology.items():
+        if isinstance(node_data, dict) and node_data.get('peers'):
+            nodes_with_peers.add(node_name)
+            nodes_with_peers.add(node_name.lower())
+
+    # Filter based on criteria
+    # IMPORTANT: Deep copy to avoid mutating original topology data
+    filtered = {}
+    for node_name, node_data in topology.items():
+        if not isinstance(node_data, dict):
+            continue
+
+        has_peers = bool(node_data.get('peers'))
+        is_referenced = (
+            node_name in all_referenced_peers or
+            node_name.lower() in all_referenced_peers
+        )
+
+        # Determine if node should be included (deep copy to prevent mutation)
+        if has_peers:
+            # Infrastructure node - always include
+            filtered[node_name] = copy.deepcopy(node_data)
+        elif is_referenced:
+            # Leaf node - include only if include_leaves is True
+            if include_leaves:
+                filtered[node_name] = copy.deepcopy(node_data)
+        else:
+            # Orphan node - include only if connected_only is False
+            if not connected_only:
+                filtered[node_name] = copy.deepcopy(node_data)
+
+    # Also need to filter peer references if we're excluding leaves
+    if not include_leaves:
+        # Remove peer entries that point to excluded nodes
+        for node_name, node_data in filtered.items():
+            if 'peers' in node_data:
+                filtered_peers = {}
+                for peer_name, peer_data in node_data['peers'].items():
+                    # Keep peer if it's in our filtered set (has peers itself)
+                    peer_in_filtered = (
+                        peer_name in nodes_with_peers or
+                        peer_name.lower() in nodes_with_peers
+                    )
+                    if peer_in_filtered:
+                        filtered_peers[peer_name] = peer_data
+                node_data['peers'] = filtered_peers
+
+    return filtered
+
+
+def _filter_cytoscape_format(cyto_data: Dict, connected_only: bool, include_leaves: bool) -> Dict:
+    """Filter Cytoscape format based on connection criteria."""
+    nodes = cyto_data.get('nodes', [])
+    edges = cyto_data.get('edges', [])
+
+    if not connected_only and include_leaves:
+        # No filtering needed
+        return cyto_data
+
+    # Build set of node IDs that are sources (have outgoing connections)
+    source_ids: Set[str] = set()
+    # Build set of node IDs that are targets (referenced by others)
+    target_ids: Set[str] = set()
+
+    for edge in edges:
+        edge_data = edge.get('data', edge)
+        source = edge_data.get('source', '')
+        target = edge_data.get('target', '')
+        if source:
+            source_ids.add(source)
+        if target:
+            target_ids.add(target)
+
+    # Filter nodes based on criteria
+    filtered_nodes = []
+    included_ids: Set[str] = set()
+
+    for node in nodes:
+        node_data = node.get('data', node)
+        node_id = node_data.get('id', '')
+
+        is_source = node_id in source_ids  # Has outgoing connections
+        is_target = node_id in target_ids  # Referenced by others
+        is_connected = is_source or is_target
+
+        # Determine if node should be included
+        if is_source:
+            # Infrastructure node - always include
+            filtered_nodes.append(node)
+            included_ids.add(node_id)
+        elif is_target:
+            # Leaf node - include only if include_leaves is True
+            if include_leaves:
+                filtered_nodes.append(node)
+                included_ids.add(node_id)
+        else:
+            # Orphan node - include only if connected_only is False
+            if not connected_only:
+                filtered_nodes.append(node)
+                included_ids.add(node_id)
+
+    # Filter edges to only include those between included nodes
+    filtered_edges = []
+    for edge in edges:
+        edge_data = edge.get('data', edge)
+        source = edge_data.get('source', '')
+        target = edge_data.get('target', '')
+        if source in included_ids and target in included_ids:
+            filtered_edges.append(edge)
+
+    return {
+        'nodes': filtered_nodes,
+        'edges': filtered_edges
     }
 
 
@@ -73,9 +239,10 @@ class MapViewerDialog(QDialog):
         self._current_theme: Optional[ThemeColors] = None
         self._icon_manager = icon_manager or get_platform_icon_manager()
         self._current_file: Optional[Path] = None
-        self._topology_data: Optional[Dict] = None
+        self._topology_data: Optional[Dict] = None  # Original unfiltered data
         self._viewer_ready = False
-        self._export_connected_only = False  # Track checkbox state
+        self._connected_only = True  # Default: ON (matches CLI behavior)
+        self._include_leaves = False  # Default: OFF (hide leaf/endpoint nodes)
 
         self.setWindowTitle("Map Viewer")
         self.setMinimumSize(1000, 700)
@@ -138,13 +305,42 @@ class MapViewerDialog(QDialog):
 
         self._layout_combo = QComboBox()
         self._layout_combo.setObjectName("layoutCombo")
-        self._layout_combo.setFixedWidth(120)
-        self._layout_combo.addItem("Auto (CoSE)", "cose")
-        self._layout_combo.addItem("Grid", "grid")
-        self._layout_combo.addItem("Circle", "circle")
-        self._layout_combo.addItem("Hierarchical", "breadthfirst")
+        self._layout_combo.setFixedWidth(130)
+        # Built-in layouts
+        self._layout_combo.addItem("Hierarchical", "dagre")      # 0 - Best for network tiers (requires extension)
+        self._layout_combo.addItem("Force Directed", "cose")     # 1 - Organic clustering
+        self._layout_combo.addItem("Concentric", "concentric")   # 2 - Degree-based rings
+        self._layout_combo.addItem("Grid", "grid")               # 3 - Even spacing
+        self._layout_combo.addItem("Circle", "circle")           # 4 - Ring layout
+        self._layout_combo.addItem("Breadthfirst", "breadthfirst")  # 5 - Tree (needs root)
+        self._layout_combo.setCurrentIndex(0)  # Default to Hierarchical (dagre)
         self._layout_combo.currentIndexChanged.connect(self._on_layout_changed)
         toolbar.addWidget(self._layout_combo)
+
+        toolbar.addSeparator()
+
+        # Connected-only checkbox - NOW AFFECTS THE VIEW (not just export)
+        self._connected_only_checkbox = QCheckBox("Connected Only")
+        self._connected_only_checkbox.setObjectName("connectedOnlyCheckbox")
+        self._connected_only_checkbox.setToolTip(
+            "Show only devices with connections\n"
+            "(hides standalone/orphan nodes)"
+        )
+        self._connected_only_checkbox.setChecked(True)  # Default ON
+        self._connected_only_checkbox.stateChanged.connect(self._on_connected_only_changed)
+        toolbar.addWidget(self._connected_only_checkbox)
+
+        # Show Leaves checkbox - controls visibility of endpoint/leaf nodes
+        self._show_leaves_checkbox = QCheckBox("Show Leaves")
+        self._show_leaves_checkbox.setObjectName("showLeavesCheckbox")
+        self._show_leaves_checkbox.setToolTip(
+            "Show leaf nodes (servers, endpoints, phones)\n"
+            "that don't have their own neighbor data.\n"
+            "Uncheck for infrastructure-only view."
+        )
+        self._show_leaves_checkbox.setChecked(False)  # Default OFF (cleaner view)
+        self._show_leaves_checkbox.stateChanged.connect(self._on_show_leaves_changed)
+        toolbar.addWidget(self._show_leaves_checkbox)
 
         toolbar.addSeparator()
 
@@ -169,21 +365,6 @@ class MapViewerDialog(QDialog):
         export_action.setToolTip("Export as PNG image (Ctrl+E)")
         export_action.triggered.connect(self._on_export_png)
         toolbar.addAction(export_action)
-
-        toolbar.addSeparator()
-
-        # Connected-only checkbox for export
-        self._connected_only_checkbox = QCheckBox("Connected Only")
-        self._connected_only_checkbox.setObjectName("connectedOnlyCheckbox")
-        self._connected_only_checkbox.setToolTip(
-            "Export only devices with connections\n"
-            "(excludes standalone/orphan nodes)"
-        )
-        self._connected_only_checkbox.setChecked(False)
-        self._connected_only_checkbox.stateChanged.connect(
-            lambda state: setattr(self, '_export_connected_only', state == 2)
-        )
-        toolbar.addWidget(self._connected_only_checkbox)
 
         # Export to yEd GraphML
         export_yed_action = QAction("📊 Export yEd", self)
@@ -220,6 +401,43 @@ class MapViewerDialog(QDialog):
         if hasattr(self._viewer, 'node_edit_requested'):
             self._viewer.node_edit_requested.connect(self._on_node_edit_requested)
 
+    def _on_connected_only_changed(self, state: int):
+        """Handle connected-only checkbox toggle - refilter and reload view."""
+        self._connected_only = (state == Qt.CheckState.Checked.value)
+
+        # Reload the view with updated filter
+        if self._topology_data and self._viewer_ready:
+            self._load_topology_to_viewer()
+            self._update_stats()
+
+    def _on_show_leaves_changed(self, state: int):
+        """Handle show-leaves checkbox toggle - refilter and reload view."""
+        self._include_leaves = (state == Qt.CheckState.Checked.value)
+
+        # Reload the view with updated filter
+        if self._topology_data and self._viewer_ready:
+            self._load_topology_to_viewer()
+            self._update_stats()
+
+    def _get_display_topology(self) -> Optional[Dict]:
+        """Get topology data for display, applying filters based on checkbox states."""
+        if not self._topology_data:
+            return None
+
+        # Apply filtering based on current checkbox states
+        return filter_topology(
+            self._topology_data,
+            connected_only=self._connected_only,
+            include_leaves=self._include_leaves
+        )
+
+    def _load_topology_to_viewer(self):
+        """Load the (potentially filtered) topology into the viewer."""
+        display_data = self._get_display_topology()
+        if display_data and self._viewer_ready:
+            self._viewer.load_topology(display_data)
+            QTimer.singleShot(500, self._viewer.fit_view)
+
     def _on_node_edit_requested(self, node_data: dict):
         """Handle double-click request to edit a node."""
         from sc2.ui.widgets.node_edit_dialog import NodeEditDialog
@@ -239,7 +457,7 @@ class MapViewerDialog(QDialog):
         if not node_id:
             return
 
-        # Update local topology data
+        # Update local topology data (the original, unfiltered data)
         if self._topology_data:
             # Detect format and update accordingly
             if 'nodes' in self._topology_data:
@@ -316,8 +534,7 @@ class MapViewerDialog(QDialog):
 
         # Load pending data
         if self._topology_data:
-            self._viewer.load_topology(self._topology_data)
-            QTimer.singleShot(500, self._viewer.fit_view)
+            self._load_topology_to_viewer()
 
     def _on_open_file(self):
         """Open file dialog to select a map JSON."""
@@ -415,11 +632,11 @@ class MapViewerDialog(QDialog):
         try:
             from sc2.export.graphml_exporter import GraphMLExporter
 
-            # Create exporter with current options
+            # Create exporter with current options (use same filter state as view)
             exporter = GraphMLExporter(
                 use_icons=True,
-                include_endpoints=True,
-                connected_only=self._export_connected_only,
+                include_endpoints=self._include_leaves,  # Match view filter
+                connected_only=self._connected_only,
                 layout_type='grid'
             )
 
@@ -427,8 +644,13 @@ class MapViewerDialog(QDialog):
 
             # Update status message to reflect filtering
             status_msg = f"Exported: {Path(path).name}"
-            if self._export_connected_only:
-                status_msg += " (connected only)"
+            filter_notes = []
+            if self._connected_only:
+                filter_notes.append("connected only")
+            if not self._include_leaves:
+                filter_notes.append("infra only")
+            if filter_notes:
+                status_msg += f" ({', '.join(filter_notes)})"
             self._status_label.setText(status_msg)
 
         except ImportError:
@@ -504,7 +726,7 @@ class MapViewerDialog(QDialog):
             QMessageBox.warning(self, "Invalid Format", "Map file must be a JSON object.")
             return False
 
-        # Store data
+        # Store data (unfiltered - filtering happens at display time)
         self._current_file = file_path
         self._topology_data = data
 
@@ -515,10 +737,9 @@ class MapViewerDialog(QDialog):
         self._update_stats()
         self._status_label.setText(f"Loaded: {file_path.name}")
 
-        # Load into viewer
+        # Load into viewer (with filtering if enabled)
         if self._viewer_ready:
-            self._viewer.load_topology(data)
-            QTimer.singleShot(500, self._viewer.fit_view)
+            self._load_topology_to_viewer()
 
         # Emit signal
         self.file_loaded.emit(str(file_path))
@@ -526,31 +747,60 @@ class MapViewerDialog(QDialog):
         return True
 
     def _update_stats(self):
-        """Update stats display."""
+        """Update stats display showing both total and displayed counts."""
         if not self._topology_data:
             self._stats_label.setText("")
             return
 
+        # Count from original data
+        total_nodes, total_edges = self._count_topology(self._topology_data)
+
+        # Count from filtered data
+        display_data = self._get_display_topology()
+        display_nodes, display_edges = self._count_topology(display_data)
+
+        # Build status text
+        if display_nodes < total_nodes:
+            # Filtering is active and reducing node count
+            filter_desc = []
+            if self._connected_only:
+                filter_desc.append("connected")
+            if not self._include_leaves:
+                filter_desc.append("infra only")
+
+            filter_text = ", ".join(filter_desc) if filter_desc else "filtered"
+            self._stats_label.setText(
+                f"Devices: {display_nodes}/{total_nodes} ({filter_text}) | Connections: {display_edges}"
+            )
+        else:
+            # No filtering effect
+            self._stats_label.setText(f"Devices: {total_nodes} | Connections: {total_edges}")
+
+    def _count_topology(self, data: Optional[Dict]) -> tuple:
+        """Count nodes and edges in topology data."""
+        if not data:
+            return 0, 0
+
         # Count nodes and edges based on format
-        if 'nodes' in self._topology_data:
-            nodes = len(self._topology_data['nodes'])
-            edges = len(self._topology_data.get('edges', []))
-        elif 'cytoscape' in self._topology_data:
-            cyto = self._topology_data['cytoscape']
+        if 'nodes' in data:
+            nodes = len(data['nodes'])
+            edges = len(data.get('edges', []))
+        elif 'cytoscape' in data:
+            cyto = data['cytoscape']
             nodes = len(cyto.get('nodes', []))
             edges = len(cyto.get('edges', []))
         else:
             # SC2 map format
-            nodes = len(self._topology_data)
+            nodes = len(data)
             edges = set()
-            for device, data in self._topology_data.items():
-                if isinstance(data, dict):
-                    for peer in data.get('peers', {}).keys():
+            for device, device_data in data.items():
+                if isinstance(device_data, dict):
+                    for peer in device_data.get('peers', {}).keys():
                         edge_id = tuple(sorted([device, peer]))
                         edges.add(edge_id)
             edges = len(edges)
 
-        self._stats_label.setText(f"Devices: {nodes} | Connections: {edges}")
+        return nodes, edges
 
     def _apply_content_theme(self, theme: ThemeColors):
         """Apply theme to dialog content."""
@@ -630,13 +880,13 @@ class MapViewerDialog(QDialog):
                 color: {theme.text_primary};
             }}
             
-            QCheckBox#connectedOnlyCheckbox {{
+            QCheckBox#connectedOnlyCheckbox, QCheckBox#showLeavesCheckbox {{
                 color: {theme.text_primary};
                 spacing: 6px;
                 padding: 4px 8px;
             }}
             
-            QCheckBox#connectedOnlyCheckbox::indicator {{
+            QCheckBox#connectedOnlyCheckbox::indicator, QCheckBox#showLeavesCheckbox::indicator {{
                 width: 16px;
                 height: 16px;
                 border: 1px solid {theme.border_dim};
@@ -644,12 +894,12 @@ class MapViewerDialog(QDialog):
                 background-color: {theme.bg_tertiary};
             }}
             
-            QCheckBox#connectedOnlyCheckbox::indicator:checked {{
+            QCheckBox#connectedOnlyCheckbox::indicator:checked, QCheckBox#showLeavesCheckbox::indicator:checked {{
                 background-color: {theme.accent};
                 border-color: {theme.accent};
             }}
             
-            QCheckBox#connectedOnlyCheckbox::indicator:hover {{
+            QCheckBox#connectedOnlyCheckbox::indicator:hover, QCheckBox#showLeavesCheckbox::indicator:hover {{
                 border-color: {theme.accent};
             }}
             

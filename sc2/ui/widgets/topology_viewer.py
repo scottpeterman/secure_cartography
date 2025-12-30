@@ -361,12 +361,18 @@ class TopologyViewer(QWidget):
 
         self._run_js(f"TopologyViewer.updateNode('{node_id}', '{b64_data}')")
 
-    def apply_layout(self, algorithm: str = 'cose'):
+    def apply_layout(self, algorithm: str = 'dagre'):
         """
         Apply layout algorithm.
 
         Args:
-            algorithm: 'cose', 'grid', 'circle', or 'breadthfirst'
+            algorithm: Layout algorithm name:
+                - 'dagre': Hierarchical/tiered layout (default, best for networks)
+                - 'cose': Force-directed, organic clustering
+                - 'concentric': Degree-based rings (high-degree nodes in center)
+                - 'grid': Even grid spacing
+                - 'circle': Ring around perimeter
+                - 'breadthfirst': Tree layout (needs clear root)
         """
         self._run_js(f"TopologyViewer.applyLayout('{algorithm}')")
 
@@ -633,7 +639,7 @@ if __name__ == '__main__':
             toolbar.addSeparator()
 
             # Layout actions
-            for layout in ['cose', 'grid', 'circle', 'breadthfirst']:
+            for layout in ['dagre', 'cose', 'concentric', 'grid', 'circle', 'breadthfirst']:
                 action = QAction(f"Layout: {layout}", self)
                 action.triggered.connect(
                     lambda checked, l=layout: self.viewer.apply_layout(l)
