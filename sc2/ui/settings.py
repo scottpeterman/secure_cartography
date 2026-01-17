@@ -28,7 +28,7 @@ class AppSettings:
     Add new settings here as needed - they'll automatically
     get defaults and be persisted.
     """
-    theme: str = "cyber"
+    theme: str = "light"  # Changed from "cyber" to "light"
 
     # Discovery defaults (can be overridden in UI)
     default_max_depth: int = 3
@@ -52,7 +52,7 @@ class AppSettings:
             "dark": ThemeName.DARK,
             "light": ThemeName.LIGHT,
         }
-        return theme_map.get(self.theme, ThemeName.CYBER)
+        return theme_map.get(self.theme, ThemeName.LIGHT)  # Default to LIGHT
 
     def set_theme(self, theme: ThemeName):
         """Set theme from ThemeName enum."""

@@ -78,10 +78,11 @@ def run_app():
         """Handle successful vault unlock."""
         nonlocal main_window
 
-        # Create and show main window
+        # Create and show main window - pass settings for theme persistence
         main_window = MainWindow(
             vault=unlocked_vault,
-            theme_name=theme_manager.theme_name
+            theme_name=theme_manager.theme_name,
+            settings=settings  # FIX: Pass settings so MainWindow can persist theme changes
         )
         main_window.show()
 

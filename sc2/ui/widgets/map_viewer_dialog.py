@@ -695,6 +695,30 @@ class MapViewerDialog(QDialog):
         except IOError as e:
             QMessageBox.warning(self, "Save Failed", f"Error saving file: {e}")
 
+    def load_topology(self, data: Dict[str, Any], name: Optional[str] = None):
+        """
+        Load topology data directly (not from file).
+
+        Args:
+            data: Topology dictionary (SC2 format, Cytoscape format, etc.)
+            name: Optional name for display in title bar
+        """
+        if not isinstance(data, dict):
+            return
+
+        self._current_file = None  # No file associated
+        self._topology_data = data
+
+        display_name = name or "Untitled"
+        self.setWindowTitle(f"Map Viewer - {display_name}")
+
+        self._update_stats()
+        self._status_label.setText(f"Loaded: {display_name} (from memory)")
+
+        if self._viewer_ready:
+            self._load_topology_to_viewer()
+
+
     def open_file(self, path: str) -> bool:
         """
         Open and display a map JSON file.

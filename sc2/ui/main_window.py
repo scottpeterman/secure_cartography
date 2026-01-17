@@ -6,7 +6,7 @@ Main application window with:
 - Vault integration
 - Login flow wiring
 """
-
+from threading import settrace
 from typing import Optional
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QFont
 
+from .settings import SettingsManager, get_settings
 from .themes import ThemeManager, ThemeName, ThemeColors, StyledComboBox
 from .widgets import (
     ConnectionPanel,
@@ -29,7 +30,6 @@ from .widgets import (
 from .widgets.credentials_panel import CredentialsPanel
 from .widgets.map_viewer_dialog import MapViewerDialog
 from ..scng.discovery.discovery_controller import DiscoveryController
-
 
 class HeaderBar(QFrame):
     """
@@ -341,11 +341,13 @@ class MainWindow(QMainWindow):
         self,
         vault=None,
         theme_name: ThemeName = ThemeName.CYBER,
+        settings: Optional[SettingsManager] = None,
         parent: Optional[QWidget] = None
     ):
         super().__init__(parent)
         self.vault = vault
         self.theme_manager = ThemeManager(theme_name)
+        self.settings = settings or get_settings()
 
         self.setWindowTitle("Secure Cartography")
         self.setMinimumSize(1200, 800)
@@ -495,6 +497,7 @@ class MainWindow(QMainWindow):
     def _on_theme_changed(self, theme_name: ThemeName):
         """Handle theme change from header."""
         self.theme_manager.set_theme(theme_name)
+        self.settings.set_theme(theme_name)
         self._apply_theme()
 
     def _apply_theme(self):
@@ -655,16 +658,14 @@ class MainWindow(QMainWindow):
         # TODO: Run single device test
 
     def _on_enhance_map(self):
-        """Handle map viewer button click (formerly enhance map)."""
+        """Handle map viewer button click."""
         from pathlib import Path
 
-        # Create dialog if needed (or reuse existing)
         if not hasattr(self, '_map_viewer_dialog') or self._map_viewer_dialog is None:
             self._map_viewer_dialog = MapViewerDialog(
                 theme_manager=self.theme_manager,
                 parent=self
             )
-            # Connect theme changes via header signal (ThemeManager has no signal)
             self.header.theme_changed.connect(
                 lambda _: self._map_viewer_dialog.apply_theme(self.theme_manager.theme)
             )
@@ -673,16 +674,19 @@ class MainWindow(QMainWindow):
         self._map_viewer_dialog.raise_()
         self._map_viewer_dialog.activateWindow()
 
-        # Auto-load map.json from output directory
-        output_dir = self.output_panel.output_directory
-        if output_dir:
-            map_file = Path(output_dir) / "map.json"
-            if map_file.exists():
-                # Only load if it's a different file than what's already loaded
-                current_file = self._map_viewer_dialog._current_file
-                if current_file != map_file:
-                    self._map_viewer_dialog.open_file(str(map_file))
-                    self.log_panel.info(f"Map Viewer opened: {map_file.name}")
-                    return
+        # Load from preview panel data directly
+        topology_data = self.preview_panel.get_topology_data()
 
-        self.log_panel.info("Map Viewer opened")
+        if topology_data:
+            self._map_viewer_dialog.load_topology(topology_data, name="Discovery Map")
+            self.log_panel.info(f"Map Viewer opened with {len(topology_data)} devices")
+        else:
+            # Fallback to file if no data in preview
+            output_dir = self.output_panel.output_directory
+            if output_dir:
+                map_file = Path(output_dir) / "map.json"
+                if map_file.exists():
+                    self._map_viewer_dialog.open_file(str(map_file))
+                    self.log_panel.info(f"Map Viewer loaded: {map_file.name}")
+                    return
+            self.log_panel.info("Map Viewer opened (no topology loaded)")

@@ -202,13 +202,13 @@ class DiscoveryOptionsPanel(Panel):
         # Map name input
         self.content_layout.addSpacing(8)
         mapname_label = FormLabel("MAP NAME")
-        self.content_layout.addWidget(mapname_label)
+        # self.content_layout.addWidget(mapname_label)
 
         self.mapname_input = QLineEdit()
         self.mapname_input.setObjectName("mapnameInput")
         self.mapname_input.setPlaceholderText("network_map_001")
         self.mapname_input.textChanged.connect(self._emit_changed)
-        self.content_layout.addWidget(self.mapname_input)
+        # self.content_layout.addWidget(self.mapname_input)
 
     def _emit_changed(self):
         """Emit options_changed signal."""
