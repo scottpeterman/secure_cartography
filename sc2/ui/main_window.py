@@ -29,7 +29,10 @@ from .widgets import (
 )
 from .widgets.credentials_panel import CredentialsPanel
 from .widgets.map_viewer_dialog import MapViewerDialog
+from .widgets.security_widget import SecurityWidget
+from .help_dialog import HelpDialog
 from ..scng.discovery.discovery_controller import DiscoveryController
+
 
 class HeaderBar(QFrame):
     """
@@ -41,6 +44,7 @@ class HeaderBar(QFrame):
     """
 
     help_clicked = pyqtSignal()
+    security_clicked = pyqtSignal()
     theme_changed = pyqtSignal(ThemeName)
 
     def __init__(
@@ -89,6 +93,14 @@ class HeaderBar(QFrame):
         self.help_btn.clicked.connect(self.help_clicked.emit)
         layout.addWidget(self.help_btn)
 
+        # Security analysis button
+        self.security_btn = QPushButton("🔐 SECURITY")
+        self.security_btn.setObjectName("securityButton")
+        self.security_btn.setToolTip("CVE Vulnerability Analysis")
+        self.security_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.security_btn.clicked.connect(self.security_clicked.emit)
+        layout.addWidget(self.security_btn)
+
         # Theme selector
         self.theme_combo = StyledComboBox()
         self.theme_combo.setObjectName("headerThemeCombo")
@@ -105,7 +117,6 @@ class HeaderBar(QFrame):
 
         self.theme_combo.currentIndexChanged.connect(self._on_theme_changed)
         layout.addWidget(self.theme_combo)
-
 
     def _on_theme_changed(self, index: int):
         """Handle theme selection change."""
@@ -148,6 +159,20 @@ class HeaderBar(QFrame):
             QPushButton#helpButton:hover {{
                 border-color: {theme.accent};
                 color: {theme.accent};
+            }}
+            
+            QPushButton#securityButton {{
+                background-color: transparent;
+                border: 1px solid {theme.border_dim};
+                border-radius: 6px;
+                padding: 8px 16px;
+                color: {theme.text_secondary};
+                font-weight: 500;
+            }}
+            
+            QPushButton#securityButton:hover {{
+                border-color: {theme.accent_danger};
+                color: {theme.accent_danger};
             }}
             
             QComboBox#headerThemeCombo {{
@@ -353,11 +378,15 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1200, 800)
         self.resize(1400, 900)
 
+        # Initialize window references before _apply_theme
+        self._security_window = None
+        self._map_viewer_dialog = None
+        self._help_dialog = None
+
         self._setup_ui()
         self._connect_signals()
         self._apply_theme()
         self.discovery_controller = DiscoveryController(self)
-
 
     def set_vault(self, vault):
         """Set the vault after login."""
@@ -483,6 +512,9 @@ class MainWindow(QMainWindow):
         # Help button
         self.header.help_clicked.connect(self._on_help_clicked)
 
+        # Security analysis button
+        self.header.security_clicked.connect(self._on_security_clicked)
+
         # Action buttons
         self.action_buttons.start_crawl_clicked.connect(self._on_start_crawl)
         self.action_buttons.test_single_clicked.connect(self._on_test_single)
@@ -593,11 +625,48 @@ class MainWindow(QMainWindow):
         self.preview_panel.apply_theme(theme)
         self.log_panel.apply_theme(theme)
 
+        # Sync security window if open
+        if self._security_window and self._security_window.isVisible():
+            self._security_window.apply_theme(theme)
+
+        # Sync map viewer if open
+        if self._map_viewer_dialog and self._map_viewer_dialog.isVisible():
+            self._map_viewer_dialog.apply_theme(theme)
+
+        # Sync help dialog if open
+        if self._help_dialog and self._help_dialog.isVisible():
+            self._help_dialog.apply_theme(theme)
+
     # === Action Handlers ===
 
     def _on_help_clicked(self):
         """Handle help button click."""
-        self.log_panel.info("Help clicked - TODO: Show help dialog")
+        if self._help_dialog is None:
+            self._help_dialog = HelpDialog(
+                theme_manager=self.theme_manager,
+                parent=self
+            )
+
+        # Ensure theme is current
+        self._help_dialog.apply_theme(self.theme_manager.theme)
+        self._help_dialog.show()
+        self._help_dialog.raise_()
+        self._help_dialog.activateWindow()
+
+    def _on_security_clicked(self):
+        """Launch security analysis window."""
+        if self._security_window is None or not self._security_window.isVisible():
+            self._security_window = SecurityWidget(
+                theme_manager=self.theme_manager,
+                parent=None  # Independent window
+            )
+            self._security_window.setWindowTitle("Secure Cartography - Security Analysis")
+            self._security_window.resize(1200, 800)
+            self._security_window.show()
+            self.log_panel.info("Security Analysis window opened")
+        else:
+            self._security_window.raise_()
+            self._security_window.activateWindow()
 
     def _on_credentials_changed(self):
         """Handle credentials being added/removed/modified."""
@@ -646,7 +715,6 @@ class MainWindow(QMainWindow):
             verbose=verbose,
         )
 
-
     def _on_test_single(self):
         """Handle test single button click."""
         seeds = self.connection_panel.seeds
@@ -661,13 +729,10 @@ class MainWindow(QMainWindow):
         """Handle map viewer button click."""
         from pathlib import Path
 
-        if not hasattr(self, '_map_viewer_dialog') or self._map_viewer_dialog is None:
+        if self._map_viewer_dialog is None:
             self._map_viewer_dialog = MapViewerDialog(
                 theme_manager=self.theme_manager,
                 parent=self
-            )
-            self.header.theme_changed.connect(
-                lambda _: self._map_viewer_dialog.apply_theme(self.theme_manager.theme)
             )
 
         self._map_viewer_dialog.show()

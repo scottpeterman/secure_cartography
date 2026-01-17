@@ -28,6 +28,7 @@ Version 2 is a complete rewrite with a modernized architecture:
 | SNMP Support | v2c only | **v2c and v3 (authPriv)** |
 | GUI | PyQt5 | **PyQt6 with theme support (Cyber/Dark/Light)** |
 | Topology Viewer | External | **Embedded Cytoscape.js with live preview** |
+| Security Analysis | None | **CVE vulnerability scanning via NIST NVD** |
 
 ---
 
@@ -49,6 +50,19 @@ Version 2 is a complete rewrite with a modernized architecture:
 - **Priority ordering** - try credentials in sequence until one works
 - **Credential discovery** - auto-detect which credentials work on which devices
 
+### Security Analysis (CVE Vulnerability Scanning)
+- **Platform-to-CPE mapping** - automatically parses discovered platform strings
+- **NIST NVD integration** - queries National Vulnerability Database for CVEs
+- **Severity color-coding** - CRITICAL/HIGH/MEDIUM/LOW at a glance
+- **Local CVE cache** - SQLite cache avoids repeated API calls
+- **Export reports** - CSV export with affected devices per CVE
+- **Device-centric view** - "Export by Device" shows CVE counts per device
+- **Multi-vendor support** - Cisco IOS/IOS-XE/NX-OS, Arista EOS, Juniper JUNOS, Palo Alto, Fortinet
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/sec_vuln.png" alt="Security Analysis - CVE Vulnerability Scanning" width="800">
+</p>
+
 ### Live Topology Preview
 - **Embedded Cytoscape.js viewer** - interactive network visualization
 - **Real-time rendering** - topology displayed immediately after discovery
@@ -64,12 +78,14 @@ Version 2 is a complete rewrite with a modernized architecture:
 - **Click-to-inspect** - node details (hostname, IP, platform) on selection
 
 ### Supported Platforms
-| Vendor | SNMP | SSH | Notes |
-|--------|------|-----|-------|
-| Cisco IOS/IOS-XE | ✓ | ✓ | CDP + LLDP |
-| Cisco NX-OS | ✓ | ✓ | CDP + LLDP |
-| Arista EOS | ✓ | ✓ | LLDP primary |
-| Juniper JUNOS | ✓ | ✓ | LLDP primary |
+| Vendor | SNMP | SSH | CVE Mapping |
+|--------|------|-----|-------------|
+| Cisco IOS/IOS-XE | ✓ | ✓ | ✓ |
+| Cisco NX-OS | ✓ | ✓ | ✓ |
+| Arista EOS | ✓ | ✓ | ✓ |
+| Juniper JUNOS | ✓ | ✓ | ✓ |
+| Palo Alto PAN-OS | - | ✓ | ✓ |
+| Fortinet FortiOS | - | ✓ | ✓ |
 
 ---
 
@@ -184,6 +200,50 @@ python -m sc2.scng.discovery crawl 192.168.1.1 10.0.0.1 \
 python -m sc2.ui
 ```
 
+### 5. Security Analysis
+After running discovery, click the **🔐 SECURITY** button in the header bar to open the Security Analysis window:
+
+1. **Load CSV** - Import the `devices.csv` from your discovery output
+2. **Review Mappings** - Verify auto-detected platform → CPE mappings
+3. **Sync Selected** - Query NIST NVD for CVEs (optional: add free API key for faster rate limits)
+4. **Analyze Results** - Review CVEs sorted by severity
+5. **Export Report** - Generate CSV with CVEs and affected devices
+
+---
+
+## Security Analysis Workflow
+
+The Security Analysis module transforms your network inventory into an actionable vulnerability report.
+
+### Platform Recognition
+Secure Cartography automatically parses platform strings into CPE (Common Platform Enumeration) format:
+
+```
+"Cisco IOS IOS 15.2(4.0.55)E" → cpe:2.3:o:cisco:ios:15.2(4.0.55)e:*:*:*:*:*:*:*
+"Arista vEOS-lab EOS 4.33.1F" → cpe:2.3:o:arista:eos:4.33.1f:*:*:*:*:*:*:*
+```
+
+### CVE Lookup
+Queries the NIST National Vulnerability Database for known vulnerabilities:
+- Results cached locally in `~/.scng/cve_cache.db`
+- Free NVD API key increases rate limits (get one at [nvd.nist.gov](https://nvd.nist.gov/developers/request-an-api-key))
+
+### Export Options
+Two export formats for different use cases:
+
+| Export | Format | Use Case |
+|--------|--------|----------|
+| **Export Report** | One row per CVE | Security team review, compliance audits |
+| **Export by Device** | One row per device | Remediation planning, patch prioritization |
+
+### Jump Host Workflow
+When your desktop doesn't have SNMP access:
+
+1. SSH to a jump host with network access
+2. Run discovery via CLI: `python -m sc2.scng.discovery crawl ...`
+3. Copy `devices.csv` back to your desktop
+4. Open in GUI → Security Analysis → Load CSV → Sync
+
 ---
 
 ## Architecture
@@ -218,6 +278,7 @@ sc2/
     ├── themes.py              # Theme system (Cyber/Dark/Light)
     ├── login.py               # Vault unlock dialog
     ├── main_window.py         # Main application window
+    ├── help_dialog.py         # Help system (GUI/CLI/Security docs)
     │
     └── widgets/               # Custom themed widgets
         ├── panel.py               # Base panel with title bar
@@ -231,6 +292,8 @@ sc2/
         ├── topology_preview_panel.py  # Preview container (singleton)
         ├── topology_viewer.py     # QWebEngineView + Cytoscape.js bridge
         ├── topology_viewer.html   # Cytoscape.js visualization
+        ├── map_viewer_dialog.py   # Full-screen topology viewer
+        ├── security_widget.py     # CVE vulnerability analysis
         ├── tag_input.py           # Tag/chip input widget
         ├── toggle_switch.py       # iOS-style toggle
         └── stat_box.py            # Counter display boxes
@@ -249,6 +312,7 @@ The embedded topology viewer uses [Cytoscape.js](https://js.cytoscape.org/) for 
 - **Edge labels** - Interface pairs displayed on connections
 - **Click inspection** - Select nodes to view device details
 - **Theme integration** - Colors adapt to current UI theme
+- **yEd Export** - Export to GraphML for professional diagrams with port labels
 
 ### Data Flow
 ```
@@ -474,7 +538,9 @@ discovery_output/
 │   └── lldp.json        # LLDP neighbors
 ├── dist-switch-01/
 │   └── ...
+├── devices.csv          # Device inventory (for Security Analysis)
 ├── discovery_summary.json
+├── topology.graphml     # yEd-compatible graph
 └── map.json             # Topology with bidirectional validation
 ```
 
@@ -497,6 +563,13 @@ discovery_output/
     }
   }
 }
+```
+
+### devices.csv (Security Analysis Input)
+```csv
+hostname,ip,platform,vendor,model,serial
+core-switch-01,10.1.1.1,Cisco IOS IOS 15.2(4.0.55)E,cisco,WS-C3850-24T,FCW2134L0NK
+dist-switch-01,10.1.1.2,Arista vEOS-lab EOS 4.33.1F,arista,vEOS,SN-VEOS-01
 ```
 
 ---
@@ -543,13 +616,15 @@ See [README_Style_Guide.md](README_Style_Guide.md) for widget styling details.
 - Discovery↔UI integration with throttled events
 - Live topology preview with Cytoscape.js
 - Undiscovered peer node visualization
+- Security Analysis with CVE vulnerability scanning
+- Export to yEd (GraphML with port labels)
+- Built-in help system
 
 ### 📋 Planned
 - Map enhancement tools (manual node positioning, annotations)
 - Credential auto-discovery integration
 - Settings persistence
 - Export topology as PNG/SVG
-- Full-screen topology viewer
 - Topology diff (compare discoveries)
 
 ---
@@ -580,6 +655,14 @@ loadTopologyB64(b64String) {
 ```
 This avoids JSON escaping issues with complex network data containing special characters.
 
+### Security Analysis Architecture
+The Security Widget operates independently of the discovery engine:
+- **Platform parsing** - regex patterns extract vendor/product/version from sysDescr strings
+- **CPE generation** - converts parsed data to NIST CPE 2.3 format
+- **NVD API client** - async queries with rate limiting and caching
+- **SQLite cache** - `~/.scng/cve_cache.db` stores CVE data to avoid repeated API calls
+- **Device tracking** - maps CVEs back to specific hostnames/IPs from discovery CSV
+
 ---
 
 ## Security Considerations
@@ -589,6 +672,7 @@ This avoids JSON escaping issues with complex network data containing special ch
 - **Salt** is randomly generated per installation
 - **No credentials in logs** - discovery output never includes passwords/communities
 - **Vault auto-locks** when application exits
+- **CVE cache is local** - no sensitive data sent to NVD (only CPE queries)
 
 ---
 
@@ -599,6 +683,11 @@ Typical discovery rates:
 - Single device (SSH fallback): 5-15 seconds
 - 100 devices: 3-8 minutes with 20 concurrent workers
 - 750+ devices: ~4-5 hours (production tested, 88%+ success rate)
+
+Security Analysis:
+- NVD API (no key): 5 requests per 30 seconds
+- NVD API (with key): 50 requests per 30 seconds
+- Cached lookups: instant
 
 GUI remains responsive during discovery due to throttled event architecture.
 
@@ -631,3 +720,4 @@ GPL v3 is required due to the use of PyQt6.
 - CLI parsing with [TextFSM](https://github.com/google/textfsm)
 - GUI powered by [PyQt6](https://www.riverbankcomputing.com/software/pyqt/)
 - Encryption via [cryptography](https://cryptography.io/)
+- CVE data from [NIST National Vulnerability Database](https://nvd.nist.gov/)

@@ -16,3 +16,4 @@ PyQt6-WebEngine>=6.6         # Embedded topology viewer (Cytoscape.js)
 aiofiles>=23.0               # Async file I/O for non-blocking output
 PyYAML>=6.0                  # Configuration file support
 click>=8.0.0
+requests>=2.30.0
