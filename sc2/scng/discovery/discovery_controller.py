@@ -308,7 +308,6 @@ class DiscoveryController(QObject):
 
     def _safe_call(self, obj, method_name: str, *args, **kwargs):
         """Safely call a method if it exists."""
-        print(f"[_safe_call] obj={type(obj).__name__}, method={method_name}, hasattr={hasattr(obj, method_name)}")
         if obj and hasattr(obj, method_name):
             method = getattr(obj, method_name)
             if callable(method):
@@ -360,7 +359,7 @@ class DiscoveryController(QObject):
     def start_crawl(
         self,
         seeds: List[str],
-        max_depth: int = 3,
+        max_depth: int = 5,
         domains: Optional[List[str]] = None,
         exclude_patterns: Optional[List[str]] = None,
         output_dir: Optional[Path] = None,

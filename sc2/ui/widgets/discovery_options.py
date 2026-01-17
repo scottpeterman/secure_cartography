@@ -124,7 +124,7 @@ class DiscoveryOptionsPanel(Panel):
         self.depth_spin = QSpinBox()
         self.depth_spin.setObjectName("depthSpin")
         self.depth_spin.setRange(1, 10)
-        self.depth_spin.setValue(3)
+        self.depth_spin.setValue(5)
         self.depth_spin.valueChanged.connect(self._emit_changed)
         depth_group.addWidget(self.depth_spin)
         numbers_row.addLayout(depth_group)

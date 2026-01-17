@@ -136,7 +136,7 @@ class ConnectionPanel(Panel):
 
         self.excludes_input = QLineEdit()
         self.excludes_input.setObjectName("excludesInput")
-        self.excludes_input.setPlaceholderText("e.g., *phone*, *wireless*")
+        self.excludes_input.setPlaceholderText("e.g., SEP, VM")
         self.excludes_input.textChanged.connect(self.excludes_changed.emit)
         self.content_layout.addWidget(self.excludes_input)
 

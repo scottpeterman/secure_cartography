@@ -31,7 +31,7 @@ class AppSettings:
     theme: str = "light"  # Changed from "cyber" to "light"
 
     # Discovery defaults (can be overridden in UI)
-    default_max_depth: int = 3
+    default_max_depth: int = 5
     default_concurrency: int = 20
     default_timeout: int = 5
 

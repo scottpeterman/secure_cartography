@@ -305,14 +305,14 @@ class CredentialVault:
         if not password and not key_content:
             raise ValueError("Must provide password or SSH key")
 
-        # Build secrets JSON
+        # Build secrets JSON - strip whitespace from all values
         secrets = {}
         if password:
-            secrets["password"] = password
+            secrets["password"] = password.strip()
         if key_content:
-            secrets["key_content"] = key_content
+            secrets["key_content"] = key_content.strip()
         if key_passphrase:
-            secrets["key_passphrase"] = key_passphrase
+            secrets["key_passphrase"] = key_passphrase.strip()
 
         secrets_encrypted = self._encryption.encrypt(json.dumps(secrets))
 
@@ -362,11 +362,15 @@ class CredentialVault:
         secrets = json.loads(self._encryption.decrypt(row['secrets_encrypted']))
         settings = json.loads(row['settings_json'] or '{}')
 
+        # Helper to safely strip string values
+        def _strip(val):
+            return val.strip() if val else val
+
         return SSHCredential(
             username=row['display_username'],
-            password=secrets.get('password'),
-            key_content=secrets.get('key_content'),
-            key_passphrase=secrets.get('key_passphrase'),
+            password=_strip(secrets.get('password')),
+            key_content=_strip(secrets.get('key_content')),
+            key_passphrase=_strip(secrets.get('key_passphrase')),
             port=row['port'] or 22,
             timeout_seconds=settings.get('timeout_seconds', 30),
         )
@@ -406,7 +410,8 @@ class CredentialVault:
         """
         self._require_unlocked()
 
-        secrets = {"community": community}
+        # Strip whitespace from community string
+        secrets = {"community": community.strip() if community else community}
         secrets_encrypted = self._encryption.encrypt(json.dumps(secrets))
 
         settings = {
@@ -447,8 +452,13 @@ class CredentialVault:
         secrets = json.loads(self._encryption.decrypt(row['secrets_encrypted']))
         settings = json.loads(row['settings_json'] or '{}')
 
+        # Strip whitespace from community string
+        community = secrets['community']
+        if community:
+            community = community.strip()
+
         return SNMPv2cCredential(
-            community=secrets['community'],
+            community=community,
             port=row['port'] or 161,
             timeout_seconds=settings.get('timeout_seconds', 5),
             retries=settings.get('retries', 2),
@@ -518,9 +528,9 @@ class CredentialVault:
             "priv_protocol": priv_protocol.value,
         }
         if auth_password:
-            secrets["auth_password"] = auth_password
+            secrets["auth_password"] = auth_password.strip()
         if priv_password:
-            secrets["priv_password"] = priv_password
+            secrets["priv_password"] = priv_password.strip()
 
         secrets_encrypted = self._encryption.encrypt(json.dumps(secrets))
 
@@ -565,12 +575,16 @@ class CredentialVault:
         secrets = json.loads(self._encryption.decrypt(row['secrets_encrypted']))
         settings = json.loads(row['settings_json'] or '{}')
 
+        # Helper to safely strip string values
+        def _strip(val):
+            return val.strip() if val else val
+
         return SNMPv3Credential(
             username=row['display_username'],
             auth_protocol=SNMPv3AuthProtocol(secrets.get('auth_protocol', 'none')),
-            auth_password=secrets.get('auth_password'),
+            auth_password=_strip(secrets.get('auth_password')),
             priv_protocol=SNMPv3PrivProtocol(secrets.get('priv_protocol', 'none')),
-            priv_password=secrets.get('priv_password'),
+            priv_password=_strip(secrets.get('priv_password')),
             context_name=settings.get('context_name', ''),
             context_engine_id=settings.get('context_engine_id'),
             port=row['port'] or 161,

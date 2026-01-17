@@ -373,6 +373,12 @@ class MapViewerDialog(QDialog):
         export_yed_action.triggered.connect(self._on_export_graphml)
         toolbar.addAction(export_yed_action)
 
+        export_csv_action = QAction("📋 Export CSV", self)
+        export_csv_action.setShortcut(QKeySequence("Ctrl+Shift+E"))
+        export_csv_action.setToolTip("Export nodes and edges to CSV (Ctrl+Shift+E)")
+        export_csv_action.triggered.connect(self._on_export_csv)
+        toolbar.addAction(export_csv_action)
+
         # Save (for edited topology)
         save_action = QAction("📄 Save Map", self)
         save_action.setShortcut(QKeySequence.StandardKey.Save)
@@ -418,6 +424,186 @@ class MapViewerDialog(QDialog):
         if self._topology_data and self._viewer_ready:
             self._load_topology_to_viewer()
             self._update_stats()
+
+    def _on_export_csv(self):
+        """Export device inventory to CSV."""
+        if not self._topology_data:
+            QMessageBox.warning(self, "Export", "No topology loaded to export.")
+            return
+
+        # Get save path
+        default_name = self._current_file.stem + ".csv" if self._current_file else "devices.csv"
+        start_dir = str(self._current_file.parent / default_name) if self._current_file else default_name
+
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Export Device Inventory to CSV",
+            start_dir,
+            "CSV Files (*.csv)"
+        )
+
+        if not path:
+            return
+
+        try:
+            import csv
+
+            # Get filtered topology (respects current view filters)
+            display_data = self._get_display_topology()
+            devices = self._extract_device_inventory(display_data)
+
+            if not devices:
+                QMessageBox.warning(self, "Export", "No devices to export.")
+                return
+
+            # Collect all fields across all devices
+            all_fields = set()
+            for device in devices:
+                all_fields.update(device.keys())
+
+            # Order fields sensibly
+            priority = ['hostname', 'ip', 'platform', 'model', 'serial', 'version', 'site', 'role']
+            fieldnames = [f for f in priority if f in all_fields]
+            fieldnames += sorted(f for f in all_fields if f not in fieldnames)
+
+            with open(path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(devices)
+
+            self._status_label.setText(f"Exported: {Path(path).name} ({len(devices)} devices)")
+
+        except Exception as e:
+            QMessageBox.warning(self, "Export Failed", f"Error exporting CSV: {e}")
+
+    def _extract_device_inventory(self, data: Optional[Dict]) -> list:
+        """Extract flat device inventory from topology data."""
+        if not data:
+            return []
+
+        devices = []
+
+        if 'nodes' in data:
+            # Cytoscape format
+            for node in data.get('nodes', []):
+                node_data = node.get('data', node)
+                devices.append(dict(node_data))
+
+        elif 'cytoscape' in data:
+            # VelocityMaps format
+            return self._extract_device_inventory(data['cytoscape'])
+
+        else:
+            # SC2 map format
+            for device_name, device_data in data.items():
+                if not isinstance(device_data, dict):
+                    continue
+
+                node_details = device_data.get('node_details', {})
+                record = {'hostname': device_name}
+
+                # Pull from node_details first, then top-level
+                for key in ['ip', 'platform', 'model', 'serial', 'version', 'site', 'role', 'vendor']:
+                    val = node_details.get(key) or device_data.get(key)
+                    if val:
+                        record[key] = val
+
+                # Add any other scalar fields from node_details
+                for k, v in node_details.items():
+                    if k not in record and isinstance(v, (str, int, float, bool)):
+                        record[k] = v
+
+                devices.append(record)
+
+        return devices
+
+    def _extract_nodes_edges(self, data: Optional[Dict]) -> tuple:
+        """
+        Extract nodes and edges from topology data in any supported format.
+
+        Returns:
+            Tuple of (nodes_list, edges_list) where each is a list of dicts
+        """
+        if not data:
+            return [], []
+
+        nodes = []
+        edges = []
+
+        if 'nodes' in data:
+            # Cytoscape format: {"nodes": [...], "edges": [...]}
+            for node in data.get('nodes', []):
+                node_data = node.get('data', node)
+                nodes.append(dict(node_data))
+
+            for edge in data.get('edges', []):
+                edge_data = edge.get('data', edge)
+                edges.append({
+                    'source': edge_data.get('source', ''),
+                    'source_port': edge_data.get('source_port', edge_data.get('sourcePort', '')),
+                    'target': edge_data.get('target', ''),
+                    'target_port': edge_data.get('target_port', edge_data.get('targetPort', '')),
+                    'edge_id': edge_data.get('id', f"{edge_data.get('source', '')}-{edge_data.get('target', '')}")
+                })
+
+        elif 'cytoscape' in data:
+            # VelocityMaps format: {"cytoscape": {"nodes": [...], "edges": [...]}}
+            return self._extract_nodes_edges(data['cytoscape'])
+
+        else:
+            # SC2 map format: {device_name: {peers: {...}, node_details: {...}}}
+            seen_edges = set()
+
+            for device_name, device_data in data.items():
+                if not isinstance(device_data, dict):
+                    continue
+
+                # Build node record
+                node_details = device_data.get('node_details', {})
+                node_record = {
+                    'id': device_name,
+                    'label': device_name,
+                    'hostname': device_name,
+                    'ip': node_details.get('ip', device_data.get('ip', '')),
+                    'platform': node_details.get('platform', device_data.get('platform', '')),
+                    'model': node_details.get('model', device_data.get('model', '')),
+                    'site': node_details.get('site', device_data.get('site', '')),
+                }
+                # Add any extra fields from node_details
+                for k, v in node_details.items():
+                    if k not in node_record and isinstance(v, (str, int, float, bool)):
+                        node_record[k] = v
+                nodes.append(node_record)
+
+                # Build edge records
+                for peer_name, peer_data in device_data.get('peers', {}).items():
+                    # Create canonical edge ID to avoid duplicates
+                    edge_key = tuple(sorted([device_name, peer_name]))
+                    if edge_key in seen_edges:
+                        continue
+                    seen_edges.add(edge_key)
+
+                    # Handle peer_data as dict or list
+                    if isinstance(peer_data, dict):
+                        local_port = peer_data.get('local_port', '')
+                        remote_port = peer_data.get('remote_port', '')
+                    elif isinstance(peer_data, list) and peer_data:
+                        # List of connections - take first or combine
+                        local_port = peer_data[0].get('local_port', '') if peer_data else ''
+                        remote_port = peer_data[0].get('remote_port', '') if peer_data else ''
+                    else:
+                        local_port = ''
+                        remote_port = ''
+
+                    edges.append({
+                        'source': device_name,
+                        'source_port': local_port,
+                        'target': peer_name,
+                        'target_port': remote_port,
+                        'edge_id': f"{device_name}--{peer_name}"
+                    })
+
+        return nodes, edges
 
     def _get_display_topology(self) -> Optional[Dict]:
         """Get topology data for display, applying filters based on checkbox states."""
