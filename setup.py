@@ -29,7 +29,7 @@ def parse_requirements(filename):
 
 setup(
     name="secure-cartography",
-    version="2.0.7",
+    version="2.0.8",
     author="Scott Peterman",
     author_email="scottpeterman@gmail.com",
     description="SSH & SNMP-Based Network Discovery and Topology Mapping",

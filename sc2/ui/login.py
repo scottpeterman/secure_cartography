@@ -442,7 +442,7 @@ class LoginDialog(QDialog):
         card_layout.addSpacing(24)
 
         # Version info
-        self.version_label = QLabel("v2.0.0")
+        self.version_label = QLabel("v2.0")
         self.version_label.setObjectName("muted")
         self.version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.version_label.setFixedHeight(16)

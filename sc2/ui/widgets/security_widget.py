@@ -1239,16 +1239,6 @@ class SecurityWidget(QWidget):
         refresh_cache_btn.clicked.connect(self._load_from_cache)
         cached_header.addWidget(refresh_cache_btn)
 
-        export_all_btn = QPushButton("Export Report")
-        export_all_btn.setToolTip("Export all CVEs with affected platforms")
-        export_all_btn.clicked.connect(self._export_full_report)
-        cached_header.addWidget(export_all_btn)
-
-        export_devices_btn = QPushButton("Export by Device")
-        export_devices_btn.setToolTip("Export vulnerability summary per device")
-        export_devices_btn.clicked.connect(self._export_devices_report)
-        cached_header.addWidget(export_devices_btn)
-
         cached_layout.addLayout(cached_header)
 
         self.cached_model = CachedVersionsModel()
@@ -1289,6 +1279,23 @@ class SecurityWidget(QWidget):
         self.results_tabs.addTab(cve_widget, "CVEs")
 
         results_layout.addWidget(self.results_tabs)
+
+        # Export buttons (always visible, below tabs)
+        export_row = QHBoxLayout()
+        export_row.addStretch()
+
+        export_report_btn = QPushButton("📊 Export Full Report")
+        export_report_btn.setToolTip("Export all CVEs with affected platforms to Excel")
+        export_report_btn.clicked.connect(self._export_full_report)
+        export_row.addWidget(export_report_btn)
+
+        export_devices_btn = QPushButton("📋 Export by Device")
+        export_devices_btn.setToolTip("Export vulnerability summary per device to Excel")
+        export_devices_btn.clicked.connect(self._export_devices_report)
+        export_row.addWidget(export_devices_btn)
+
+        results_layout.addLayout(export_row)
+
         splitter.addWidget(results_group)
 
         splitter.setSizes([300, 200])
@@ -1404,7 +1411,7 @@ class SecurityWidget(QWidget):
                 webbrowser.open(f"https://nvd.nist.gov/vuln/detail/{cve_id}")
 
     def _export_full_report(self):
-        """Export full vulnerability report to CSV with affected devices"""
+        """Export full vulnerability report to Excel with affected devices"""
         versions = self.cache.get_version_summary()
         if not versions:
             QMessageBox.warning(self, "No Data", "No cached data to export.")
@@ -1412,8 +1419,8 @@ class SecurityWidget(QWidget):
 
         filepath, _ = QFileDialog.getSaveFileName(
             self, "Export Vulnerability Report",
-            f"vulnerability_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            "CSV Files (*.csv)"
+            f"vulnerability_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+            "Excel Files (*.xlsx)"
         )
         if not filepath:
             return
@@ -1429,62 +1436,128 @@ class SecurityWidget(QWidget):
                 }
 
         try:
-            with open(filepath, 'w', newline='', encoding='utf-8') as f:
-                writer = csv.writer(f)
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
 
-                # Header with device info
-                writer.writerow([
-                    'Vendor', 'Product', 'Version', 'Device Count', 'Affected Devices',
-                    'CVE ID', 'Severity', 'CVSS v3', 'Published', 'Description'
-                ])
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "CVE Report"
 
-                total_rows = 0
-                for v in versions:
-                    cves = self.cache.get_cves_for_version(v['vendor'], v['product'], v['version'])
+            # Severity colors
+            severity_fills = {
+                'CRITICAL': PatternFill('solid', fgColor='DC2626'),
+                'HIGH': PatternFill('solid', fgColor='EA580C'),
+                'MEDIUM': PatternFill('solid', fgColor='CA8A04'),
+                'LOW': PatternFill('solid', fgColor='16A34A'),
+            }
+            white_font = Font(color='FFFFFF', bold=True)
+            header_fill = PatternFill('solid', fgColor='1F2937')
+            header_font = Font(bold=True, color='FFFFFF')
+            thin_border = Border(
+                left=Side(style='thin'),
+                right=Side(style='thin'),
+                top=Side(style='thin'),
+                bottom=Side(style='thin')
+            )
 
-                    # Look up device info
-                    key = f"{v['vendor']}:{v['product']}:{v['version']}"
-                    device_info = platform_devices.get(key, {'count': 0, 'devices': []})
-                    device_count = device_info['count'] or ''
-                    device_list = '; '.join(device_info['devices'][:20])  # Limit to 20 devices
-                    if len(device_info['devices']) > 20:
-                        device_list += f' ... and {len(device_info["devices"]) - 20} more'
+            # Headers
+            headers = ['Vendor', 'Product', 'Version', 'Device Count', 'Affected Devices',
+                       'CVE ID', 'Severity', 'CVSS v3', 'Published', 'Description']
+            for col, header in enumerate(headers, 1):
+                cell = ws.cell(row=1, column=col, value=header)
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = Alignment(horizontal='center')
+                cell.border = thin_border
 
-                    if cves:
-                        for cve in cves:
-                            writer.writerow([
-                                v['vendor'],
-                                v['product'],
-                                v['version'],
-                                device_count,
-                                device_list,
-                                cve.get('cve_id', ''),
-                                cve.get('severity', ''),
-                                cve.get('cvss_v3_score', ''),
-                                cve.get('published_date', '')[:10] if cve.get('published_date') else '',
-                                cve.get('description', '')
-                            ])
-                            total_rows += 1
-                    else:
-                        # Include version with no CVEs
-                        writer.writerow([
-                            v['vendor'], v['product'], v['version'],
-                            device_count, device_list,
-                            '', '', '', '', 'No CVEs found'
-                        ])
-                        total_rows += 1
+            # Data rows
+            row_num = 2
+            for v in versions:
+                cves = self.cache.get_cves_for_version(v['vendor'], v['product'], v['version'])
 
+                # Look up device info
+                key = f"{v['vendor']}:{v['product']}:{v['version']}"
+                device_info = platform_devices.get(key, {'count': 0, 'devices': []})
+                device_count = device_info['count'] or ''
+                device_list = '; '.join(device_info['devices'])  # No limit in Excel
+
+                if cves:
+                    for cve in cves:
+                        severity = cve.get('severity', '').upper()
+
+                        ws.cell(row=row_num, column=1, value=v['vendor'])
+                        ws.cell(row=row_num, column=2, value=v['product'])
+                        ws.cell(row=row_num, column=3, value=v['version'])
+                        ws.cell(row=row_num, column=4, value=device_count)
+                        ws.cell(row=row_num, column=5, value=device_list)
+                        ws.cell(row=row_num, column=6, value=cve.get('cve_id', ''))
+
+                        sev_cell = ws.cell(row=row_num, column=7, value=severity)
+                        if severity in severity_fills:
+                            sev_cell.fill = severity_fills[severity]
+                            sev_cell.font = white_font
+                            sev_cell.alignment = Alignment(horizontal='center')
+
+                        ws.cell(row=row_num, column=8, value=cve.get('cvss_v3_score', ''))
+                        ws.cell(row=row_num, column=9,
+                                value=cve.get('published_date', '')[:10] if cve.get('published_date') else '')
+
+                        # Full description - no truncation in Excel
+                        desc_cell = ws.cell(row=row_num, column=10, value=cve.get('description', ''))
+                        desc_cell.alignment = Alignment(wrap_text=True)
+
+                        # Apply borders
+                        for col in range(1, 11):
+                            ws.cell(row=row_num, column=col).border = thin_border
+
+                        row_num += 1
+                else:
+                    ws.cell(row=row_num, column=1, value=v['vendor'])
+                    ws.cell(row=row_num, column=2, value=v['product'])
+                    ws.cell(row=row_num, column=3, value=v['version'])
+                    ws.cell(row=row_num, column=4, value=device_count)
+                    ws.cell(row=row_num, column=5, value=device_list)
+                    ws.cell(row=row_num, column=10, value='No CVEs found')
+                    for col in range(1, 11):
+                        ws.cell(row=row_num, column=col).border = thin_border
+                    row_num += 1
+
+            # Column widths
+            ws.column_dimensions['A'].width = 12  # Vendor
+            ws.column_dimensions['B'].width = 12  # Product
+            ws.column_dimensions['C'].width = 18  # Version
+            ws.column_dimensions['D'].width = 12  # Device Count
+            ws.column_dimensions['E'].width = 35  # Affected Devices
+            ws.column_dimensions['F'].width = 18  # CVE ID
+            ws.column_dimensions['G'].width = 12  # Severity
+            ws.column_dimensions['H'].width = 10  # CVSS
+            ws.column_dimensions['I'].width = 12  # Published
+            ws.column_dimensions['J'].width = 80  # Description
+
+            # Freeze header row
+            ws.freeze_panes = 'A2'
+
+            # Auto-filter
+            ws.auto_filter.ref = f"A1:J{row_num - 1}"
+
+            wb.save(filepath)
+
+            total_rows = row_num - 2
             QMessageBox.information(
                 self, "Export Complete",
                 f"Exported {total_rows} rows for {len(versions)} versions to:\n{filepath}"
             )
 
+        except ImportError:
+            QMessageBox.critical(self, "Missing Dependency",
+                                 "openpyxl is required for Excel export.\nInstall with: pip install openpyxl")
         except Exception as e:
             QMessageBox.critical(self, "Export Error", str(e))
             logger.exception("Export error")
 
     def _export_devices_report(self):
-        """Export device-centric vulnerability report"""
+        """Export device-centric vulnerability report to Excel"""
         if not hasattr(self, '_loaded_platforms') or not self._loaded_platforms:
             QMessageBox.warning(self, "No Data",
                                 "Load a CSV first to export device-focused report.")
@@ -1492,79 +1565,153 @@ class SecurityWidget(QWidget):
 
         filepath, _ = QFileDialog.getSaveFileName(
             self, "Export Devices Vulnerability Report",
-            f"devices_vulnerabilities_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            "CSV Files (*.csv)"
+            f"devices_vulnerabilities_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+            "Excel Files (*.xlsx)"
         )
         if not filepath:
             return
 
         try:
-            with open(filepath, 'w', newline='', encoding='utf-8') as f:
-                writer = csv.writer(f)
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
 
-                # Header
-                writer.writerow([
-                    'Device', 'Platform', 'Vendor', 'Product', 'Version',
-                    'Total CVEs', 'Critical', 'High', 'Medium', 'Low'
-                ])
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "Device Vulnerabilities"
 
-                total_rows = 0
-                for p in self._loaded_platforms:
-                    # Get CVE counts for this platform
-                    if p.cpe_vendor and p.cpe_product and p.cpe_version:
-                        cves = self.cache.get_cves_for_version(
-                            p.cpe_vendor, p.cpe_product, p.cpe_version
-                        )
+            # Severity colors for count cells
+            severity_fills = {
+                'critical': PatternFill('solid', fgColor='DC2626'),
+                'high': PatternFill('solid', fgColor='EA580C'),
+                'medium': PatternFill('solid', fgColor='CA8A04'),
+                'low': PatternFill('solid', fgColor='16A34A'),
+            }
+            white_font = Font(color='FFFFFF', bold=True)
+            header_fill = PatternFill('solid', fgColor='1F2937')
+            header_font = Font(bold=True, color='FFFFFF')
+            thin_border = Border(
+                left=Side(style='thin'),
+                right=Side(style='thin'),
+                top=Side(style='thin'),
+                bottom=Side(style='thin')
+            )
 
-                        # Count by severity
-                        counts = {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0}
-                        for cve in cves:
-                            sev = cve.get('severity', '').upper()
-                            if sev in counts:
-                                counts[sev] += 1
+            # Headers
+            headers = ['Device', 'Platform', 'Vendor', 'Product', 'Version',
+                       'Total CVEs', 'Critical', 'High', 'Medium', 'Low']
+            for col, header in enumerate(headers, 1):
+                cell = ws.cell(row=1, column=col, value=header)
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = Alignment(horizontal='center')
+                cell.border = thin_border
 
-                        total = len(cves)
-                    else:
-                        total = 0
-                        counts = {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0}
+            row_num = 2
+            for p in self._loaded_platforms:
+                # Get CVE counts for this platform
+                if p.cpe_vendor and p.cpe_product and p.cpe_version:
+                    cves = self.cache.get_cves_for_version(
+                        p.cpe_vendor, p.cpe_product, p.cpe_version
+                    )
 
-                    # Write a row for each device
-                    for device in p.device_names:
-                        writer.writerow([
-                            device,
-                            p.raw,
-                            p.cpe_vendor or p.vendor,
-                            p.cpe_product or p.product,
-                            p.cpe_version or p.version,
-                            total,
-                            counts['CRITICAL'],
-                            counts['HIGH'],
-                            counts['MEDIUM'],
-                            counts['LOW']
-                        ])
-                        total_rows += 1
+                    # Count by severity
+                    counts = {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0}
+                    for cve in cves:
+                        sev = cve.get('severity', '').upper()
+                        if sev in counts:
+                            counts[sev] += 1
 
-                    # If no device names, still write a row with count
-                    if not p.device_names and p.device_count:
-                        writer.writerow([
-                            f"({p.device_count} devices)",
-                            p.raw,
-                            p.cpe_vendor or p.vendor,
-                            p.cpe_product or p.product,
-                            p.cpe_version or p.version,
-                            total,
-                            counts['CRITICAL'],
-                            counts['HIGH'],
-                            counts['MEDIUM'],
-                            counts['LOW']
-                        ])
-                        total_rows += 1
+                    total = len(cves)
+                else:
+                    total = 0
+                    counts = {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0}
 
+                # Write a row for each device
+                for device in p.device_names:
+                    ws.cell(row=row_num, column=1, value=device)
+                    ws.cell(row=row_num, column=2, value=p.raw)
+                    ws.cell(row=row_num, column=3, value=p.cpe_vendor or p.vendor)
+                    ws.cell(row=row_num, column=4, value=p.cpe_product or p.product)
+                    ws.cell(row=row_num, column=5, value=p.cpe_version or p.version)
+                    ws.cell(row=row_num, column=6, value=total)
+
+                    # Severity counts with color coding if > 0
+                    crit_cell = ws.cell(row=row_num, column=7, value=counts['CRITICAL'])
+                    if counts['CRITICAL'] > 0:
+                        crit_cell.fill = severity_fills['critical']
+                        crit_cell.font = white_font
+                    crit_cell.alignment = Alignment(horizontal='center')
+
+                    high_cell = ws.cell(row=row_num, column=8, value=counts['HIGH'])
+                    if counts['HIGH'] > 0:
+                        high_cell.fill = severity_fills['high']
+                        high_cell.font = white_font
+                    high_cell.alignment = Alignment(horizontal='center')
+
+                    med_cell = ws.cell(row=row_num, column=9, value=counts['MEDIUM'])
+                    if counts['MEDIUM'] > 0:
+                        med_cell.fill = severity_fills['medium']
+                        med_cell.font = white_font
+                    med_cell.alignment = Alignment(horizontal='center')
+
+                    low_cell = ws.cell(row=row_num, column=10, value=counts['LOW'])
+                    if counts['LOW'] > 0:
+                        low_cell.fill = severity_fills['low']
+                        low_cell.font = white_font
+                    low_cell.alignment = Alignment(horizontal='center')
+
+                    # Apply borders
+                    for col in range(1, 11):
+                        ws.cell(row=row_num, column=col).border = thin_border
+
+                    row_num += 1
+
+                # If no device names, still write a row with count
+                if not p.device_names and p.device_count:
+                    ws.cell(row=row_num, column=1, value=f"({p.device_count} devices)")
+                    ws.cell(row=row_num, column=2, value=p.raw)
+                    ws.cell(row=row_num, column=3, value=p.cpe_vendor or p.vendor)
+                    ws.cell(row=row_num, column=4, value=p.cpe_product or p.product)
+                    ws.cell(row=row_num, column=5, value=p.cpe_version or p.version)
+                    ws.cell(row=row_num, column=6, value=total)
+                    ws.cell(row=row_num, column=7, value=counts['CRITICAL'])
+                    ws.cell(row=row_num, column=8, value=counts['HIGH'])
+                    ws.cell(row=row_num, column=9, value=counts['MEDIUM'])
+                    ws.cell(row=row_num, column=10, value=counts['LOW'])
+                    for col in range(1, 11):
+                        ws.cell(row=row_num, column=col).border = thin_border
+                    row_num += 1
+
+            # Column widths
+            ws.column_dimensions['A'].width = 25  # Device
+            ws.column_dimensions['B'].width = 35  # Platform
+            ws.column_dimensions['C'].width = 12  # Vendor
+            ws.column_dimensions['D'].width = 12  # Product
+            ws.column_dimensions['E'].width = 18  # Version
+            ws.column_dimensions['F'].width = 12  # Total CVEs
+            ws.column_dimensions['G'].width = 10  # Critical
+            ws.column_dimensions['H'].width = 10  # High
+            ws.column_dimensions['I'].width = 10  # Medium
+            ws.column_dimensions['J'].width = 10  # Low
+
+            # Freeze header row
+            ws.freeze_panes = 'A2'
+
+            # Auto-filter
+            ws.auto_filter.ref = f"A1:J{row_num - 1}"
+
+            wb.save(filepath)
+
+            total_rows = row_num - 2
             QMessageBox.information(
                 self, "Export Complete",
                 f"Exported {total_rows} device vulnerability records to:\n{filepath}"
             )
 
+        except ImportError:
+            QMessageBox.critical(self, "Missing Dependency",
+                                 "openpyxl is required for Excel export.\nInstall with: pip install openpyxl")
         except Exception as e:
             QMessageBox.critical(self, "Export Error", str(e))
             logger.exception("Export error")

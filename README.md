@@ -9,7 +9,7 @@
 Secure Cartography is a network discovery tool that crawls your infrastructure via SNMP and SSH, collecting CDP/LLDP neighbor information to automatically generate topology maps. Built by a network engineer, for network engineers.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/crawl_dark_preview.png" alt="Secure Cartography - Cyber Theme" width="800">
+  <img src="https://raw.githubusercontent.com/scottpeterman/secure_cartography/refs/heads/main/screenshots/slides2.gif" alt="Secure Cartography - Cyber Theme" width="800">
 </p>
 
 ---
