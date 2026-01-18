@@ -818,15 +818,22 @@ class MapViewerDialog(QDialog):
         try:
             from sc2.export.graphml_exporter import GraphMLExporter
 
-            # Create exporter with current options (use same filter state as view)
+            # Get filtered topology (same as what's displayed in viewer)
+            display_data = self._get_display_topology()
+
+            if not display_data:
+                QMessageBox.warning(self, "Export", "No topology data after filtering.")
+                return
+
+            # Create exporter - filtering already applied, so disable exporter's filters
             exporter = GraphMLExporter(
                 use_icons=True,
-                include_endpoints=self._include_leaves,  # Match view filter
-                connected_only=self._connected_only,
+                include_endpoints=True,   # Don't filter again - already filtered
+                connected_only=False,     # Don't filter again - already filtered
                 layout_type='grid'
             )
 
-            exporter.export(self._topology_data, Path(path))
+            exporter.export(display_data, Path(path))
 
             # Update status message to reflect filtering
             status_msg = f"Exported: {Path(path).name}"
