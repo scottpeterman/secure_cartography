@@ -405,6 +405,23 @@ class TopologyViewer(QWidget):
         """Set base path for platform icons."""
         self._run_js(f"TopologyViewer.setIconBasePath('{path}')")
 
+    def get_selected_nodes(self, callback: Callable[[list], None]):
+        """
+        Get IDs of currently selected nodes.
+
+        Args:
+            callback: Function receiving list of node IDs
+        """
+
+        def handle_result(json_str):
+            try:
+                ids = json.loads(json_str) if json_str else []
+                callback(ids)
+            except json.JSONDecodeError:
+                callback([])
+
+        self._run_js("TopologyViewer.getSelectedNodes()", handle_result)
+
     def save_positions(self) -> Optional[Dict[str, Dict[str, float]]]:
         """
         Get current node positions for saving.

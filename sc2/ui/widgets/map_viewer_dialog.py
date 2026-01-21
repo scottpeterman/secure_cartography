@@ -288,7 +288,7 @@ class MapViewerDialog(QDialog):
         toolbar = QToolBar("Map Viewer Tools")
         toolbar.setObjectName("mapViewerToolbar")
         toolbar.setMovable(False)
-        toolbar.setIconSize(toolbar.iconSize())  # Keep default
+        toolbar.setIconSize(toolbar.iconSize())
 
         # Open file
         open_action = QAction("📂 Open", self)
@@ -306,31 +306,30 @@ class MapViewerDialog(QDialog):
         self._layout_combo = QComboBox()
         self._layout_combo.setObjectName("layoutCombo")
         self._layout_combo.setFixedWidth(130)
-        # Built-in layouts
-        self._layout_combo.addItem("Hierarchical", "dagre")      # 0 - Best for network tiers (requires extension)
-        self._layout_combo.addItem("Force Directed", "cose")     # 1 - Organic clustering
-        self._layout_combo.addItem("Concentric", "concentric")   # 2 - Degree-based rings
-        self._layout_combo.addItem("Grid", "grid")               # 3 - Even spacing
-        self._layout_combo.addItem("Circle", "circle")           # 4 - Ring layout
-        self._layout_combo.addItem("Breadthfirst", "breadthfirst")  # 5 - Tree (needs root)
-        self._layout_combo.setCurrentIndex(0)  # Default to Hierarchical (dagre)
+        self._layout_combo.addItem("Hierarchical", "dagre")
+        self._layout_combo.addItem("Force Directed", "cose")
+        self._layout_combo.addItem("Concentric", "concentric")
+        self._layout_combo.addItem("Grid", "grid")
+        self._layout_combo.addItem("Circle", "circle")
+        self._layout_combo.addItem("Breadthfirst", "breadthfirst")
+        self._layout_combo.setCurrentIndex(0)
         self._layout_combo.currentIndexChanged.connect(self._on_layout_changed)
         toolbar.addWidget(self._layout_combo)
 
         toolbar.addSeparator()
 
-        # Connected-only checkbox - NOW AFFECTS THE VIEW (not just export)
+        # Connected-only checkbox
         self._connected_only_checkbox = QCheckBox("Connected Only")
         self._connected_only_checkbox.setObjectName("connectedOnlyCheckbox")
         self._connected_only_checkbox.setToolTip(
             "Show only devices with connections\n"
             "(hides standalone/orphan nodes)"
         )
-        self._connected_only_checkbox.setChecked(True)  # Default ON
+        self._connected_only_checkbox.setChecked(True)
         self._connected_only_checkbox.stateChanged.connect(self._on_connected_only_changed)
         toolbar.addWidget(self._connected_only_checkbox)
 
-        # Show Leaves checkbox - controls visibility of endpoint/leaf nodes
+        # Show Leaves checkbox
         self._show_leaves_checkbox = QCheckBox("Show Leaves")
         self._show_leaves_checkbox.setObjectName("showLeavesCheckbox")
         self._show_leaves_checkbox.setToolTip(
@@ -338,7 +337,7 @@ class MapViewerDialog(QDialog):
             "that don't have their own neighbor data.\n"
             "Uncheck for infrastructure-only view."
         )
-        self._show_leaves_checkbox.setChecked(False)  # Default OFF (cleaner view)
+        self._show_leaves_checkbox.setChecked(False)
         self._show_leaves_checkbox.stateChanged.connect(self._on_show_leaves_changed)
         toolbar.addWidget(self._show_leaves_checkbox)
 
@@ -357,39 +356,44 @@ class MapViewerDialog(QDialog):
         refresh_action.triggered.connect(self._on_reload)
         toolbar.addAction(refresh_action)
 
+        focus_action = QAction("🎯 Focus Map", self)
+        focus_action.setShortcut(QKeySequence("Ctrl+Shift+F"))
+        focus_action.setToolTip(
+            "Open selected nodes in new viewer (Ctrl+Shift+F)\n"
+            "Shift+click or drag to multi-select"
+        )
+        focus_action.triggered.connect(self._on_create_focus_map)
+        toolbar.addAction(focus_action)
+
         toolbar.addSeparator()
 
-        # Export PNG
-        export_action = QAction("💾 Export PNG", self)
-        export_action.setShortcut(QKeySequence("Ctrl+E"))
-        export_action.setToolTip("Export as PNG image (Ctrl+E)")
-        export_action.triggered.connect(self._on_export_png)
-        toolbar.addAction(export_action)
+        # Export dropdown
+        export_label = QLabel(" Export: ")
+        toolbar.addWidget(export_label)
 
-        # Export to yEd GraphML
-        export_yed_action = QAction("📊 Export yEd", self)
-        export_yed_action.setShortcut(QKeySequence("Ctrl+G"))
-        export_yed_action.setToolTip("Export to yEd GraphML format (Ctrl+G)")
-        export_yed_action.triggered.connect(self._on_export_graphml)
-        toolbar.addAction(export_yed_action)
-
-        export_csv_action = QAction("📋 Export CSV", self)
-        export_csv_action.setShortcut(QKeySequence("Ctrl+Shift+E"))
-        export_csv_action.setToolTip("Export nodes and edges to CSV (Ctrl+Shift+E)")
-        export_csv_action.triggered.connect(self._on_export_csv)
-        toolbar.addAction(export_csv_action)
-
-        # Save (for edited topology)
-        save_action = QAction("📄 Save Map", self)
-        save_action.setShortcut(QKeySequence.StandardKey.Save)
-        save_action.setToolTip("Save edited topology to file (Ctrl+S)")
-        save_action.triggered.connect(self._on_save_map)
-        toolbar.addAction(save_action)
+        self._export_combo = QComboBox()
+        self._export_combo.setObjectName("exportCombo")
+        self._export_combo.setFixedWidth(100)
+        self._export_combo.addItem("PNG", "png")
+        self._export_combo.addItem("yEd", "graphml")
+        self._export_combo.addItem("CSV", "csv")
+        self._export_combo.addItem("JSON", "json")
+        self._export_combo.setCurrentIndex(-1)
+        self._export_combo.setPlaceholderText("Select...")
+        self._export_combo.currentIndexChanged.connect(self._on_export_selected)
+        toolbar.addWidget(self._export_combo)
 
         # Spacer
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         toolbar.addWidget(spacer)
+
+        # Help button
+        help_action = QAction("? Help", self)
+        help_action.setShortcut(QKeySequence.StandardKey.HelpContents)
+        help_action.setToolTip("Keyboard shortcuts and tips")
+        help_action.triggered.connect(self._on_show_help)
+        toolbar.addAction(help_action)
 
         # Close button
         close_action = QAction("✕ Close", self)
@@ -399,6 +403,47 @@ class MapViewerDialog(QDialog):
 
         return toolbar
 
+    def _on_show_help(self):
+        """Show keyboard shortcuts and tips."""
+        QMessageBox.information(
+            self, "Map Viewer Help",
+            "Keyboard Shortcuts:\n\n"
+            "Ctrl+O\t\tOpen file\n"
+            "F\t\tFit view\n"
+            "F5\t\tReload\n"
+            "Ctrl+Shift+F\tFocus map from selection\n"
+            "Ctrl+W\t\tClose\n\n"
+            "Mouse:\n\n"
+            "Click\t\tSelect node\n"
+            "Shift+Click\tAdd to selection\n"
+            "Drag\t\tPan view\n"
+            "Drag on node\tMove node\n"
+            "Scroll\t\tZoom\n"
+            "Double-click\tEdit node"
+        )
+
+    def _on_export_selected(self, index: int):
+        """Handle export dropdown selection."""
+        if index < 0:
+            return
+
+        export_type = self._export_combo.itemData(index)
+
+        # Reset combo to placeholder state
+        self._export_combo.blockSignals(True)
+        self._export_combo.setCurrentIndex(-1)
+        self._export_combo.blockSignals(False)
+
+        if export_type == "png":
+            self._on_export_png()
+        elif export_type == "graphml":
+            self._on_export_graphml()
+        elif export_type == "csv":
+            self._on_export_csv()
+        elif export_type == "json":
+            self._on_save_map()
+
+
     def _connect_signals(self):
         """Connect viewer signals."""
         self._viewer.ready.connect(self._on_viewer_ready)
@@ -406,6 +451,105 @@ class MapViewerDialog(QDialog):
         # Node editing (requires updated topology_viewer.py with node_edit_requested signal)
         if hasattr(self._viewer, 'node_edit_requested'):
             self._viewer.node_edit_requested.connect(self._on_node_edit_requested)
+
+    def _on_create_focus_map(self):
+        """Create a new viewer with only selected nodes and their interconnections."""
+        if not self._viewer_ready or not self._topology_data:
+            QMessageBox.warning(self, "Focus Map", "No topology loaded.")
+            return
+
+        def on_selection(selected_ids):
+            if not selected_ids:
+                QMessageBox.information(
+                    self, "Focus Map",
+                    "Select one or more nodes first.\n\n"
+                    "Shift+click to add to selection\n"
+                    "Or drag a box to select multiple"
+                )
+                return
+
+            # Extract subgraph with only selected nodes
+            subgraph = self._extract_subgraph(set(selected_ids))
+            if not subgraph:
+                QMessageBox.warning(self, "Focus Map", "Could not extract subgraph.")
+                return
+
+            # Create new viewer
+            focus_viewer = MapViewerDialog(
+                theme_manager=self.theme_manager,
+                icon_manager=self._icon_manager,
+                parent=self.parent()
+            )
+            focus_viewer.load_topology(subgraph, f"Focus ({len(selected_ids)} nodes)")
+            focus_viewer.show()
+
+        self._viewer.get_selected_nodes(on_selection)
+
+    def _extract_subgraph(self, node_ids: set) -> Optional[Dict]:
+        """Extract subgraph containing only specified nodes and their interconnections."""
+        if not self._topology_data or not node_ids:
+            return None
+
+        # Work from filtered data so focus map respects current view settings
+        display_data = self._get_display_topology()
+        if not display_data:
+            return None
+
+        # Handle different formats
+        if 'nodes' in display_data:
+            return self._extract_subgraph_cytoscape(display_data, node_ids)
+        elif 'cytoscape' in display_data:
+            cyto_sub = self._extract_subgraph_cytoscape(display_data['cytoscape'], node_ids)
+            return {'cytoscape': cyto_sub} if cyto_sub else None
+        else:
+            return self._extract_subgraph_sc2(display_data, node_ids)
+
+    def _extract_subgraph_cytoscape(self, cyto_data: Dict, node_ids: set) -> Dict:
+        """Extract subgraph from Cytoscape format."""
+        # Filter nodes
+        nodes = [
+            n for n in cyto_data.get('nodes', [])
+            if n.get('data', n).get('id') in node_ids
+        ]
+
+        # Filter edges - keep only those connecting selected nodes
+        edges = [
+            e for e in cyto_data.get('edges', [])
+            if e.get('data', e).get('source') in node_ids
+               and e.get('data', e).get('target') in node_ids
+        ]
+
+        return {'nodes': nodes, 'edges': edges}
+
+    def _extract_subgraph_sc2(self, sc2_data: Dict, node_ids: set) -> Dict:
+        """Extract subgraph from SC2 map format."""
+        subgraph = {}
+
+        # Also check lowercase variants for matching
+        node_ids_lower = {n.lower() for n in node_ids}
+
+        for node_name, node_data in sc2_data.items():
+            # Check if this node is in selection
+            if node_name not in node_ids and node_name.lower() not in node_ids_lower:
+                continue
+
+            if not isinstance(node_data, dict):
+                continue
+
+            # Deep copy to avoid mutating original
+            node_copy = copy.deepcopy(node_data)
+
+            # Filter peers to only those in selection
+            if 'peers' in node_copy:
+                filtered_peers = {}
+                for peer_name, peer_data in node_copy['peers'].items():
+                    if peer_name in node_ids or peer_name.lower() in node_ids_lower:
+                        filtered_peers[peer_name] = peer_data
+                node_copy['peers'] = filtered_peers
+
+            subgraph[node_name] = node_copy
+
+        return subgraph
 
     def _on_connected_only_changed(self, state: int):
         """Handle connected-only checkbox toggle - refilter and reload view."""
