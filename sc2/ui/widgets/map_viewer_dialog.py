@@ -364,7 +364,10 @@ class MapViewerDialog(QDialog):
         )
         focus_action.triggered.connect(self._on_create_focus_map)
         toolbar.addAction(focus_action)
-
+        poll_action = QAction("🔍 Poll Device", self)
+        poll_action.setToolTip("SNMP poll selected device for fingerprinting")
+        poll_action.triggered.connect(self._on_poll_device)
+        toolbar.addAction(poll_action)
         toolbar.addSeparator()
 
         # Export dropdown
@@ -402,6 +405,67 @@ class MapViewerDialog(QDialog):
         toolbar.addAction(close_action)
 
         return toolbar
+
+    def _on_poll_device(self):
+        """Poll selected device via SNMP"""
+        if not self._viewer_ready:
+            return
+
+        def on_selection(selected_ids):
+            if len(selected_ids) != 1:
+                QMessageBox.information(
+                    self, "Poll Device",
+                    "Select a single node to poll"
+                )
+                return
+
+            node_id = selected_ids[0]
+            node_data = self._get_node_data(node_id)
+
+            ip = node_data.get('ip', '')
+            if not ip:
+                QMessageBox.warning(
+                    self, "Poll Device",
+                    f"No IP address for {node_id}"
+                )
+                return
+
+            from sc2.ui.widgets.device_poll_dialog import DevicePollDialog
+
+            dialog = DevicePollDialog(
+                ip=ip,
+                hostname=node_id,
+                theme_manager=self.theme_manager,
+                parent=self
+            )
+            dialog.node_update_available.connect(
+                lambda data: self._on_node_updated(data)
+            )
+            dialog.exec()
+
+        self._viewer.get_selected_nodes(on_selection)
+
+    def _get_node_data(self, node_id: str) -> Dict:
+        """Get node data from topology by ID"""
+        if not self._topology_data:
+            return {}
+
+        # Handle different formats
+        if 'nodes' in self._topology_data:
+            for node in self._topology_data['nodes']:
+                if node.get('data', node).get('id') == node_id:
+                    return node.get('data', node)
+        elif 'cytoscape' in self._topology_data:
+            for node in self._topology_data['cytoscape'].get('nodes', []):
+                if node.get('data', node).get('id') == node_id:
+                    return node.get('data', node)
+        else:
+            # SC2 format
+            if node_id in self._topology_data:
+                details = self._topology_data[node_id].get('node_details', {})
+                return {'id': node_id, **details}
+
+        return {'id': node_id}
 
     def _on_show_help(self):
         """Show keyboard shortcuts and tips."""

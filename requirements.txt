@@ -2,7 +2,7 @@
 # Python 3.10+
 
 # Discovery Engine
-pysnmp>=7.1                  # SNMP discovery (pysnmp-lextudio)
+pysnmp>=7.1                  # SNMP discovery (async, pure Python)
 paramiko>=3.0                # SSH fallback discovery
 textfsm>=1.1                 # CLI output parsing
 
@@ -11,10 +11,17 @@ cryptography>=42.0           # AES-256-GCM encryption
 
 # GUI
 PyQt6>=6.6                   # Application framework
-PyQt6-WebEngine>=6.6         # Embedded topology viewer (Cytoscape.js)
+PyQt6-WebEngine>=6.6         # Embedded topology viewer
 
-aiofiles>=23.0               # Async file I/O for non-blocking output
-PyYAML>=6.0                  # Configuration file support
-click>=8.0.0
-requests>=2.30.0
-openpyxl>=3.0.0
+# SNMP Proxy Server
+fastapi>=0.100               # REST API framework
+uvicorn>=0.27                # ASGI server
+pydantic>=2.0                # Request/response models
+
+# Utilities
+aiofiles>=23.0               # Async file I/O
+PyYAML>=6.0                  # Configuration files
+click>=8.0                   # CLI interface
+requests>=2.30               # HTTP client
+openpyxl>=3.1                # Excel export
+python-dotenv>=1.0           # Environment files
